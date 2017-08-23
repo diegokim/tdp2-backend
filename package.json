@@ -1,0 +1,47 @@
+{
+  "name": "tdp2-web-server",
+  "version": "1.0.0",
+  "description": "A sample Node.js app using Express 4",
+  "main": "app.js",
+  "scripts": {
+    "eslint": "ENV=env_test eslint ./",
+    "eslint:fix": "ENV=env_test eslint --fix ./",
+    "test": "npm run eslint && npm run test:app",
+    "test:app": "ENV=env_test nyc ./node_modules/mocha/bin/mocha ./tests",
+    "start": "ENV=env_production node app",
+    "starttest": "ENV=env_test node app"
+  },
+  "dependencies": {
+    "bcrypt-as-promised": "~1.1.0",
+    "bcryptjs": "*",
+    "body-parser": "~1.17.2",
+    "cors": "*",
+    "eslint": "~3.19.0",
+    "express": "~4.15.3",
+    "http-errors": "~1.6.1",
+    "jsonwebtoken": "~7.4.1",
+    "knex": "~0.13.0",
+    "lodash": "~4.17.4",
+    "mongoose": "~4.10.6",
+    "passport": "*",
+    "passport-jwt": "*",
+    "promise": "~7.3.0",
+    "superagent": "~3.5.2"
+  },
+  "devDependencies": {
+    "chai": "~3.5.0",
+    "mocha": "~3.3.0",
+    "nyc": "^11.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diegokim/tdp2-backend"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC"
+}
