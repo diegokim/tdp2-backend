@@ -1,6 +1,6 @@
-# Taller de desarrollo de proyectos 2 - Server
+# Taller de desarrollo de proyectos 2 - Server - Link Up
 
-Servidor en NodeJs
+Servidor web en NodeJs con arquitectura de microservicios que utiliza MongoDB como base de datos.
 
 
 ## Tutos
@@ -14,8 +14,8 @@ https://www.youtube.com/playlist?list=PLillGF-RfqbZMNtaOXJQiDebNXjVapWPZ
 Instalar Node JS (también se instalará NPM):
 https://nodejs.org/es/
 
-Instalar postgres:
-https://www.postgresql.org/download/
+Instalar mongodb:
+https://www.mongodb.com/download-center?jmp=nav#community
 
 
 Una vez instalado, ejecutar desde el directorio raiz:
@@ -28,7 +28,13 @@ Esto instala las dependencias del proyecto (bibliotecas externas definidas en el
 
 ### Levantar el motor de Base de Datos primero:
 
-> $ ...
+> $ sudo mongod
+
+Si este error ocurrre:
+exception in initAndListen: 29 Data directory /data/db not found., terminating
+
+Ejecutar como root:
+> $ mkdir -p /data/db
 
 ### Levantar el servidor:
 

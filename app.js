@@ -1,29 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const knex = require('knex');
 const passport = require('passport');
 
 const statusRoutes = require('./routes/statusRoutes');
+const database = require('./database/database');
 
 const app = express();
+
 const port = process.env.PORT || 5000;
-const DATABASE_URL = process.env.DATABASE_URL;
 
-const connection = DATABASE_URL || {
-  user: 'postgres',
-  database: 'postgres',
-  port: 5432,
-  host: 'localhost',
-  password: 'postgres'
-}
-
-const dbClient = new knex({
-  client: 'pg',
-  debug: true,
-  connection,
-  ssl: true
-});
+database.connect()
+  .then(() => database.drop())
+  .then(() => database.initialize());
 
 //  Middleware cors
 app.use(cors());
@@ -39,15 +28,6 @@ require('./config/passport')(passport);
 
 //  Status routes
 app.use(statusRoutes);
-
-// DB test
-app.get('/db', (req, res) => (
-  dbClient('test_table')
-  .select('*')
-  .then((result) => {
-    res.status(200).json({ result });
-  })
-))
 
 //  Setting the invalid enpoint message for any other route
 app.get('*', (req, res) => {
