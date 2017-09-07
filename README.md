@@ -63,3 +63,32 @@ Respuesta:
 	body: {
 		status: "ok"
 	}
+
+## Login
+Tipo y URI
+
+GET /login
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	body: {
+    fotos: [
+      'photo-link-1',
+      'photo-link-2',
+      'photo-link-3'
+    ]
+  }
+
+  o si ya estás logueado
+
+  body: {
+    // Completar con el perfil cuando se defina
+  }

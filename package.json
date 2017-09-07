@@ -18,12 +18,15 @@
     "cors": "*",
     "eslint": "~3.19.0",
     "express": "~4.15.3",
+    "fb": "^2.0.0",
     "http-errors": "~1.6.1",
     "jsonwebtoken": "~7.4.1",
     "lodash": "~4.17.4",
     "mongoose": "~4.10.6",
+    "nock": "~9.0.14",
     "passport": "*",
     "passport-jwt": "*",
+    "pg": "~7.0.0",
     "promise": "~7.3.0",
     "superagent": "~3.5.2"
   },
@@ -32,6 +35,6 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "mocha": "~3.3.0",
-    "nyc": "^11.1.0"
+    "nyc": "~11.1.0"
   }
 }

@@ -1,13 +1,14 @@
 const express = require('express');
+const router = express.Router();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
 
-const statusRoutes = require('./routes/statusRoutes');
+const statusController = require('./controllers/statusController');
+const authController = require('./controllers/authController');
 const database = require('./database/database');
 
 const app = express();
-
 const port = process.env.PORT || 5000;
 
 database.connect()
@@ -26,8 +27,11 @@ app.use(passport.session());
 
 require('./config/passport')(passport);
 
-//  Status routes
-app.use(statusRoutes);
+//  Routes
+router.get('/ping', (req, res) => statusController.ping(req, res));
+router.get('/login', (req, res) => authController.login(req, res));
+
+app.use(router);
 
 //  Setting the invalid enpoint message for any other route
 app.get('*', (req, res) => {
