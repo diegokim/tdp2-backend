@@ -44,10 +44,13 @@ module.exports.connect = function () {
 
 //  Delete database
 module.exports.drop = function () {
-  if (state.db) {
-    return state.db.connection.db.dropDatabase();
-  }
-  return Promise.reject('Cant drop database')
+  return new Promise((resolve, reject) => {
+    if (state.db) {
+      state.db.connection.db.dropDatabase();
+      return resolve();
+    }
+    reject();
+  });
 };
 
 // Initialize database

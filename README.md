@@ -90,5 +90,17 @@ Respuesta:
   o si ya estás logueado
 
   body: {
-    // Completar con el perfil cuando se defina
+    foto: 'http://google.com',
+    ocupacion: 'maestro',
+    id: '1411063048948357',
+    nombre: 'papa noel',
+    sexo: 'male',
+    nacimiento: '08/13/1993',
+    intereses: [
+      'futbol',
+      'mas futbol'
+    ],
+    educacion: [
+      'High School'
+    ]
   }

@@ -1,10 +1,11 @@
-
-// const _ = require('lodash');
-// const usersDB = require('../database/usersDB');
+const UsersDB = require('../database/usersDB');
 const faceAPI = require('../clients/faceAPI');
-const params = ['id', 'birthday', 'photos'];
+const params = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in']
+
+// ['favorite_teams', 'political', 'books{genre,name}', 'movies{name,genre}', 'music{name,genre}']
 
 const MAX_PHOTOS = 5;
+const MAX_INTEREST = 5;
 
 /**
  * User login.
@@ -14,17 +15,62 @@ const MAX_PHOTOS = 5;
  *  - If not, validate the user has photos and is older than 18
  *    and returns the 5 first photos of his/her profile.
  */
-module.exports.login = (accessToken) => faceAPI.getProfile(accessToken, params)
-  .then(validateProfile)
-  .then((profile) => {
-    const photos = profile.photos.data.slice(0, MAX_PHOTOS);
+ // eslint-disable-next-line
+module.exports.login = (accessToken) => {
+  return faceAPI.getProfile(accessToken, ['id'])
+    .then((fbProfile) => UsersDB.get(fbProfile.id))
+    .then((userProfile) => {
+      if (!userProfile) {
+        return faceAPI.getProfile(accessToken, params)
+          .then((profile) => validateProfile(profile)
+            .then(() => saveProfile(profile))
+            .then(() => getPhotosLink(profile.photos.data, accessToken))
+          )
+      }
+      if (!userProfile.foto || userProfile.foto.length === 0) {
+        return faceAPI.getProfile(accessToken, ['photos'])
+          .then((profile) => getPhotosLink(profile.photos.data, accessToken))
+      }
+      return parseUserProfile(userProfile);
+    })
+    .catch((err) => Promise.reject(err));
+}
 
-    const promises = photos.map((photo) => faceAPI.getPhoto(accessToken, photo.id));
-    return Promise.all(promises);
-  })
-  .then((photos) => ({ fotos: photos }))
-  .catch((err) => Promise.reject({ status: err.status, message: err.message }));
 
+const saveProfile = (profile) => {
+  const educacion = profile.education ? profile.education[0].type : '';
+  const ocupacion = (profile.work || {}).description || '';
+  const intereses = (profile.interested_in || []).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
+  const newUser = new UsersDB({
+    foto: '',
+    fotos: [],
+    educacion,
+    ocupacion,
+    intereses,
+    description: '',
+    id: profile.id,
+    sexo: profile.gender,
+    nombre: profile.name,
+    nacimiento: profile.birthday
+  });
+
+
+  return UsersDB.create(newUser);
+}
+
+const parseUserProfile = (profile) => (profile)
+
+/**
+ * Get user photos as links
+ *
+ */
+const getPhotosLink = (profilePhotos, accessToken) => {
+  const photos = profilePhotos.slice(0, MAX_PHOTOS);
+  const promises = photos.map((photo) => faceAPI.getPhoto(accessToken, photo.id));
+
+  return Promise.all(promises)
+    .then((photos) => ({ fotos: photos })) // obtener en base 64 ?
+}
 
 const validateProfile = (profile) => {
   const photos = profile.photos.data;
