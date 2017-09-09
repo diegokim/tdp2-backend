@@ -5,6 +5,7 @@ const cors = require('cors');
 const passport = require('passport');
 
 const statusController = require('./controllers/statusController');
+const usersController = require('./controllers/usersController');
 const authController = require('./controllers/authController');
 const database = require('./database/database');
 
@@ -30,6 +31,10 @@ require('./config/passport')(passport);
 //  Routes
 router.get('/ping', (req, res) => statusController.ping(req, res));
 router.get('/login', (req, res) => authController.login(req, res));
+
+// Profile
+router.get('/profile', (req, res) => usersController.get(req, res));
+router.patch('/profile', (req, res) => usersController.update(req, res));
 
 app.use(router);
 

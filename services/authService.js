@@ -27,7 +27,8 @@ module.exports.login = (accessToken) => {
             .then(() => getPhotosLink(profile.photos.data, accessToken))
           )
       }
-      if (!userProfile.foto || userProfile.foto.length === 0) {
+
+      if (!userProfile.photo) {
         return faceAPI.getProfile(accessToken, ['photos'])
           .then((profile) => getPhotosLink(profile.photos.data, accessToken))
       }
@@ -38,22 +39,21 @@ module.exports.login = (accessToken) => {
 
 
 const saveProfile = (profile) => {
-  const educacion = profile.education ? profile.education[0].type : '';
-  const ocupacion = (profile.work || {}).description || '';
-  const intereses = (profile.interested_in || []).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
+  const education = profile.education ? profile.education[0].type : '';
+  const work = (profile.work || {}).description || '';
+  const interests = (profile.interested_in || []).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
   const newUser = new UsersDB({
-    foto: '',
-    fotos: [],
-    educacion,
-    ocupacion,
-    intereses,
+    photo: '',
+    photos: [],
+    education,
+    work,
+    interests,
     description: '',
     id: profile.id,
-    sexo: profile.gender,
-    nombre: profile.name,
-    nacimiento: profile.birthday
+    gender: profile.gender,
+    name: profile.name,
+    birthday: profile.birthday
   });
-
 
   return UsersDB.create(newUser);
 }
@@ -69,11 +69,11 @@ const getPhotosLink = (profilePhotos, accessToken) => {
   const promises = photos.map((photo) => faceAPI.getPhoto(accessToken, photo.id));
 
   return Promise.all(promises)
-    .then((photos) => ({ fotos: photos })) // obtener en base 64 ?
+    .then((photos) => ({ photos })) // obtener en base 64 ?
 }
 
 const validateProfile = (profile) => {
-  const photos = profile.photos.data;
+  const photos = profile.photos ? profile.photos.data : [];
   const birthday = new Date(profile.birthday);
   const today = new Date();
   let age = today.getFullYear() - birthday.getFullYear();

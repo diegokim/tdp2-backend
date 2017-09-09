@@ -80,27 +80,87 @@ Respuesta:
 
 	respuesta --> 200
 	body: {
-    fotos: [
+    photos: [
       'photo-link-1',
       'photo-link-2',
       'photo-link-3'
     ]
   }
 
-  o si ya estás logueado
+  #o si ya estás logueado
 
-  body: {
-    foto: 'http://google.com',
-    ocupacion: 'maestro',
-    id: '1411063048948357',
-    nombre: 'papa noel',
-    sexo: 'male',
-    nacimiento: '08/13/1993',
-    intereses: [
-      'futbol',
-      'mas futbol'
-    ],
-    educacion: [
-      'High School'
-    ]
-  }
+	  body: {
+	    photo: 'http://google.com',
+	    photos: [
+	      'http://google.com',
+	      'http://imagen-perfil.com'
+	    ],
+	    description: 'description'
+	    work: 'maestro',
+	    id: '1411063048948357',
+	    name: 'papa noel',
+	    gender: 'male',
+	    birthday: '08/13/1993',
+	    interests: [
+	      'futbol',
+	      'mas futbol'
+	    ],
+	    education: 'High School'
+	  }
+
+## Perfil
+Tipo y URI
+
+GET /profile
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    photo: 'http://google.com',
+	    photos: [
+	      'http://google.com',
+	      'http://imagen-perfil.com'
+	    ],
+	    description: 'description'
+	    work: 'maestro',
+	    id: '1411063048948357',
+	    name: 'papa noel',
+	    gender: 'male',
+	    birthday: '08/13/1993',
+	    interests: [
+	      'futbol',
+	      'mas futbol'
+	    ],
+	    education: 'High School'
+	  }
+
+
+PATCH /profile (update)
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { // alguno de estos cambios, no hace falta que sean todos
+      photo: 'http://google.com',
+      photos: [
+        'http://google.com',
+        'http://imagen-perfil.com'
+      ],
+      description: 'description'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+
+  body: // profile

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const UsersDB = require('./usersDB');
 
 //  Uris for production and test environment
 //  Usar variables de ambiente es mas seguro
@@ -54,6 +55,11 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function () {
-  return Promise.resolve();
+module.exports.initialize = function (users = []) {
+  const createUserPromises = [];
+  users.forEach((user) => {
+    const newUser = new UsersDB(user);
+    createUserPromises.push(UsersDB.create(newUser));
+  })
+  return Promise.all(createUserPromises);
 }

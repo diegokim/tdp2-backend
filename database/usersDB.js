@@ -5,31 +5,31 @@ const UserSchema = mongoose.Schema({
   id: {
     type: String
   },
-  nombre: {
+  name: {
     type: String
   },
-  nacimiento: {
+  birthday: {
     type: String
   },
-  descripcion: {
+  description: {
     type: String
   },
-  educacion: {
+  education: {
     type: String
   },
-  ocupacion: {
+  work: {
     type: String
   },
-  sexo: {
+  gender: {
     type: String
   },
-  foto: {
+  photo: {
     type: String
   },
-  fotos: {
+  photos: {
     type: Array
   },
-  intereses: {
+  interests: {
     type: Array
   }
 })
@@ -46,3 +46,14 @@ module.exports.get = function (id) {
 
   return User.findOne(query);
 }
+
+module.exports.updateProfile = function (user) {
+  return User.findOne({ id: user.id })
+  .then((existUser) => {
+    return (existUser === null) ?
+      Promise.reject({ status: 404, message: 'user is not login' }) :
+      existUser.update(user)
+  })
+  .then(() => User.findOne({ id: user.id }));
+}
+

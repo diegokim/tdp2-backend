@@ -7,3 +7,17 @@ module.exports.login = (accessToken) => Promise.resolve(
     .send()
     .catch((err) => err)
 );
+
+module.exports.getProfile = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/profile')
+    .set({'Authorization': accessToken})
+    .send()
+    .catch((err) => err)
+);
+
+module.exports.updateProfile = (accessToken, profile) => Promise.resolve(
+  request.patch(baseUrl + '/profile')
+    .set({'Authorization': accessToken})
+    .send(profile)
+    .catch((err) => err)
+);

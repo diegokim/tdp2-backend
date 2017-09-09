@@ -97,7 +97,7 @@ describe('Integration auth tests', () => {
         it('should return bad request', () => response
           .then((res) => {
             assert.equal(res.status, 200);
-            assert.deepEqual(res.body, { fotos: ['link', 'link', 'link'] });
+            assert.deepEqual(res.body, { photos: ['link', 'link', 'link'] });
           }));
       })
 
@@ -114,12 +114,12 @@ describe('Integration auth tests', () => {
         it('should return bad request', () => response
           .then((res) => {
             assert.equal(res.status, 200);
-            assert.deepEqual(res.body, { fotos: ['link', 'link', 'link'] });
+            assert.deepEqual(res.body, { photos: ['link', 'link', 'link'] });
           }));
       })
     });
 
-    describe('When the user has already logged but does not have profile photo', () => {
+    describe('When the user is already logged but does not have profile photo', () => {
       let photo;
       beforeEach(() => {
         photo = { picture: 'link' }
@@ -139,21 +139,53 @@ describe('Integration auth tests', () => {
       it('should return bad request', () => response
         .then((res) => {
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, { fotos: ['link'] });
+          assert.deepEqual(res.body, { photos: ['link'] });
         }));
     })
 
-    // describe('When the user has already logged', () => {
-    //   beforeEach(() => {
-    //   })
-    //   beforeEach(() => (response = request.login('access_token')));
+    describe('When the user is already logged', () => {
+      let expectedProfile;
+      beforeEach(() => {
+        photo = { picture: 'link' }
+        expectedProfile = {
+          birthday: '08/13/1993',
+          description: '',
+          education: 'High School',
+          gender: 'male',
+          id: 'id',
+          interests: [
+            'racing',
+            'fiuba'
+          ],
+          photos: [
+            'esta foto'
+          ],
+          name: 'name',
+          photo: 'esta foto',
+          work:  'work description'
+        }
 
-    //   it('should return bad request', () => response
-    //     .then((res) => {
-    //       assert.equal(res.status, 200);
-    //       assert.equal(res.body, userProfile);
-    //     }));
-    // });
+        nockProfile(profileParams, accessToken, completeProfile)
+        nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+      })
+      beforeEach(() => {
+        response = request.login('access_token')
+          .then(() => request.updateProfile('access_token', { photo: 'esta foto', photos: [ 'esta foto' ] }))
+          .then(() => request.login('access_token'))
+      });
+
+      it('should return bad request', () => response
+        .then((res) => {
+          delete res.body.__v;
+          delete res.body._id;
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, expectedProfile);
+        }));
+    });
   });
 });
 
@@ -178,7 +210,7 @@ const nockGetPhoto = (ids, accessToken, response) => {
 }
 
 const completeProfile = {
-  id: '1411063048948357',
+  id: 'id',
   name: 'name',
   photos: { data: [
     { id: 'id1' },
