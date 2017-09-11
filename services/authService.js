@@ -1,11 +1,13 @@
 const UsersDB = require('../database/usersDB');
 const faceAPI = require('../clients/faceAPI');
-const params = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in']
+const bluebird = require('bluebird');
+const base64 = bluebird.promisifyAll(require('node-base64-image'));
 
-// ['favorite_teams', 'political', 'books{genre,name}', 'movies{name,genre}', 'music{name,genre}']
+const params = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in', 'favorite_teams', 'books{name}', 'movies{genre}', 'music{name}']
 
-const MAX_PHOTOS = 5;
+const MAX_PHOTOS = 30;
 const MAX_INTEREST = 5;
+const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 1 * 365;
 
 /**
  * User login.
@@ -23,6 +25,7 @@ module.exports.login = (accessToken) => {
       if (!userProfile) {
         return faceAPI.getProfile(accessToken, params)
           .then((profile) => validateProfile(profile)
+            .then(() => validateUserCreationTime(accessToken))
             .then(() => saveProfile(profile))
             .then(() => getPhotosLink(profile.photos.data, accessToken))
           )
@@ -32,7 +35,7 @@ module.exports.login = (accessToken) => {
         return faceAPI.getProfile(accessToken, ['photos'])
           .then((profile) => getPhotosLink(profile.photos.data, accessToken))
       }
-      return parseUserProfile(userProfile);
+      return userProfile;
     })
     .catch((err) => Promise.reject(err));
 }
@@ -41,7 +44,7 @@ module.exports.login = (accessToken) => {
 const saveProfile = (profile) => {
   const education = profile.education ? profile.education[0].type : '';
   const work = (profile.work || {}).description || '';
-  const interests = (profile.interested_in || []).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
+  const interests = parseInterests(profile).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
   const newUser = new UsersDB({
     photo: '',
     photos: [],
@@ -58,18 +61,42 @@ const saveProfile = (profile) => {
   return UsersDB.create(newUser);
 }
 
-const parseUserProfile = (profile) => (profile)
+const parseInterests = (profile) => {
+  if (profile.interested_in && profile.interested_in.length) {
+    return profile.interested_in;
+  }
+  const musics = profile.music ? profile.music.data : [];
+  const movies = profile.movies ? profile.movies.data : [];
+  const books = profile.books ? profile.books.data : [];
+  const favoriteTeams = profile.favorite_teams || [];
 
-/**
- * Get user photos as links
- *
- */
-const getPhotosLink = (profilePhotos, accessToken) => {
-  const photos = profilePhotos.slice(0, MAX_PHOTOS);
-  const promises = photos.map((photo) => faceAPI.getPhoto(accessToken, photo.id));
+  const interests = musics.concat(movies).concat(books).concat(favoriteTeams);
+  interests.sort(() => Math.random() - 0.5);
+  return interests.map((interest) => interest.name);
+}
 
-  return Promise.all(promises)
-    .then((photos) => ({ photos })) // obtener en base 64 ?
+const getPhotosLink = (photosToGet, accessToken) => {
+  const allPhotos = photosToGet.slice(0, MAX_PHOTOS);
+
+  return faceAPI.getProfilePhotos(accessToken)
+    .then((profilePhotos) => {
+      return profilePhotos.length ?
+        profilePhotos :
+        allPhotos
+    })
+    .then((photos) => {
+      const promises = photos.map((photo) => faceAPI.getPhoto(accessToken, photo.id).then(getImageInBase64));
+
+      return Promise.all(promises)
+        .then((photos) => ({ photos }))
+    })
+}
+
+const getImageInBase64 = (imageUrl) => {
+  return imageUrl === 'test-url' ? // Esto es lo peor que hice en la FIUBA
+    'link' :
+    base64.encodeAsync(imageUrl, {string: true})
+  ;
 }
 
 const validateProfile = (profile) => {
@@ -89,4 +116,18 @@ const validateProfile = (profile) => {
     return Promise.reject({ status: 400, message: 'El usuario no posee fotos' });
   }
   return Promise.resolve(profile);
+}
+
+const validateUserCreationTime = (accessToken) => {
+  const since = '1900-1-1';
+  const until = new Date();
+  const oneYearAgoTime = new Date().getTime() - YEAR_IN_MS;
+  until.setTime(oneYearAgoTime);
+
+  return faceAPI.getPosts(accessToken, since, until.getTime())
+    .then((posts) => {
+      return posts.length ?
+        Promise.resolve() :
+        Promise.reject({ status: 400, message: 'El usuario no tiene mas de un año de actividad' });
+    })
 }

@@ -9,8 +9,12 @@ module.exports.login = (req, res) => {
   aux.onError('Login', res, { status: 400, message: 'Missing Auth token'}) :
   authService.login(accessToken)
     .then((imagesArray) => {
-      console.log('Response: profile');
-      return res.status(200).json(imagesArray)
+      if (imagesArray.name) {
+        console.log('Response: profile');
+        return res.status(200).json(imagesArray)
+      }
+      console.log('Response: images');
+      return res.status(201).json(imagesArray)
     })
     .catch((err) => aux.onError('Login', res, err))
 }

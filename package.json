@@ -24,6 +24,7 @@
     "lodash": "~4.17.4",
     "mongoose": "~4.10.6",
     "nock": "~9.0.14",
+    "node-base64-image": "~1.0.4",
     "passport": "*",
     "passport-jwt": "*",
     "pg": "~7.0.0",

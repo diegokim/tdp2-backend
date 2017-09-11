@@ -4,5 +4,5 @@ module.exports.onError = (funName, res, err) => {
   } else {
     console.log('Error in: ' + funName + ': ' + JSON.stringify(err));
   }
-  return res.status(err.status || 500).json(err.message);
+  return res.status(err.status || 500).json({ message: err.message });
 }

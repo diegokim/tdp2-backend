@@ -8,7 +8,7 @@ const DB = require('../database/database');
 const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
 
-const profileParams = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in'];
+const profileParams = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in', 'favorite_teams', 'books%7Bname%7D', 'movies%7Bgenre%7D', 'music%7Bname%7D'];
 
 describe('Integration auth tests', () => {
 
@@ -61,6 +61,26 @@ describe('Integration auth tests', () => {
         }));
     });
 
+    describe('When the user has not an one year older account', () => {
+      beforeEach(() => {
+        profile = {
+          birthday: '08/13/1990',
+          photos: { data: [{ profile: '' }] }
+        }
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(profileParams, accessToken, profile)
+        nockGetPosts(accessToken, { data: [] })
+      })
+      beforeEach(() => (response = request.login('access_token')));
+
+      it('should return bad request', () => response
+        .then((res) => {
+          assert.equal(res.status, 400);
+          assert.equal(res.response.body, 'El usuario no tiene mas de un año de actividad');
+          assert.equal(res.message, 'Bad Request');
+        }));
+    });
+
     describe('When the user does not send access_token', () => {
       beforeEach(() => (response = request.login('')));
 
@@ -86,35 +106,66 @@ describe('Integration auth tests', () => {
               { id: 'id3' }
             ]}
           }
-          photo = { picture: 'link' }
+          photo = { picture: 'test-url' }
 
           nockProfile(profileParams, accessToken, profile)
           nockProfile(['id'], accessToken, { id: 'id' })
           nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+          nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
+          nockGetProfilePhotos(accessToken)
         })
         beforeEach(() => (response = request.login('access_token')));
 
-        it('should return bad request', () => response
+        it('should return images', () => response
           .then((res) => {
-            assert.equal(res.status, 200);
+            assert.equal(res.status, 201);
             assert.deepEqual(res.body, { photos: ['link', 'link', 'link'] });
           }));
       })
 
       describe('and has a complete profile', () => {
         beforeEach(() => {
-          photo = { picture: 'link' }
+          photo = { picture: 'test-url' }
 
           nockProfile(profileParams, accessToken, completeProfile)
           nockProfile(['id'], accessToken, { id: 'id' })
           nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+          nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
+          nockGetProfilePhotos(accessToken)
         })
         beforeEach(() => (response = request.login('access_token')));
 
-        it('should return bad request', () => response
+        it('should return images', () => response
+          .then((res) => {
+            assert.equal(res.status, 201);
+            assert.deepEqual(res.body, { photos: ['link', 'link', 'link'] });
+          }));
+      })
+
+      describe('and has a complete profile without interests', () => {
+        let profileWithoutInterests;
+        beforeEach(() => {
+          photo = { picture: 'test-url' }
+          profileWithoutInterests = Object.assign({}, completeProfile);
+          profileWithoutInterests.interested_in = []; // eslint-disable-line
+
+          nockProfile(profileParams, accessToken, profileWithoutInterests)
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+          nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
+          nockGetProfilePhotos(accessToken)
+          nockProfile(['id'], accessToken, { id: 'id' })
+        })
+        beforeEach(() => {
+          return (response = request.login('access_token')
+            .then(() => request.getProfile(accessToken)))
+        });
+
+        it('should set interests based on movies, books, music and sports', () => response
           .then((res) => {
             assert.equal(res.status, 200);
-            assert.deepEqual(res.body, { photos: ['link', 'link', 'link'] });
+            assert.equal(res.body.interests.length, 5);
+            assert.includeDeepMembers(interestsBasedOnLikes, res.body.interests);
           }));
       })
     });
@@ -122,23 +173,26 @@ describe('Integration auth tests', () => {
     describe('When the user is already logged but does not have profile photo', () => {
       let photo;
       beforeEach(() => {
-        photo = { picture: 'link' }
+        photo = { picture: 'test-url' }
 
         nockProfile(profileParams, accessToken, completeProfile)
-        nockProfile(['id'], accessToken, { id: '1411063048948357' })
-        nockProfile(['id'], accessToken, { id: '1411063048948357' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['photos'], accessToken, { photos: { data: [{ id: 'id1' }] } })
         nockGetPhoto(['id1'], accessToken, photo)
         nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+        nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
+        nockGetProfilePhotos(accessToken)
+        nockGetProfilePhotos(accessToken)
       })
       beforeEach(() => (
-        response = request.login('access_token')
-          .then(() => request.login('access_token'))
+        response = request.login(accessToken)
+          .then(() => request.login(accessToken))
       ));
 
-      it('should return bad request', () => response
+      it('should return the photos', () => response
         .then((res) => {
-          assert.equal(res.status, 200);
+          assert.equal(res.status, 201);
           assert.deepEqual(res.body, { photos: ['link'] });
         }));
     })
@@ -170,10 +224,11 @@ describe('Integration auth tests', () => {
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
+        nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
       })
       beforeEach(() => {
         response = request.login('access_token')
-          .then(() => request.updateProfile('access_token', { photo: 'esta foto', photos: [ 'esta foto' ] }))
+          .then(() => request.updateProfile('access_token', { photo: 'esta foto', photos: ['esta foto'] }))
           .then(() => request.login('access_token'))
       });
 
@@ -207,6 +262,19 @@ const nockGetPhoto = (ids, accessToken, response) => {
     .get(`/v2.3/${id}?fields=picture&access_token=${accessToken}`)
     .reply(200, response);
   }
+}
+
+const nockGetPosts = (accessToken, response) => {
+  nock('https://graph.facebook.com')
+    .filteringPath(() => '/v2.3/me/posts')
+    .get('/v2.3/me/posts')
+    .reply(200, response);
+}
+
+const nockGetProfilePhotos = (accessToken, response = { data: [] }) => {
+  nock('https://graph.facebook.com')
+    .get(`/v2.3/me/albums?fields=type&access_token=${accessToken}`)
+    .reply(200, response);
 }
 
 const completeProfile = {
@@ -259,12 +327,10 @@ const completeProfile = {
     data: [
       {
         name: 'ExtraNatural',
-        genre: 'Rock',
         id: '116683489703'
       },
       {
         name: 'John Lennon',
-        genre: 'Rock',
         id: '135388936479828'
       },
       {
@@ -273,7 +339,6 @@ const completeProfile = {
       },
       {
         name: 'Pink Floyd',
-        genre: 'Rock',
         id: '5660597307'
       }
     ]
@@ -286,3 +351,14 @@ const completeProfile = {
     description: 'work description'
   }
 }
+
+const interestsBasedOnLikes = [
+  'El Primer Grande',
+  'Racing Club de Avellaneda',
+  'Harry Potter',
+  'Captain Jack Sparrow',
+  'ExtraNatural',
+  'John Lennon',
+  'Gustavo Adrián Cerati',
+  'Pink Floyd'
+]
