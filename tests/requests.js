@@ -21,3 +21,17 @@ module.exports.updateProfile = (accessToken, profile) => Promise.resolve(
     .send(profile)
     .catch((err) => err)
 );
+
+module.exports.getSettings = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/settings')
+    .set({'Authorization': accessToken})
+    .send()
+    .catch((err) => err)
+);
+
+module.exports.updateSettings = (accessToken, settings) => Promise.resolve(
+  request.patch(baseUrl + '/settings')
+    .set({'Authorization': accessToken})
+    .send(settings)
+    .catch((err) => err)
+);

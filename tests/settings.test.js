@@ -8,7 +8,7 @@ const DB = require('../database/database');
 const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
 
-describe('Integration user tests', () => {
+describe('Integration setting tests', () => {
   let response;
 
   // Leave the database in a valid state
@@ -18,12 +18,12 @@ describe('Integration user tests', () => {
 		.catch(done);
   });
 
-  describe('get Profile', () => {
+  describe('get Settings', () => {
     describe('When the user is not login', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
       })
-      beforeEach(() => (response = request.getProfile('access_token')));
+      beforeEach(() => (response = request.getSettings('access_token')));
 
       it('should return not found', () => response
         .then((res) => {
@@ -36,26 +36,26 @@ describe('Integration user tests', () => {
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile] })
+        return DB.initialize({ settings: [userSetting] })
       })
-      beforeEach(() => (response = request.getProfile('access_token')));
+      beforeEach(() => (response = request.getSettings('access_token')));
 
-      it('should return the profile', () => response
+      it('should return the settings', () => response
         .then((res) => {
-          const resultProf = formatDBResponse(res.body);
+          const resultSet = formatDBResponse(res.body);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(resultProf, userProfile);
+          assert.deepEqual(resultSet, userSetting);
         }));
     });
   });
 
-  describe('update Profile', () => {
+  describe('update Settings', () => {
     describe('When the user is not login', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
       })
-      beforeEach(() => (response = request.updateProfile('access_token', updateParams)));
+      beforeEach(() => (response = request.updateSettings('access_token', updateParams)));
 
       it('should return not found', () => response
         .then((res) => {
@@ -68,16 +68,16 @@ describe('Integration user tests', () => {
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile] })
+        return DB.initialize({ settings: [userSetting] })
       })
-      beforeEach(() => (response = request.updateProfile('access_token', updateParams)));
+      beforeEach(() => (response = request.updateSettings('access_token', updateParams)));
 
-      it('should return the updated profile', () => response
+      it('should return the updated settings', () => response
         .then((res) => {
-          const resultProf = Object.assign({}, formatDBResponse(res.body), userProfile)
+          resultSet = Object.assign({}, formatDBResponse(res.body), userSetting);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(resultProf, userProfile);
+          assert.deepEqual(resultSet, userSetting);
         }));
     });
   });
@@ -103,30 +103,29 @@ const nockProfile = (params, accessToken, response) => {
     .reply(200, response);
 }
 
-const userProfile = {
+const userSetting = {
   id: 'id',
-  name: 'name',
-  description: 'alta descripcion',
-  photos: [
-    'foto 1',
-    'foto 2'
-  ],
-  photo: 'foto 1',
-  education: 'High School',
-  birthday: '08/13/1993',
-  gender: 'male',
-  interests: [
-    'racing',
-    'fiuba'
-  ],
-  work: 'work description'
+  ageRange: {
+    min: 18,
+    max: 29
+  },
+  distRange: {
+    min: 1,
+    max: 3
+  },
+  invisible: true,
+  interestType: 'male'
 }
 
 const updateParams = {
-  photo: 'up foto',
-  photos: [
-    'up foto',
-    'up foto'
-  ],
-  description: 'descr'
+  ageRange: {
+    min: 18,
+    max: 32
+  },
+  distRange: {
+    min: 1,
+    max: 500
+  },
+  invisible: false,
+  interestType: 'female'
 }

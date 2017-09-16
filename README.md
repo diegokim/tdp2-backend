@@ -49,9 +49,8 @@ Para correr el servidor:
 # API publica
 
 ## Status
-Tipo y URI
 
-GET /ping
+### GET /ping
 
 Mensaje:
 
@@ -65,9 +64,8 @@ Respuesta:
 	}
 
 ## Login
-Tipo y URI
 
-GET /login
+### GET /login
 
 Mensaje:
 
@@ -90,28 +88,15 @@ Respuesta:
   #o si ya estás logueado
 
 	  body: {
-	    photo: 'http://google.com',
-	    photos: [
-	      'http://google.com',
-	      'http://imagen-perfil.com'
-	    ],
-	    description: 'description'
-	    work: 'maestro',
-	    id: '1411063048948357',
-	    name: 'papa noel',
-	    gender: 'male',
-	    birthday: '08/13/1993',
-	    interests: [
-	      'futbol',
-	      'mas futbol'
-	    ],
-	    education: 'High School'
-	  }
+      profile: {},
+      setting: {},
+      links: [],
+      candidates: []
+    }
 
 ## Perfil
-Tipo y URI
 
-GET /profile
+### GET /profile
 
 Mensaje:
 
@@ -143,14 +128,14 @@ Respuesta:
 	  }
 
 
-PATCH /profile (update)
+### PATCH /profile (update)
 
 Mensaje:
 
     headers: {
       Authorization: 'access_token'
     }
-    body: { // alguno de estos cambios, no hace falta que sean todos
+    body: { // alguno de estos campos, no hace falta que sean todos
       photo: 'http://google.com',
       photos: [
         'http://google.com',
@@ -164,3 +149,58 @@ Respuesta:
 	respuesta --> 200
 
   body: // profile
+
+
+## Settings
+
+### GET /settings
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    ageRange: {
+        min: 18,
+        max: 32
+      },
+      distRange: {
+        min: 1,
+        max: 500
+      },
+      invisible: true,
+      interestType: 'female' // male, both, friends
+	  }
+
+
+### PATCH /settings (update)
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { // alguno de estos campos, no hace falta que sean todos
+      ageRange: {
+        min: 18,
+        max: 32
+      },
+      distRange: {
+        min: 1,
+        max: 500
+      },
+      invisible: true,
+      interestType: 'female' // male, both, friends
+	  }
+
+Respuesta:
+
+	respuesta --> 200
+
+  body: // settings

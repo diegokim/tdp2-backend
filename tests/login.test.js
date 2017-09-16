@@ -37,7 +37,7 @@ describe('Integration auth tests', () => {
       it('should return bad request', () => response
         .then((res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.response.body, 'El usuario no posee fotos');
+          assert.equal(res.response.body.message, 'El usuario no posee fotos');
           assert.equal(res.message, 'Bad Request');
         }));
     });
@@ -56,7 +56,7 @@ describe('Integration auth tests', () => {
       it('should return bad request', () => response
         .then((res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.response.body, 'El usuario no es mayor de edad');
+          assert.equal(res.response.body.message, 'El usuario no es mayor de edad');
           assert.equal(res.message, 'Bad Request');
         }));
     });
@@ -76,7 +76,7 @@ describe('Integration auth tests', () => {
       it('should return bad request', () => response
         .then((res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.response.body, 'El usuario no tiene mas de un año de actividad');
+          assert.equal(res.response.body.message, 'El usuario no tiene mas de un año de actividad');
           assert.equal(res.message, 'Bad Request');
         }));
     });
@@ -87,7 +87,7 @@ describe('Integration auth tests', () => {
       it('should return bad request', () => response
         .then((res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.response.body, 'Missing Auth token');
+          assert.equal(res.response.body.message, 'Missing Auth token');
           assert.equal(res.message, 'Bad Request');
         }));
     });
@@ -232,17 +232,26 @@ describe('Integration auth tests', () => {
           .then(() => request.login('access_token'))
       });
 
-      it('should return bad request', () => response
+      it('should return complete profile', () => response
         .then((res) => {
-          delete res.body.__v;
-          delete res.body._id;
+          formatDBResponse(res.body.profile)
+          formatDBResponse(res.body.settings)
 
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, expectedProfile);
+          assert.deepEqual(res.body.profile, expectedProfile);
+          assert.deepEqual(res.body.settings, defaultSettings);
         }));
     });
   });
 });
+
+const formatDBResponse = (dbResponse) => {
+  const result = dbResponse;
+  delete result.__v;
+  delete result._id;
+
+  return result;
+}
 
 const nockProfile = (params, accessToken, response) => {
   let paramsToSearch = '';
@@ -275,6 +284,20 @@ const nockGetProfilePhotos = (accessToken, response = { data: [] }) => {
   nock('https://graph.facebook.com')
     .get(`/v2.3/me/albums?fields=type&access_token=${accessToken}`)
     .reply(200, response);
+}
+
+const defaultSettings = {
+  id: 'id',
+  ageRange: {
+    min: 18,
+    max: 40
+  },
+  distRange: {
+    min: 1,
+    max: 22
+  },
+  invisible: false,
+  interestType: 'both'
 }
 
 const completeProfile = {

@@ -1,13 +1,28 @@
 const _ = require('lodash');
 const UsersDB = require('../database/usersDB');
 const faceAPI = require('../clients/faceAPI');
+const settingsService = require('./settingsService');
+
+/**
+ * Get User
+ *
+ */
+module.exports.get = (accessToken, userId) => {
+  const promises = [
+    this.getProfile(accessToken, userId),
+    settingsService.get(accessToken, userId)
+  ]
+  return Promise.all(promises)
+    .then(([profile, settings]) => ({ profile, settings }))
+}
+
 
 /**
  * Get Profile.
  *
  */
-module.exports.getProfile = (accessToken) => {
-  return faceAPI.getProfile(accessToken, ['id'])
+module.exports.getProfile = (accessToken, userId) => {
+  return Promise.resolve(userId ? { id: userId } : faceAPI.getProfile(accessToken, ['id']))
     .then((fbProfile) => UsersDB.get(fbProfile.id))
     .catch((err) => Promise.reject(err))
     .then((userProfile) => {
@@ -31,7 +46,32 @@ module.exports.updateProfile = (accessToken, body) => {
  * Create Profile
  *
  */
-module.exports.saveProfile = (profile) => {
+module.exports.createProfile = (profile) => {
   const newUser = new UsersDB(profile);
   return UsersDB.create(newUser);
+}
+
+/**
+ * Create Complete User
+ *
+ */
+module.exports.createUser = (profile) => {
+  const newUser = new UsersDB(profile);
+  const newSettings = Object.assign({}, defaultSettings, { id: profile.id })
+  return UsersDB.create(newUser)
+    .then(() => settingsService.create(newSettings))
+  ;
+}
+
+const defaultSettings = {
+  ageRange: {
+    min: 18,
+    max: 40
+  },
+  distRange: {
+    min: 1,
+    max: 22
+  },
+  invisible: false,
+  interestType: 'both'
 }

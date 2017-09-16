@@ -1,5 +1,5 @@
-const UsersDB = require('../database/usersDB');
 const faceAPI = require('../clients/faceAPI');
+const usersService = require('./usersService');
 const bluebird = require('bluebird');
 const base64 = bluebird.promisifyAll(require('node-base64-image'));
 
@@ -20,32 +20,33 @@ const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 1 * 365;
  // eslint-disable-next-line
 module.exports.login = (accessToken) => {
   return faceAPI.getProfile(accessToken, ['id'])
-    .then((fbProfile) => UsersDB.get(fbProfile.id))
-    .then((userProfile) => {
-      if (!userProfile) {
+    .then((fbProfile) => usersService.get(accessToken, fbProfile.id))
+    .catch((err) => (err && err.status === 404 ? null : Promise.reject(err)))
+    .then((user) => {
+      if (!user) {
         return faceAPI.getProfile(accessToken, params)
           .then((profile) => validateProfile(profile)
             .then(() => validateUserCreationTime(accessToken))
-            .then(() => saveProfile(profile))
+            .then(() => parseProfile(profile))
+            .then((pp) => usersService.createUser(pp))
             .then(() => getPhotosLink(profile.photos.data, accessToken))
           )
       }
 
-      if (!userProfile.photo) {
+      if (!user.profile.photo) {
         return faceAPI.getProfile(accessToken, ['photos'])
           .then((profile) => getPhotosLink(profile.photos.data, accessToken))
       }
-      return userProfile;
+      return user;
     })
     .catch((err) => Promise.reject(err));
 }
 
-
-const saveProfile = (profile) => {
+const parseProfile = (profile) => {
   const education = profile.education ? profile.education[0].type : '';
   const work = (profile.work || {}).description || '';
   const interests = parseInterests(profile).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
-  const newUser = new UsersDB({
+  const newUser = {
     photo: '',
     photos: [],
     education,
@@ -56,9 +57,9 @@ const saveProfile = (profile) => {
     gender: profile.gender,
     name: profile.name,
     birthday: profile.birthday
-  });
+  };
 
-  return UsersDB.create(newUser);
+  return Promise.resolve(newUser);
 }
 
 const parseInterests = (profile) => {

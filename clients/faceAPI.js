@@ -15,7 +15,7 @@ module.exports.getProfile = (accessToken, params) => {
 }
 
 module.exports.getPhoto = (accessToken, photoId) => { // eslint-disable-line
-  return FB.api(`/${photoId}?fields=picture`, { 'access_token': accessToken }) //?type=large
+  return FB.api(`/${photoId}?fields=picture`, { 'access_token': accessToken }) //?fields=images
     .then((linkPhotos) => linkPhotos.picture)
     .catch(processError)
   ;

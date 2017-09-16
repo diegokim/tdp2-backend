@@ -2,21 +2,21 @@ const usersService = require('../services/usersService');
 const aux = require('../utils/auxiliar.functions.js')
 
 module.exports.get = (req, res) => {
-  console.log('Request:', req.url)
+  aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
   return accessToken === undefined || accessToken.length === 0 ?
   aux.onError('Get Profile', res, { status: 400, message: 'Missing Auth token'}) :
   usersService.getProfile(accessToken)
     .then((profile) => {
-      console.log('Response:', profile);
+      aux.onLog('Response:', profile);
       return res.status(200).json(profile)
     })
     .catch((err) => aux.onError('Get Profile', res, err))
 }
 
 module.exports.update = (req, res) => {
-  console.log('Request:', req.url)
+  aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
   return accessToken === undefined || accessToken.length === 0 ?
@@ -24,7 +24,7 @@ module.exports.update = (req, res) => {
   validateProfile(req.body)
     .then(() => usersService.updateProfile(accessToken, req.body))
     .then((profile) => {
-      console.log('Response:', profile);
+      aux.onLog('Response:', profile);
       return res.status(200).json(profile)
     })
     .catch((err) => aux.onError('Update Profile', res, err))
