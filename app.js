@@ -10,12 +10,16 @@ const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
 const database = require('./database/database');
 
+const mocks = require('./database/mocks');
+const profiles = mocks.mockProfiles();
+const settings = mocks.mockSettings();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize({}));
+  .then(() => database.initialize({ users: profiles, settings }));
 
 //  Middleware cors
 app.use(cors());

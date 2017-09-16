@@ -56,4 +56,3 @@ module.exports.updateProfile = function (user) {
   })
   .then(() => User.findOne({ id: user.id }));
 }
-
