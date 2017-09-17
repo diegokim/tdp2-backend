@@ -202,7 +202,7 @@ describe('Integration auth tests', () => {
       beforeEach(() => {
         photo = { picture: 'link' }
         expectedProfile = {
-          birthday: '08/13/1993',
+          age: 24,
           description: '',
           education: 'High School',
           gender: 'male',

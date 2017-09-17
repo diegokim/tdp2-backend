@@ -113,7 +113,7 @@ const userProfile = {
   ],
   photo: 'foto 1',
   education: 'High School',
-  birthday: '08/13/1993',
+  age: 24,
   gender: 'male',
   interests: [
     'racing',

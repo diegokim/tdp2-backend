@@ -16,10 +16,11 @@ const settings = mocks.mockSettings();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize({ users: profiles, settings }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { users: profiles, settings }));
 
 //  Middleware cors
 app.use(cors());
@@ -38,10 +39,11 @@ router.get('/ping', (req, res) => statusController.ping(req, res));
 router.get('/login', (req, res) => loginController.login(req, res));
 
 // Profile
-router.get('/profile', (req, res) => usersController.get(req, res));
+router.get('/users/candidates', (req, res) => usersController.getCandidates(req, res));
+router.get('/profile', (req, res) => usersController.get(req, res)); // users/profile
 router.patch('/profile', (req, res) => usersController.update(req, res));
 
-// Profile
+// Settings
 router.get('/settings', (req, res) => settingsController.get(req, res));
 router.patch('/settings', (req, res) => settingsController.update(req, res));
 

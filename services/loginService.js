@@ -5,7 +5,7 @@ const base64 = bluebird.promisifyAll(require('node-base64-image'));
 
 const params = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in', 'favorite_teams', 'books{name}', 'movies{genre}', 'music{name}']
 
-const MAX_PHOTOS = 30;
+const MAX_PHOTOS = 7;
 const MAX_INTEREST = 5;
 const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 1 * 365;
 
@@ -17,7 +17,6 @@ const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 1 * 365;
  *  - If not, validate the user has photos and is older than 18
  *    and returns the 5 first photos of his/her profile.
  */
- // eslint-disable-next-line
 module.exports.login = (accessToken) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then((fbProfile) => usersService.get(accessToken, fbProfile.id))
@@ -45,7 +44,7 @@ module.exports.login = (accessToken) => {
 const parseProfile = (profile) => {
   const education = profile.education ? profile.education[0].type : '';
   const work = (profile.work || {}).description || '';
-  const interests = parseInterests(profile).slice(0, MAX_INTEREST); // luego buscar en musica, bla bla
+  const interests = parseInterests(profile).slice(0, MAX_INTEREST);
   const newUser = {
     photo: '',
     photos: [],
@@ -56,7 +55,7 @@ const parseProfile = (profile) => {
     id: profile.id,
     gender: profile.gender,
     name: profile.name,
-    birthday: profile.birthday
+    age: calculateAge(profile.birthday)
   };
 
   return Promise.resolve(newUser);
@@ -102,13 +101,7 @@ const getImageInBase64 = (imageUrl) => {
 
 const validateProfile = (profile) => {
   const photos = profile.photos ? profile.photos.data : [];
-  const birthday = new Date(profile.birthday);
-  const today = new Date();
-  let age = today.getFullYear() - birthday.getFullYear();
-  const m = today.getMonth() - birthday.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
-    age -= 1;
-  }
+  const age = calculateAge(profile.birthday);
 
   if (age < 18) {
     return Promise.reject({ status: 400, message: 'El usuario no es mayor de edad' });
@@ -131,4 +124,16 @@ const validateUserCreationTime = (accessToken) => {
         Promise.resolve() :
         Promise.reject({ status: 400, message: 'El usuario no tiene mas de un año de actividad' });
     })
+}
+
+const calculateAge = (birthdayString) => {
+  const birthday = new Date(birthdayString);
+  const today = new Date();
+  let age = today.getFullYear() - birthday.getFullYear();
+  const m = today.getMonth() - birthday.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+    age -= 1;
+  }
+
+  return age;
 }

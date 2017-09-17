@@ -29,7 +29,7 @@ module.exports.create = function (setting) {
 module.exports.get = function (id) {
   const query = { id };
 
-  return Setting.findOne(query);
+  return Promise.resolve(Setting.findOne(query));
 }
 
 module.exports.updateSetting = function (setting) {
@@ -42,3 +42,29 @@ module.exports.updateSetting = function (setting) {
   .then(() => Setting.findOne({ id: setting.id }));
 }
 
+
+/**
+ * Search:
+ *  - users that have "invisible" in false
+ *  - users that are searching my same interestType
+ *
+ *  - age ?
+ */
+module.exports.search = function (params) { // diferent id than I
+  const interestType = (params.interestType === 'friends') ?
+    { interestType: 'friends' } :
+    { $or: [{ interestType: params.gender }, { interestType: 'both' }]}
+
+  const query = {
+    $and: [
+      { invisible: false },
+      interestType
+    ]
+  }
+
+  return Setting.find(query);
+}
+
+module.exports.findAll = function () {
+  return Promise.resolve(Setting.find({}))
+}

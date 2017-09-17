@@ -204,3 +204,22 @@ Respuesta:
 	respuesta --> 200
 
   body: // settings
+
+
+## Users (candidates)
+
+### GET /users/candidates
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    profiles: []
+	  }

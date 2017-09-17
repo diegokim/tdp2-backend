@@ -16,17 +16,17 @@
  */
 module.exports.mockProfiles = () => {
   const profiles = [
-    makeProfile('id1', 'Mariana', '08/13/1980', 'female', fPhotos[0], [fPhotos[0]], ['men', 'estudiar', 'ingles', 'universidad']),
-    makeProfile('id2', 'Flor',    '08/13/1990', 'female', fPhotos[1], [fPhotos[1]], ['men', 'tennis', 'tv', 'racing', 'boca']),
-    makeProfile('id3', 'Camila',  '08/13/1995', 'female', fPhotos[2], [fPhotos[2]], ['women', 'handball', 'musica', 'green day', 'strokes']),
-    makeProfile('id4', 'Rogelia', '08/13/1999', 'female', fPhotos[3], [fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id5', 'Patri',   '08/13/1985', 'female', fPhotos[4], [fPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
+    makeProfile('id1', 'Mariana', 38, 'female', fPhotos[0], [fPhotos[0]], ['men', 'estudiar', 'ingles', 'universidad']),
+    makeProfile('id2', 'Flor',    28, 'female', fPhotos[1], [fPhotos[1]], ['men', 'tennis', 'tv', 'racing', 'boca']),
+    makeProfile('id3', 'Camila',  23, 'female', fPhotos[2], [fPhotos[2]], ['women', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id4', 'Rogelia', 19, 'female', fPhotos[3], [fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id5', 'Patri',   32, 'female', fPhotos[4], [fPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
 
-    makeProfile('id6',  'Lauti',  '08/13/1982', 'male', mPhotos[0], [mPhotos[0]], ['women', 'estudiar', 'ingles', 'universidad']),
-    makeProfile('id7',  'Pablo',  '08/13/1985', 'male', mPhotos[1], [mPhotos[1]], ['women', 'tennis', 'tv', 'racing', 'boca']),
-    makeProfile('id8',  'Jorge',  '08/13/1990', 'male', mPhotos[2], [mPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
-    makeProfile('id9',  'Pedro',  '08/13/1993', 'male', mPhotos[3], [mPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id10', 'Thiago', '08/13/1997', 'male', mPhotos[4], [mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
+    makeProfile('id6',  'Lauti',  36, 'male', mPhotos[0], [mPhotos[0]], ['women', 'estudiar', 'ingles', 'universidad']),
+    makeProfile('id7',  'Pablo',  33, 'male', mPhotos[1], [mPhotos[1]], ['women', 'tennis', 'tv', 'racing', 'boca']),
+    makeProfile('id8',  'Jorge',  28, 'male', mPhotos[2], [mPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id9',  'Pedro',  24, 'male', mPhotos[3], [mPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id10', 'Thiago', 21, 'male', mPhotos[4], [mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
   ]
 
   return profiles;
@@ -50,15 +50,15 @@ module.exports.mockSettings = () => {
   return settings;
 }
 
-const makeProfile = (id, name, birth, gender, photo, photos, interests) => {
+const makeProfile = (id, name, age, gender, photo, photos, interests) => {
   return {
     id,
+    age,
     name,
     gender,
     photo,
     photos,
     interests,
-    birthday: birth,
     work: 'my work',
     education: 'my education',
     description: `I am ${name}`

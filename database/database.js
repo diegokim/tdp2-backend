@@ -69,5 +69,6 @@ module.exports.initialize = function ({ users = [], settings = [] }) {
   })
 
   return Promise.all(createUserProfiles)
-    .then(() => Promise.all(createUserSettings));
+    .then(() => Promise.all(createUserSettings))
+  ;
 }

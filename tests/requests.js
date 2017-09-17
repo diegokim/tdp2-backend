@@ -35,3 +35,10 @@ module.exports.updateSettings = (accessToken, settings) => Promise.resolve(
     .send(settings)
     .catch((err) => err)
 );
+
+module.exports.getCandidates = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/users/candidates')
+    .set({'Authorization': accessToken})
+    .send()
+    .catch((err) => err)
+);
