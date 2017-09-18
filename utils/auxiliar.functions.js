@@ -15,3 +15,9 @@ module.exports.onLog = (message = '', details = '') => {
     console.log(message, details);
   }
 }
+
+module.exports.validateToken = (accessToken) => {
+  return accessToken === undefined || accessToken.length === 0 ?
+    Promise.reject({ status: 400, message: 'Missing Auth token'}) :
+    Promise.resolve();
+}

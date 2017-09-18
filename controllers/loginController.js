@@ -5,9 +5,8 @@ module.exports.login = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Login', res, { status: 400, message: 'Missing Auth token'}) :
-  loginService.login(accessToken)
+  return aux.validateToken(accessToken)
+    .then(() => loginService.login(accessToken))
     .then((imagesOrUser) => {
       if (imagesOrUser.profile) {
         aux.onLog('Response: ', imagesOrUser); //sacar foto y fotos

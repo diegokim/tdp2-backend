@@ -40,6 +40,7 @@ module.exports.updateProfile = (accessToken, body) => {
       const profileToUpdate = _.pick(body, ['photo', 'photos', 'description'])
       return UsersDB.updateProfile(Object.assign({}, profileToUpdate, { id: fbProfile.id }))
     })
+    .then((profile) => (_.omit(profile._doc, ['photo', 'photos'])))
 }
 
 /**

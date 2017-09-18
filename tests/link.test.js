@@ -12,7 +12,7 @@ const settings = mocks.mockSettings();
 const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
 
-describe('Integration setting tests', () => {
+describe('Integration link tests', () => {
   let response;
 
   // Leave the database in a valid state
@@ -46,12 +46,73 @@ describe('Integration setting tests', () => {
 
       it('should return the apropiated candidates', () => response
         .then((res) => {
-          const resultSet = res.body;
+          const resultSet = res.body.profiles;
 
           assert.equal(res.status, 200);
           assert.include(['id2', 'id4'], resultSet[0].id);
           assert.include(['id2', 'id4'], resultSet[1].id);
         }));
+    });
+  });
+
+  describe('Link User', () => {
+    describe('When the user does not exist', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+      })
+      beforeEach(() => (response = request.linkUser('access_token', 'id2', 'link')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.response.body.message, 'user does not exist');
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When dont send action', () => {
+      beforeEach(() => (response = request.linkUser('access_token', 'id2')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 400);
+          assert.equal(res.response.body.message, 'missing userId or action');
+          assert.equal(res.message, 'Bad Request');
+        }));
+    });
+
+    describe('When both users exist', () => {
+      describe('when a link does occur', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => {
+          return request.linkUser('access_token', 'id2', 'link')
+            .then(() => (response = request.linkUser('access_token', 'id', 'link')))
+        });
+
+        it('should return true because a link has not occured', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { link: true });
+          }));
+      })
+
+      describe('when a link does not occur', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => (response = request.linkUser('access_token', 'id2', 'link')));
+
+        it('should return false because a link has not occured', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { link: false });
+          }));
+      })
     });
   });
 });
@@ -99,4 +160,10 @@ const userProfile = {
     'fiuba'
   ],
   work: 'work description'
+}
+
+const anotherUserProfile = {
+  id: 'id2',
+  name: 'name',
+  photo: 'foto2'
 }

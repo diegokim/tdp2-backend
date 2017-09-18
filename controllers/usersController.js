@@ -6,9 +6,8 @@ module.exports.get = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Get Profile', res, { status: 400, message: 'Missing Auth token'}) :
-  usersService.getProfile(accessToken)
+  return aux.validateToken(accessToken)
+    .then(() => usersService.getProfile(accessToken))
     .then((profile) => {
       aux.onLog('Response:', profile); //sacar foto y fotos
       return res.status(200).json(profile)
@@ -20,9 +19,8 @@ module.exports.update = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Update Profile', res, { status: 400, message: 'Missing Auth token'}) :
-  validateProfile(req.body)
+  return aux.validateToken(accessToken)
+    .then(() => validateProfile(req.body))
     .then(() => usersService.updateProfile(accessToken, req.body))
     .then((profile) => {
       aux.onLog('Response:', profile); //sacar foto y fotos
@@ -35,16 +33,30 @@ module.exports.getCandidates = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Get Candidates', res, { status: 400, message: 'Missing Auth token'}) :
-  linkService.getCandidates(accessToken)
+  return aux.validateToken(accessToken)
+    .then(() => linkService.getCandidates(accessToken))
     .then((profiles) => {
       aux.onLog('Response:', profiles.length);
-      return res.status(200).json(profiles)
+      return res.status(200).json({ profiles })
     })
-    .catch((err) => aux.onError('Get Profile', res, err))
+    .catch((err) => aux.onError('Get Candidates', res, err))
 }
 
+module.exports.link = (req, res) => {
+  aux.onLog('Request:', req.url)
+  const accessToken = req.headers.authorization;
+  const userId = req.params.userId;
+  const action = req.body.action;
+
+  return aux.validateToken(accessToken)
+    .then(() => validateAction(userId, action))
+    .then(() => linkService.link(accessToken, userId, action))
+    .then((response) => {
+      aux.onLog('Response:', response);
+      return res.status(200).json(response)
+    })
+    .catch((err) => aux.onError('Link', res, err))
+}
 
 const validateProfile = (profile) => {
   const validProfile =
@@ -55,4 +67,10 @@ const validateProfile = (profile) => {
   return validProfile ?
     Promise.resolve() :
     Promise.reject({ status: 400, message: 'missing valid profile' })
+}
+
+const validateAction = (userId, action) => {
+  return (userId && action) ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing userId or action' })
 }

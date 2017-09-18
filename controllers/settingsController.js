@@ -5,9 +5,8 @@ module.exports.get = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Get Settings', res, { status: 400, message: 'Missing Auth token'}) :
-  settingsService.get(accessToken)
+  return aux.validateToken(accessToken)
+    .then(() => settingsService.get(accessToken))
     .then((settings) => {
       aux.onLog('Response:', settings);
       return res.status(200).json(settings)
@@ -19,9 +18,8 @@ module.exports.update = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return accessToken === undefined || accessToken.length === 0 ?
-  aux.onError('Update Settings', res, { status: 400, message: 'Missing Auth token'}) :
-  validateSettings(req.body)
+  return aux.validateToken(accessToken)
+    .then(() => validateSettings(req.body))
     .then(() => settingsService.update(accessToken, req.body))
     .then((settings) => {
       aux.onLog('Response:', settings);

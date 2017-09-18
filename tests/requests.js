@@ -42,3 +42,10 @@ module.exports.getCandidates = (accessToken) => Promise.resolve(
     .send()
     .catch((err) => err)
 );
+
+module.exports.linkUser = (accessToken, userId, action) => Promise.resolve(
+  request.put(baseUrl + `/users/${userId}/link`)
+    .set({'Authorization': accessToken})
+    .send({ action })
+    .catch((err) => err)
+);

@@ -38,8 +38,11 @@ require('./config/passport')(passport);
 router.get('/ping', (req, res) => statusController.ping(req, res));
 router.get('/login', (req, res) => loginController.login(req, res));
 
-// Profile
+// Users
 router.get('/users/candidates', (req, res) => usersController.getCandidates(req, res));
+router.put('/users/:userId/link', (req, res) => usersController.link(req, res));
+
+// Profile
 router.get('/profile', (req, res) => usersController.get(req, res)); // users/profile
 router.patch('/profile', (req, res) => usersController.update(req, res));
 

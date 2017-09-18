@@ -223,3 +223,19 @@ Respuesta:
 	  body: {
 	    profiles: []
 	  }
+
+### PUT /users/{id}/link
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      action: 'link' // 'super-link', 'reject'
+    }
+
+Respuesta:
+
+	respuesta --> 201
+	  body: { link: false }
