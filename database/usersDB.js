@@ -86,6 +86,8 @@ module.exports.search = function (params) {
   return User.find(query).catch(console.log);
 }
 
-module.exports.findAll = function () {
-  return Promise.resolve(User.find({}))
+module.exports.getUsers = function (userIds) {
+  const queryIds = userIds.map((uid) => ({ id: uid }))
+
+  return queryIds.length ? User.find({ $or: queryIds }) : [];
 }

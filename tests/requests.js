@@ -37,15 +37,22 @@ module.exports.updateSettings = (accessToken, settings) => Promise.resolve(
 );
 
 module.exports.getCandidates = (accessToken) => Promise.resolve(
-  request.get(baseUrl + '/users/candidates')
+  request.get(baseUrl + '/user/candidates')
     .set({'Authorization': accessToken})
     .send()
     .catch((err) => err)
 );
 
 module.exports.linkUser = (accessToken, userId, action) => Promise.resolve(
-  request.put(baseUrl + `/users/${userId}/link`)
+  request.put(baseUrl + `/user/${userId}/link`)
     .set({'Authorization': accessToken})
     .send({ action })
+    .catch((err) => err)
+);
+
+module.exports.getLinks = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/user/links')
+    .set({'Authorization': accessToken})
+    .send()
     .catch((err) => err)
 );

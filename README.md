@@ -208,7 +208,7 @@ Respuesta:
 
 ## Users (candidates)
 
-### GET /users/candidates
+### GET /user/candidates
 
 Mensaje:
 
@@ -224,7 +224,9 @@ Respuesta:
 	    profiles: []
 	  }
 
-### PUT /users/{id}/link
+## Links
+
+### PUT /user/{id}/link
 
 Mensaje:
 
@@ -239,3 +241,20 @@ Respuesta:
 
 	respuesta --> 201
 	  body: { link: false }
+
+
+### GET user/links
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    profiles: []
+	  }

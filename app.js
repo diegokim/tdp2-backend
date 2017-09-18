@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const passport = require('passport');
 
 const settingsController = require('./controllers/settingsController');
 const statusController = require('./controllers/statusController');
@@ -28,19 +27,14 @@ app.use(cors());
 //  Body parser middleware
 app.use(bodyParser.json());
 
-//  Passport Middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-require('./config/passport')(passport);
-
 //  Routes
 router.get('/ping', (req, res) => statusController.ping(req, res));
 router.get('/login', (req, res) => loginController.login(req, res));
 
 // Users
-router.get('/users/candidates', (req, res) => usersController.getCandidates(req, res));
-router.put('/users/:userId/link', (req, res) => usersController.link(req, res));
+router.get('/user/candidates', (req, res) => usersController.getCandidates(req, res));
+router.put('/user/:userId/link', (req, res) => usersController.link(req, res));
+router.get('/user/links', (req, res) => usersController.getLinks(req, res));
 
 // Profile
 router.get('/profile', (req, res) => usersController.get(req, res)); // users/profile

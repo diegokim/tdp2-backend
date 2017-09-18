@@ -58,6 +58,19 @@ module.exports.link = (req, res) => {
     .catch((err) => aux.onError('Link', res, err))
 }
 
+module.exports.getLinks = (req, res) => {
+  aux.onLog('Request:', req.url)
+  const accessToken = req.headers.authorization;
+
+  return aux.validateToken(accessToken)
+    .then(() => linkService.getLinks(accessToken))
+    .then((profileLinks) => {
+      aux.onLog('Response:', profileLinks.length);
+      return res.status(200).json({ profiles: profileLinks })
+    })
+    .catch((err) => aux.onError('Link', res, err))
+}
+
 const validateProfile = (profile) => {
   const validProfile =
     profile.photo ||

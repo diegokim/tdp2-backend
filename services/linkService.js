@@ -56,6 +56,17 @@ module.exports.link = (accessToken, userId, action) => {
     })
 }
 
+/**
+ * Get Links
+ *
+ */
+module.exports.getLinks = (accessToken) => {
+  return faceAPI.getProfile(accessToken, ['id'])
+    .then(({ id }) => LinkDB.getLinks(id))
+    .then((userLinks) => userLinks.map((ul) => ul.sendUID))
+    .then((userIds) => UsersDB.getUsers(userIds))
+    .then((userProfiles) => userProfiles.map((up) => _.omit(up._doc, ['photos'])))
+}
 
 const filterParamsToSearch = (user) => {
   return {

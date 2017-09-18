@@ -64,7 +64,3 @@ module.exports.search = function (params) { // diferent id than I
 
   return Setting.find(query);
 }
-
-module.exports.findAll = function () {
-  return Promise.resolve(Setting.find({}))
-}

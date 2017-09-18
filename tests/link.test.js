@@ -113,6 +113,68 @@ describe('Integration link tests', () => {
             assert.deepEqual(res.body, { link: false });
           }));
       })
+
+      describe('when get links but has not anyone', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => (response = request.getLinks('access_token')));
+
+        it('should return empty links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { profiles: [] });
+          }));
+      })
+
+      describe('when get links with one user', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => {
+          return request.linkUser('access_token', 'id2', 'link')
+            .then(() => request.linkUser('access_token', 'id', 'link'))
+            .then(() => (response = request.getLinks('access_token')))
+        });
+
+        it('should return the links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body.profiles[0].id, 'id2');
+            assert.deepEqual(res.body.profiles[0].photo, 'foto2');
+          }));
+      })
+
+      describe('when get links with more than one user', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id3' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile, anotherAnotherUserProfile] })
+        })
+        beforeEach(() => {
+          return request.linkUser('access_token', 'id2', 'link')
+            .then(() => request.linkUser('access_token', 'id', 'link'))
+            .then(() => request.linkUser('access_token', 'id3', 'link'))
+            .then(() => request.linkUser('access_token', 'id', 'link'))
+            .then(() => (response = request.getLinks('access_token')))
+        });
+
+        it('should return the links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body.profiles[0].id, 'id2');
+            assert.deepEqual(res.body.profiles[0].photo, 'foto2');
+            assert.deepEqual(res.body.profiles[1].id, 'id3');
+            assert.deepEqual(res.body.profiles[1].photo, 'foto3');
+          }));
+      })
     });
   });
 });
@@ -166,4 +228,10 @@ const anotherUserProfile = {
   id: 'id2',
   name: 'name',
   photo: 'foto2'
+}
+
+const anotherAnotherUserProfile = {
+  id: 'id3',
+  name: 'name',
+  photo: 'foto3'
 }
