@@ -21,3 +21,11 @@ module.exports.validateToken = (accessToken) => {
     Promise.reject({ status: 400, message: 'Missing Auth token'}) :
     Promise.resolve();
 }
+
+module.exports.parseProfileToLog = (profile) => {
+  const profileToLog = Object.assign({}, profile._doc);
+  delete profileToLog.photo;
+  delete profileToLog.photos;
+
+  return profileToLog;
+}

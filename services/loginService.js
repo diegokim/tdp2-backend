@@ -45,11 +45,13 @@ const parseProfile = (profile) => {
   const education = profile.education ? profile.education[0].type : '';
   const work = (profile.work || {}).description || '';
   const interests = parseInterests(profile).slice(0, MAX_INTEREST);
+  const location = [-58.368323, -34.617528]; // la facu
   const newUser = {
     photo: '',
     photos: [],
     education,
     work,
+    location,
     interests,
     description: '',
     id: profile.id,
@@ -72,7 +74,7 @@ const parseInterests = (profile) => {
 
   const interests = musics.concat(movies).concat(books).concat(favoriteTeams);
   interests.sort(() => Math.random() - 0.5);
-  return interests.map((interest) => interest.name);
+  return interests.map((interest) => interest.name).filter((interest) => (interest));
 }
 
 const getPhotosLink = (photosToGet, accessToken) => {

@@ -13,11 +13,7 @@ const profileParams = ['id', 'name', 'photos', 'birthday', 'education', 'work', 
 describe('Integration auth tests', () => {
 
   // Leave the database in a valid state
-  beforeEach((done) => {
-    DB.drop()
-		.then(done)
-		.catch(done);
-  });
+  beforeEach(() => DB.drop());
 
   describe('Login', () => {
     let profile;
@@ -216,7 +212,8 @@ describe('Integration auth tests', () => {
           ],
           name: 'name',
           photo: 'esta foto',
-          work:  'work description'
+          work:  'work description',
+          location: [-58.368323, -34.617528]
         }
 
         nockProfile(profileParams, accessToken, completeProfile)
@@ -293,7 +290,7 @@ const defaultSettings = {
     max: 40
   },
   distRange: {
-    min: 1,
+    min: 0,
     max: 22
   },
   invisible: false,

@@ -11,11 +11,7 @@ describe('Search unit tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach((done) => {
-    DB.drop()
-		.then(done)
-		.catch(done);
-  });
+  beforeEach(() => DB.drop());
 
   describe('Search settings', () => {
     let searchParams;
@@ -84,6 +80,11 @@ describe('Search unit tests', () => {
           ageRange: {
             min: 18,
             max: 200
+          },
+          location: [-58.380661, -34.627982], // constitucion
+          distRange: {
+            min: 0,
+            max: 10
           }
         }
         return DB.initialize({ users: profiles })
@@ -105,6 +106,11 @@ describe('Search unit tests', () => {
           ageRange: {
             min: 18,
             max: 200
+          },
+          location: [-58.380661, -34.627982], // constitucion
+          distRange: {
+            min: 0,
+            max: 10
           }
         }
         return DB.initialize({ users: profiles })
@@ -126,6 +132,11 @@ describe('Search unit tests', () => {
           ageRange: {
             min: 18,
             max: 200
+          },
+          location: [-58.380661, -34.627982], // constitucion
+          distRange: {
+            min: 0,
+            max: 10
           }
         }
         return DB.initialize({ users: profiles })
@@ -149,6 +160,11 @@ describe('Search unit tests', () => {
           ageRange: {
             min: 18,
             max: 24
+          },
+          location: [-58.380661, -34.627982], // constitucion
+          distRange: {
+            min: 0,
+            max: 10
           }
         }
         return DB.initialize({ users: profiles })
@@ -162,13 +178,96 @@ describe('Search unit tests', () => {
         }));
     });
 
-    describe('when no match found', () => {
+    describe('when search by distance', () => {
+      describe('and is between min-max', () => {
+        beforeEach(() => {
+          searchParams = {
+            interestType: 'both',
+            ageRange: {
+              min: 18,
+              max: 50
+            },
+            location: [-58.362036, -34.672959], // el tano
+            distRange: {
+              min: 0,
+              max: 5
+            }
+          }
+          return DB.initialize({ users: profiles })
+        })
+        beforeEach(() => (response = UserDB.search(searchParams)));
+
+        it('should return only racing fans', () => response
+          .then((res) => {
+            assert.include(['id3', 'id4'], res[0].id);
+            assert.include(['id3', 'id4'], res[1].id);
+            assert.equal(res.length, 2)
+          }));
+      });
+
+      describe('and is more than min', () => {
+        beforeEach(() => {
+          searchParams = {
+            interestType: 'both',
+            ageRange: {
+              min: 18,
+              max: 50
+            },
+            location: [-58.362036, -34.672959], // el tano
+            distRange: {
+              min: 2,
+              max: 5
+            }
+          }
+          return DB.initialize({ users: profiles })
+        })
+        beforeEach(() => (response = UserDB.search(searchParams)));
+
+        it('should not return searched people', () => response
+          .then((res) => {
+            assert.deepEqual(res, []);
+            assert.equal(res.length, 0)
+          }));
+      });
+
+      describe('and is less than max', () => {
+        beforeEach(() => {
+          searchParams = {
+            interestType: 'both',
+            ageRange: {
+              min: 18,
+              max: 50
+            },
+            location: [-58.362036, -34.672959], // el tano
+            distRange: {
+              min: 0,
+              max: 0
+            }
+          }
+          return DB.initialize({ users: profiles })
+        })
+        beforeEach(() => (response = UserDB.search(searchParams)));
+
+        it('should not return searched people', () => response
+          .then((res) => {
+            assert.deepEqual(res, []);
+            assert.equal(res.length, 0)
+          }));
+      });
+    });
+
+    describe('when no match is found', () => {
       beforeEach(() => {
         searchParams = {
           interestType: 'female',
           ageRange: {
             min: 18,
             max: 24
+          },
+          location: [-58.380661, -34.627982], // constitucion
+          distRange: {
+            min: 0,
+            max: 10
           }
         }
         return DB.initialize({ users: profiles })
@@ -234,7 +333,8 @@ const profiles = [
     interests: [
       'racing',
       'fiuba'
-    ]
+    ],
+    location: [-58.381584, -34.603736] // obelisco
   },
   {
     id: 'id2',
@@ -243,7 +343,8 @@ const profiles = [
     interests: [
       'brown',
       'fifa'
-    ]
+    ],
+    location: [-58.381584, -34.603736] // obelisco
   },
   {
     id: 'id3',
@@ -252,7 +353,8 @@ const profiles = [
     interests: [
       'fiesta',
       'locura'
-    ]
+    ],
+    location: [-58.368645, -34.667453] // cancha de Racing
   },
   {
     id: 'id4',
@@ -261,6 +363,7 @@ const profiles = [
     interests: [
       'fiesta',
       'locura'
-    ]
+    ],
+    location: [-58.368645, -34.667453] // cancha de Racing
   }
 ]

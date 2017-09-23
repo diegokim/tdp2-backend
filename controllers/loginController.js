@@ -9,7 +9,8 @@ module.exports.login = (req, res) => {
     .then(() => loginService.login(accessToken))
     .then((imagesOrUser) => {
       if (imagesOrUser.profile) {
-        aux.onLog('Response: ', imagesOrUser); //sacar foto y fotos
+        const responseToLog = { profile: aux.parseProfileToLog(imagesOrUser.profile), settings: imagesOrUser.settings };
+        aux.onLog('Response: ', responseToLog);
         return res.status(200).json(imagesOrUser)
       }
       aux.onLog('Response: images');

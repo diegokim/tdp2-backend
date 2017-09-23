@@ -12,11 +12,7 @@ describe('Integration setting tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach((done) => {
-    DB.drop()
-		.then(done)
-		.catch(done);
-  });
+  beforeEach(() => DB.drop());
 
   describe('get Settings', () => {
     describe('When the user is not login', () => {

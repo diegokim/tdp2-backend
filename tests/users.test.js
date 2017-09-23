@@ -12,11 +12,7 @@ describe('Integration user tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach((done) => {
-    DB.drop()
-		.then(done)
-		.catch(done);
-  });
+  beforeEach(() => DB.drop());
 
   describe('get Profile', () => {
     describe('When the user is not login', () => {
@@ -87,6 +83,7 @@ const formatDBResponse = (dbResponse) => {
   const result = dbResponse;
   delete result.__v;
   delete result._id;
+  delete result.location;
 
   return result;
 }

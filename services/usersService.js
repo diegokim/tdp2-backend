@@ -37,7 +37,8 @@ module.exports.getProfile = (accessToken, userId) => {
 module.exports.updateProfile = (accessToken, body) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then((fbProfile) => {
-      const profileToUpdate = _.pick(body, ['photo', 'photos', 'description'])
+      const profileToUpdate = _.pick(body, ['photo', 'photos', 'description', 'location']);
+
       return UsersDB.updateProfile(Object.assign({}, profileToUpdate, { id: fbProfile.id }))
     })
     .then((profile) => (_.omit(profile._doc, ['photo', 'photos'])))
@@ -70,7 +71,7 @@ const defaultSettings = {
     max: 40
   },
   distRange: {
-    min: 1,
+    min: 0,
     max: 22
   },
   invisible: false,

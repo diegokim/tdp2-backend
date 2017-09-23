@@ -61,7 +61,8 @@ const makeProfile = (id, name, age, gender, photo, photos, interests) => {
     interests,
     work: 'my work',
     education: 'my education',
-    description: `I am ${name}`
+    description: `I am ${name}`,
+    location: [-58.381584, -34.603736] // obelisco
   }
 }
 

@@ -33,7 +33,7 @@ module.exports.connect = function () {
     //  On connection
     mongoose.connection.on('connected', () => {
       console.log('youre now connected to the database ' + state.uri);
-      resolve();
+      resolve()
     });
     //  On Error
     mongoose.connection.on('error', (err) => {
@@ -46,17 +46,18 @@ module.exports.connect = function () {
 
 //  Delete database
 module.exports.drop = function () {
-  return new Promise((resolve, reject) => {
-    if (state.db) {
-      state.db.connection.db.dropDatabase();
-      return resolve();
-    }
-    reject();
-  });
+  if (state.db) {
+    return state.db.connection.db.dropDatabase();
+  }
+  return Promise.reject('Drop Error');
 };
 
 // Initialize database
 module.exports.initialize = function ({ users = [], settings = [] }) {
+  // create indexes
+  state.db.connection.collections.users.createIndex({ location: '2dsphere' })
+
+  // create data
   const createUserProfiles = [];
   const createUserSettings = [];
   users.forEach((user) => {

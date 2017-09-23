@@ -22,7 +22,7 @@ module.exports.getCandidates = (accessToken, userId) => {
         // TOD0: new people
       ])
     })
-    .then(([candByProf, candBySet]) => {
+    .then(([candByProf, candBySet]) => { // TOD0: agregar a que distancia esta la otra persona ?
       return candByProf.filter((cand) => (candBySet.filter(($cand) => ($cand.id === cand.id)).length > 0))
     })
     .then((candidates) => {
@@ -77,7 +77,7 @@ const filterParamsToSearch = (user) => {
     ageRange: user.settings.ageRange,
     distRange: user.settings.distRange,
     invisible: user.settings.invisible,
-    interestType: user.settings.interestType
-    // location: user.profile.location // TOD0
+    interestType: user.settings.interestType,
+    location: user.profile.location
   };
 }

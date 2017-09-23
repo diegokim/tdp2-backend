@@ -31,6 +31,9 @@ const UserSchema = mongoose.Schema({
   },
   interests: {
     type: Array
+  },
+  location: {
+    type: [Number]
   }
 })
 
@@ -69,6 +72,13 @@ module.exports.search = function (params) {
   const gender = ['male', 'female'].includes(params.interestType) ?
     { gender: params.interestType } : {};
 
+  const minDist = params.distRange.min > 0 ? params.distRange.min - 1 : 0;
+  const location = {
+    $nearSphere: params.location,
+    $maxDistance: params.distRange.max / 6378,
+    $minDistance: minDist / 6378
+  }
+
   // const interests = params.interests.length ? { $or: [] } : {}
   // for (const interest of params.interests) {
   //   const regex = new RegExp('.*' + interest + '.*');
@@ -78,12 +88,13 @@ module.exports.search = function (params) {
   const query = {
     $and: [
       gender,
+      { location },
       { age: { $gte: params.ageRange.min } },
       { age: { $lte: params.ageRange.max } }
     ]
   }
 
-  return User.find(query).catch(console.log);
+  return User.find(query);
 }
 
 module.exports.getUsers = function (userIds) {

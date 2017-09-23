@@ -48,7 +48,6 @@ module.exports.updateSetting = function (setting) {
  *  - users that have "invisible" in false
  *  - users that are searching my same interestType
  *
- *  - age ?
  */
 module.exports.search = function (params) { // diferent id than I
   const interestType = (params.interestType === 'friends') ?

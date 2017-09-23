@@ -16,11 +16,7 @@ describe('Integration link tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach((done) => {
-    DB.drop()
-		.then(done)
-		.catch(done);
-  });
+  beforeEach(() => DB.drop());
 
   describe('get Candidates', () => {
     describe('When the user is not login', () => {
@@ -198,8 +194,8 @@ const userSetting = {
     max: 29
   },
   distRange: {
-    min: 1,
-    max: 3
+    min: 5,
+    max: 10
   },
   invisible: true,
   interestType: 'female'
@@ -221,7 +217,8 @@ const userProfile = {
     'racing',
     'fiuba'
   ],
-  work: 'work description'
+  work: 'work description',
+  location: [-58.368645, -34.667453] // cancha de Racing
 }
 
 const anotherUserProfile = {

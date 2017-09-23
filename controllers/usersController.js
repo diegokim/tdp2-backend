@@ -9,7 +9,7 @@ module.exports.get = (req, res) => {
   return aux.validateToken(accessToken)
     .then(() => usersService.getProfile(accessToken))
     .then((profile) => {
-      aux.onLog('Response:', profile); //sacar foto y fotos
+      aux.onLog('Response:', aux.parseProfileToLog(profile));
       return res.status(200).json(profile)
     })
     .catch((err) => aux.onError('Get Profile', res, err))
@@ -23,8 +23,8 @@ module.exports.update = (req, res) => {
     .then(() => validateProfile(req.body))
     .then(() => usersService.updateProfile(accessToken, req.body))
     .then((profile) => {
-      aux.onLog('Response:', profile); //sacar foto y fotos
-      return res.status(200).json(profile)
+      aux.onLog('Response:', aux.parseProfileToLog(profile));
+      return res.status(200).json({})
     })
     .catch((err) => aux.onError('Update Profile', res, err))
 }
@@ -75,7 +75,8 @@ const validateProfile = (profile) => {
   const validProfile =
     profile.photo ||
     profile.photos ||
-    profile.description;
+    profile.description ||
+    profile.location;
 
   return validProfile ?
     Promise.resolve() :
