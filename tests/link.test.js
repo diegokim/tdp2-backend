@@ -47,6 +47,30 @@ describe('Integration link tests', () => {
           assert.equal(res.status, 200);
           assert.include(['id2', 'id4'], resultSet[0].id);
           assert.include(['id2', 'id4'], resultSet[1].id);
+          assert.equal(resultSet[0].distance, 7)
+          assert.equal(resultSet[1].distance, 7)
+        }));
+    });
+
+    describe('When the user has candidates but they have linked actions', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+      })
+      beforeEach(() => {
+        return request.linkUser('access_token', 'id2', 'link')
+          .then(() => request.linkUser('access_token', 'id4', 'reject'))
+          .then(() => (response = request.getCandidates('access_token')))
+      });
+
+      it('should return the apropiated candidates', () => response
+        .then((res) => {
+          const resultSet = res.body.profiles;
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(resultSet, []);
         }));
     });
   });
@@ -165,10 +189,10 @@ describe('Integration link tests', () => {
         it('should return the links', () => response
           .then((res) => {
             assert.equal(res.status, 200);
-            assert.deepEqual(res.body.profiles[0].id, 'id2');
-            assert.deepEqual(res.body.profiles[0].photo, 'foto2');
-            assert.deepEqual(res.body.profiles[1].id, 'id3');
-            assert.deepEqual(res.body.profiles[1].photo, 'foto3');
+            assert.include(['id2', 'id3'], res.body.profiles[0].id);
+            assert.include(['id2', 'id3'], res.body.profiles[1].id);
+            assert.include(['foto2', 'foto3'], res.body.profiles[0].photo);
+            assert.include(['foto2', 'foto3'], res.body.profiles[1].photo);
           }));
       })
     });

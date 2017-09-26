@@ -24,7 +24,7 @@ module.exports.update = (req, res) => {
     .then(() => usersService.updateProfile(accessToken, req.body))
     .then((profile) => {
       aux.onLog('Response:', aux.parseProfileToLog(profile));
-      return res.status(200).json({})
+      return res.status(200).json(profile)
     })
     .catch((err) => aux.onError('Update Profile', res, err))
 }

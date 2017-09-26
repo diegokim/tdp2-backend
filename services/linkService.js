@@ -1,9 +1,12 @@
 const _ = require('lodash');
+const geolib = require('geolib');
 const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
 const SettingsDB = require('../database/settingDB');
 const faceAPI = require('../clients/faceAPI');
 const usersService = require('./usersService');
+
+const MAX_CANDIDATES = 5;
 
 /**
  * Get Candidates.
@@ -17,17 +20,18 @@ module.exports.getCandidates = (accessToken, userId) => {
 
       return Promise.all([
         UsersDB.search(paramsToSearch),
-        SettingsDB.search(paramsToSearch)
-        // TOD0: search people linked
+        SettingsDB.search(paramsToSearch),
+        LinkDB.search({ sendUID: user.profile.id }),
+        user
         // TOD0: new people
       ])
     })
-    .then(([candByProf, candBySet]) => { // TOD0: agregar a que distancia esta la otra persona ?
-      return candByProf.filter((cand) => (candBySet.filter(($cand) => ($cand.id === cand.id)).length > 0))
+    .then(([candByProf, candBySet, noCandByLink, user]) => {
+      return filterCandidates(candByProf, candBySet, noCandByLink, user)
     })
     .then((candidates) => {
-      const parsedCandidates = candidates.map((candidate) => (_.omit(candidate._doc, ['photos'])));
-      return parsedCandidates;
+      const parsedCandidates = candidates.map((candidate) => candidate); // (_.omit(candidate._doc, ['photos']
+      return parsedCandidates.splice(0, MAX_CANDIDATES);
     })
 }
 
@@ -80,4 +84,30 @@ const filterParamsToSearch = (user) => {
     interestType: user.settings.interestType,
     location: user.profile.location
   };
+}
+
+const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
+  return candByProf.filter((cand) => {
+    const doMatchLinked = noCandByLink.filter(($cand) => ($cand.recUID === cand.id)).length > 0;
+
+    if (doMatchLinked || cand.id === user.profile.id) {
+      return false;
+    }
+    return candBySet.filter(($cand) => ($cand.id === cand.id)).length > 0
+  })
+  .map((cand) => { // TOD0: AVERIGUAR POR QUE PASA ESTO
+    if (cand._doc) {
+      return Object.assign({}, cand._doc, { distance: calculateDistance(user.profile.location, cand.location) })
+    }
+    return Object.assign({}, cand, { distance: calculateDistance(user.profile.location, cand.location) })
+  })
+}
+
+const calculateDistance = (location1, location2) => {
+  const distance = geolib.getDistance(
+    {latitude: location1[1], longitude: location1[0] },
+    {latitude: location2[1], longitude: location2[0] }
+  )
+
+  return Math.round(distance / 1000);
 }

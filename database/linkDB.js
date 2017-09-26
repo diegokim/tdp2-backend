@@ -40,12 +40,18 @@ module.exports.existsLink = function (userId1, userId2) {
 }
 
 module.exports.getLinks = function (userId) {
-  const sendQuery = { sendUID: userId, action: 'link' };
+  const sendQuery = { sendUID: userId, action: 'link' }; // TOD0: SUPERLINK
 
   return Link.find(sendQuery)
     .then((links) => {
       const recQuery = links.map((link) => ({ sendUID: link.recUID, recUID: userId, action: 'link' }))
 
-      return recQuery.length ? Link.find({ $or: recQuery }) : [];
+      return recQuery.length ? Link.find({ $or: recQuery }).sort({ __v: 1 }) : [];
     })
+}
+
+module.exports.search = function (params) {
+  const sendQuery = { sendUID: params.sendUID };
+
+  return Link.find(sendQuery);
 }

@@ -16,17 +16,17 @@
  */
 module.exports.mockProfiles = () => {
   const profiles = [
-    makeProfile('id1', 'Mariana', 38, 'female', fPhotos[0], [fPhotos[0]], ['men', 'estudiar', 'ingles', 'universidad']),
-    makeProfile('id2', 'Flor',    28, 'female', fPhotos[1], [fPhotos[1]], ['men', 'tennis', 'tv', 'racing', 'boca']),
-    makeProfile('id3', 'Camila',  23, 'female', fPhotos[2], [fPhotos[2]], ['women', 'handball', 'musica', 'green day', 'strokes']),
-    makeProfile('id4', 'Rogelia', 19, 'female', fPhotos[3], [fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id5', 'Patri',   32, 'female', fPhotos[4], [fPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
+    makeProfile('id1', 'Mariana', 38, 'female', fPhotos[0], [fPhotos[0], fPhotos[0], fPhotos[0], fPhotos[0], fPhotos[0]], ['men', 'estudiar', 'ingles', 'universidad']),
+    makeProfile('id2', 'Flor',    28, 'female', fPhotos[1], [fPhotos[1], fPhotos[1], fPhotos[1], fPhotos[1], fPhotos[1]], ['men', 'tennis', 'tv', 'racing', 'boca']),
+    makeProfile('id3', 'Camila',  23, 'female', fPhotos[2], [fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2]], ['women', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id4', 'Rogelia', 19, 'female', fPhotos[3], [fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id5', 'Patri',   32, 'female', fPhotos[4], [fPhotos[4], fPhotos[4], fPhotos[4], fPhotos[4], fPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
 
-    makeProfile('id6',  'Lauti',  36, 'male', mPhotos[0], [mPhotos[0]], ['women', 'estudiar', 'ingles', 'universidad']),
-    makeProfile('id7',  'Pablo',  33, 'male', mPhotos[1], [mPhotos[1]], ['women', 'tennis', 'tv', 'racing', 'boca']),
-    makeProfile('id8',  'Jorge',  28, 'male', mPhotos[2], [mPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
-    makeProfile('id9',  'Pedro',  24, 'male', mPhotos[3], [mPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id10', 'Thiago', 21, 'male', mPhotos[4], [mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
+    makeProfile('id6',  'Lauti',  36, 'male', mPhotos[0], [mPhotos[0], mPhotos[0], mPhotos[0], mPhotos[0], mPhotos[0]], ['women', 'estudiar', 'ingles', 'universidad']),
+    makeProfile('id7',  'Pablo',  33, 'male', mPhotos[1], [mPhotos[1], mPhotos[1], mPhotos[1], mPhotos[1], mPhotos[1]], ['women', 'tennis', 'tv', 'racing', 'boca']),
+    makeProfile('id8',  'Jorge',  28, 'male', mPhotos[2], [mPhotos[2], mPhotos[2], mPhotos[2], mPhotos[2], mPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id9',  'Pedro',  24, 'male', mPhotos[3], [mPhotos[3], mPhotos[3], mPhotos[3], mPhotos[3], mPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id10', 'Thiago', 21, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
   ]
 
   return profiles;
@@ -48,6 +48,45 @@ module.exports.mockSettings = () => {
   ]
 
   return settings;
+}
+
+module.exports.mockLinks = () => {
+  const links = [
+    makeLink('id1', '10212279649380359', 'link'),
+    makeLink('id2', '10212279649380359', 'link'),
+    makeLink('id3', '10212279649380359', 'link'),
+    makeLink('id4', '10212279649380359', 'link'),
+    makeLink('id5', '10212279649380359', 'link'),
+    makeLink('id6', '10212279649380359', 'link'),
+    makeLink('id7', '10212279649380359', 'link'),
+    makeLink('id8', '10212279649380359', 'link'),
+    makeLink('id9', '10212279649380359', 'link'),
+    makeLink('id10', '10212279649380359', 'link'),
+
+    makeLink('id1', '10211595473336432', 'link'),
+    makeLink('id2', '10211595473336432', 'link'),
+    makeLink('id3', '10211595473336432', 'link'),
+    makeLink('id4', '10211595473336432', 'link'),
+    makeLink('id5', '10211595473336432', 'link'),
+    makeLink('id6', '10211595473336432', 'link'),
+    makeLink('id7', '10211595473336432', 'link'),
+    makeLink('id8', '10211595473336432', 'link'),
+    makeLink('id9', '10211595473336432', 'link'),
+    makeLink('id10', '10211595473336432', 'link'),
+
+    makeLink('id1', '1411063048948357', 'link'),
+    makeLink('id2', '1411063048948357', 'link'),
+    makeLink('id3', '1411063048948357', 'link'),
+    makeLink('id4', '1411063048948357', 'link'),
+    makeLink('id5', '1411063048948357', 'link'),
+    makeLink('id6', '1411063048948357', 'link'),
+    makeLink('id7', '1411063048948357', 'link'),
+    makeLink('id8', '1411063048948357', 'link'),
+    makeLink('id9', '1411063048948357', 'link'),
+    makeLink('id10', '1411063048948357', 'link')
+  ]
+
+  return links;
 }
 
 const makeProfile = (id, name, age, gender, photo, photos, interests) => {
@@ -73,6 +112,14 @@ const makeSettings = (id, ageRange, distRange, invisible, interestType) => {
     distRange,
     invisible,
     interestType
+  }
+}
+
+const makeLink = (sendUID, recUID, action) => {
+  return {
+    sendUID,
+    recUID,
+    action
   }
 }
 

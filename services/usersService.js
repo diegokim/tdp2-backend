@@ -38,6 +38,7 @@ module.exports.updateProfile = (accessToken, body) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then((fbProfile) => {
       const profileToUpdate = _.pick(body, ['photo', 'photos', 'description', 'location']);
+      profileToUpdate.location = [-58.381584, -34.603736];
 
       return UsersDB.updateProfile(Object.assign({}, profileToUpdate, { id: fbProfile.id }))
     })
@@ -68,11 +69,11 @@ module.exports.createUser = (profile) => {
 const defaultSettings = {
   ageRange: {
     min: 18,
-    max: 40
+    max: 150
   },
   distRange: {
-    min: 0,
-    max: 22
+    min: 1,
+    max: 30
   },
   invisible: false,
   interestType: 'both'

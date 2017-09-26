@@ -12,6 +12,7 @@ const database = require('./database/database');
 const mocks = require('./database/mocks');
 const profiles = mocks.mockProfiles();
 const settings = mocks.mockSettings();
+const links = mocks.mockLinks();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,7 +20,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { users: profiles, settings }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { users: profiles, settings, links }));
 
 //  Middleware cors
 app.use(cors());

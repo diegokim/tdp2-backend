@@ -23,7 +23,7 @@ module.exports.validateToken = (accessToken) => {
 }
 
 module.exports.parseProfileToLog = (profile) => {
-  const profileToLog = Object.assign({}, profile._doc);
+  const profileToLog = Object.assign({}, profile);
   delete profileToLog.photo;
   delete profileToLog.photos;
 
