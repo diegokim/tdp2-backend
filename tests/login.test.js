@@ -287,11 +287,11 @@ const defaultSettings = {
   id: 'id',
   ageRange: {
     min: 18,
-    max: 40
+    max: 150
   },
   distRange: {
-    min: 0,
-    max: 22
+    min: 1,
+    max: 30
   },
   invisible: false,
   interestType: 'both'

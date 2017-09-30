@@ -243,7 +243,7 @@ Respuesta:
 	  body: { link: false }
 
 
-### GET user/links
+### GET /user/links
 
 Mensaje:
 
@@ -258,3 +258,17 @@ Respuesta:
 	  body: {
 	    profiles: []
 	  }
+
+### DELETE /user/{id}/link
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 203
+	  body: {}

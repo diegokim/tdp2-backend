@@ -96,8 +96,18 @@ describe('Integration link tests', () => {
       it('should return not found', () => response
         .then((res) => {
           assert.equal(res.status, 400);
-          assert.equal(res.response.body.message, 'missing userId or action');
+          assert.equal(res.response.body.message, 'missing action');
           assert.equal(res.message, 'Bad Request');
+        }));
+    });
+
+    describe('When dont send userId', () => {
+      beforeEach(() => (response = request.linkUser('access_token', '', 'link')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.message, 'Not Found');
         }));
     });
 
@@ -195,6 +205,76 @@ describe('Integration link tests', () => {
             assert.include(['foto2', 'foto3'], res.body.profiles[1].photo);
           }));
       })
+    });
+  });
+
+  describe('Delete Link', () => {
+    describe('When dont send userId', () => {
+      beforeEach(() => (response = request.linkUser('access_token', '', 'link')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When can delete the user well', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id2' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+      })
+      beforeEach(() => {
+        return request.linkUser('access_token', 'id2', 'link')
+          .then(() => request.linkUser('access_token', 'id', 'link'))
+          .then(() => (response = request.deleteLink('access_token', 'id2')))
+      });
+
+      it('should have delete the link', () => response
+        .then((res) => {
+          assert.equal(res.status, 204);
+          assert.deepEqual(res.body, {});
+        }));
+    });
+
+    describe('When try to get the link after delete', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id2' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+      })
+      beforeEach(() => {
+        return request.linkUser('access_token', 'id2', 'link')
+          .then(() => request.linkUser('access_token', 'id', 'link'))
+          .then(() => request.deleteLink('access_token', 'id2'))
+          .then(() => (response = request.getLinks('access_token')))
+      });
+
+      it('should have delete the link', () => response
+        .then((res) => {
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, { profiles: [] });
+        }));
+    });
+
+    describe('When the user does not exist', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+      })
+      beforeEach(() => {
+        return (response = request.deleteLink('access_token', 'id2'))
+      });
+
+      it('should have return 204', () => response
+        .then((res) => {
+          assert.equal(res.status, 204);
+          assert.deepEqual(res.body, {});
+        }));
     });
   });
 });

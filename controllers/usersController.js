@@ -49,7 +49,8 @@ module.exports.link = (req, res) => {
   const action = req.body.action;
 
   return aux.validateToken(accessToken)
-    .then(() => validateAction(userId, action))
+    .then(() => validateAction(action))
+    .then(() => validateUserId(userId))
     .then(() => linkService.link(accessToken, userId, action))
     .then((response) => {
       aux.onLog('Response:', response);
@@ -71,6 +72,21 @@ module.exports.getLinks = (req, res) => {
     .catch((err) => aux.onError('Link', res, err))
 }
 
+module.exports.deleteLink = (req, res) => {
+  const accessToken = req.headers.authorization;
+  const userId = req.params.userId;
+  aux.onLog('Request: Delete link', userId);
+
+  return aux.validateToken(accessToken)
+    .then(() => validateUserId(userId))
+    .then(() => linkService.deleteLink(accessToken, userId))
+    .then(() => {
+      aux.onLog('Response: deleted', userId);
+      return res.status(204).json({})
+    })
+    .catch((err) => aux.onError('Delete link', res, err))
+}
+
 const validateProfile = (profile) => {
   const validProfile =
     profile.photo ||
@@ -83,8 +99,14 @@ const validateProfile = (profile) => {
     Promise.reject({ status: 400, message: 'missing valid profile' })
 }
 
-const validateAction = (userId, action) => {
-  return (userId && action) ?
+const validateAction = (action) => {
+  return (action) ?
     Promise.resolve() :
-    Promise.reject({ status: 400, message: 'missing userId or action' })
+    Promise.reject({ status: 400, message: 'missing action' })
+}
+
+const validateUserId = (userId) => {
+  return (userId) ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing userId' })
 }

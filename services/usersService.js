@@ -38,7 +38,7 @@ module.exports.updateProfile = (accessToken, body) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then((fbProfile) => {
       const profileToUpdate = _.pick(body, ['photo', 'photos', 'description', 'location']);
-      profileToUpdate.location = [-58.381584, -34.603736];
+      // profileToUpdate.location = [-58.381584, -34.603736];
 
       return UsersDB.updateProfile(Object.assign({}, profileToUpdate, { id: fbProfile.id }))
     })

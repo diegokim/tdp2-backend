@@ -50,6 +50,15 @@ module.exports.getLinks = function (userId) {
     })
 }
 
+module.exports.deleteLink = function (id, userId) {
+  const query = { $or: [
+    { sendUID: userId, recUID: id },
+    { sendUID: id, recUID: userId }
+  ]}
+
+  return Link.remove(query);
+}
+
 module.exports.search = function (params) {
   const sendQuery = { sendUID: params.sendUID };
 

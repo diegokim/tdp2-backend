@@ -36,6 +36,7 @@ router.get('/login', (req, res) => loginController.login(req, res));
 router.get('/user/candidates', (req, res) => usersController.getCandidates(req, res));
 router.put('/user/:userId/link', (req, res) => usersController.link(req, res));
 router.get('/user/links', (req, res) => usersController.getLinks(req, res));
+router.delete('/user/:userId/link', (req, res) => usersController.deleteLink(req, res));
 
 // Profile
 router.get('/profile', (req, res) => usersController.get(req, res)); // users/profile

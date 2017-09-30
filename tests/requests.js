@@ -56,3 +56,10 @@ module.exports.getLinks = (accessToken) => Promise.resolve(
     .send()
     .catch((err) => err)
 );
+
+module.exports.deleteLink = (accessToken, userId) => Promise.resolve(
+  request.delete(baseUrl + `/user/${userId}/link`)
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);

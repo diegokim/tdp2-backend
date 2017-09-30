@@ -86,6 +86,16 @@ const filterParamsToSearch = (user) => {
   };
 }
 
+/**
+ * Delete Link
+ *
+ */
+module.exports.deleteLink = (accessToken, userId) => {
+  return faceAPI.getProfile(accessToken, ['id'])
+  .then(({ id }) => LinkDB.deleteLink(id, userId));
+  // TOD0: Delete the chat
+}
+
 const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
   return candByProf.filter((cand) => {
     const doMatchLinked = noCandByLink.filter(($cand) => ($cand.recUID === cand.id)).length > 0;
