@@ -52,6 +52,27 @@ describe('Integration link tests', () => {
         }));
     });
 
+    describe('when the user has been blocked before', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id2' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+      })
+      beforeEach(() => {
+        return request.actionUser('access_token', 'id', 'block')
+          .then(() => (response = request.getCandidates('access_token')))
+      });
+
+      it('should not return this user as candidate', () => response
+        .then((res) => {
+          const resultSet = res.body.profiles;
+
+          assert.equal(res.status, 200);
+          assert.equal('id4', resultSet[0].id);
+          assert.equal(resultSet.length, 1)
+        }));
+    });
+
     describe('When the user has candidates but they have linked actions', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -60,8 +81,8 @@ describe('Integration link tests', () => {
         return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
       })
       beforeEach(() => {
-        return request.linkUser('access_token', 'id2', 'link')
-          .then(() => request.linkUser('access_token', 'id4', 'reject'))
+        return request.actionUser('access_token', 'id2', 'link')
+          .then(() => request.actionUser('access_token', 'id4', 'reject'))
           .then(() => (response = request.getCandidates('access_token')))
       });
 
@@ -80,7 +101,7 @@ describe('Integration link tests', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
       })
-      beforeEach(() => (response = request.linkUser('access_token', 'id2', 'link')));
+      beforeEach(() => (response = request.actionUser('access_token', 'id2', 'link')));
 
       it('should return not found', () => response
         .then((res) => {
@@ -91,7 +112,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When dont send action', () => {
-      beforeEach(() => (response = request.linkUser('access_token', 'id2')));
+      beforeEach(() => (response = request.actionUser('access_token', 'id2')));
 
       it('should return not found', () => response
         .then((res) => {
@@ -102,7 +123,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When dont send userId', () => {
-      beforeEach(() => (response = request.linkUser('access_token', '', 'link')));
+      beforeEach(() => (response = request.actionUser('access_token', '', 'link')));
 
       it('should return not found', () => response
         .then((res) => {
@@ -119,8 +140,8 @@ describe('Integration link tests', () => {
           return DB.initialize({ users: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
-          return request.linkUser('access_token', 'id2', 'link')
-            .then(() => (response = request.linkUser('access_token', 'id', 'link')))
+          return request.actionUser('access_token', 'id2', 'link')
+            .then(() => (response = request.actionUser('access_token', 'id', 'link')))
         });
 
         it('should return true because a link has not occured', () => response
@@ -135,7 +156,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id' })
           return DB.initialize({ users: [userProfile, anotherUserProfile] })
         })
-        beforeEach(() => (response = request.linkUser('access_token', 'id2', 'link')));
+        beforeEach(() => (response = request.actionUser('access_token', 'id2', 'link')));
 
         it('should return false because a link has not occured', () => response
           .then((res) => {
@@ -166,8 +187,8 @@ describe('Integration link tests', () => {
           return DB.initialize({ users: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
-          return request.linkUser('access_token', 'id2', 'link')
-            .then(() => request.linkUser('access_token', 'id', 'link'))
+          return request.actionUser('access_token', 'id2', 'link')
+            .then(() => request.actionUser('access_token', 'id', 'link'))
             .then(() => (response = request.getLinks('access_token')))
         });
 
@@ -189,10 +210,10 @@ describe('Integration link tests', () => {
           return DB.initialize({ users: [userProfile, anotherUserProfile, anotherAnotherUserProfile] })
         })
         beforeEach(() => {
-          return request.linkUser('access_token', 'id2', 'link')
-            .then(() => request.linkUser('access_token', 'id', 'link'))
-            .then(() => request.linkUser('access_token', 'id3', 'link'))
-            .then(() => request.linkUser('access_token', 'id', 'link'))
+          return request.actionUser('access_token', 'id2', 'link')
+            .then(() => request.actionUser('access_token', 'id', 'link'))
+            .then(() => request.actionUser('access_token', 'id3', 'link'))
+            .then(() => request.actionUser('access_token', 'id', 'link'))
             .then(() => (response = request.getLinks('access_token')))
         });
 
@@ -208,9 +229,51 @@ describe('Integration link tests', () => {
     });
   });
 
+  describe('Block User', () => {
+    describe('When both users exist', () => {
+      describe('and a link exists', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => {
+          return request.actionUser('access_token', 'id2', 'link')
+            .then(() => request.actionUser('access_token', 'id', 'link'))
+            .then(() => request.actionUser('access_token', 'id2', 'block'))
+            .then(() => (response = request.getLinks('access_token')));
+        });
+
+        it('should return empty links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { profiles: [] });
+          }));
+      })
+
+      describe('when the block does occur', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        })
+        beforeEach(() => {
+          return (response = request.actionUser('access_token', 'id2', 'block'))
+        });
+
+        it('should return an empty response', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, {});
+          }));
+      })
+    });
+  });
+
   describe('Delete Link', () => {
     describe('When dont send userId', () => {
-      beforeEach(() => (response = request.linkUser('access_token', '', 'link')));
+      beforeEach(() => (response = request.actionUser('access_token', '', 'link')));
 
       it('should return not found', () => response
         .then((res) => {
@@ -227,8 +290,8 @@ describe('Integration link tests', () => {
         return DB.initialize({ users: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
-        return request.linkUser('access_token', 'id2', 'link')
-          .then(() => request.linkUser('access_token', 'id', 'link'))
+        return request.actionUser('access_token', 'id2', 'link')
+          .then(() => request.actionUser('access_token', 'id', 'link'))
           .then(() => (response = request.deleteLink('access_token', 'id2')))
       });
 
@@ -248,8 +311,8 @@ describe('Integration link tests', () => {
         return DB.initialize({ users: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
-        return request.linkUser('access_token', 'id2', 'link')
-          .then(() => request.linkUser('access_token', 'id', 'link'))
+        return request.actionUser('access_token', 'id2', 'link')
+          .then(() => request.actionUser('access_token', 'id', 'link'))
           .then(() => request.deleteLink('access_token', 'id2'))
           .then(() => (response = request.getLinks('access_token')))
       });

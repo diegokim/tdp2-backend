@@ -22,12 +22,13 @@ module.exports.getCandidates = (accessToken, userId) => {
         UsersDB.search(paramsToSearch),
         SettingsDB.search(paramsToSearch),
         LinkDB.search({ sendUID: user.profile.id }),
+        LinkDB.search({ recUID: user.profile.id, action: 'block' }),
         user
         // TOD0: new people
       ])
     })
-    .then(([candByProf, candBySet, noCandByLink, user]) => {
-      return filterCandidates(candByProf, candBySet, noCandByLink, user)
+    .then(([candByProf, candBySet, noCandByLink, noBlockByLink, user]) => {
+      return filterCandidates(candByProf, candBySet, noCandByLink.concat(noBlockByLink), user)
     })
     .then((candidates) => {
       const parsedCandidates = candidates.map((candidate) => candidate); // (_.omit(candidate._doc, ['photos']
@@ -36,28 +37,57 @@ module.exports.getCandidates = (accessToken, userId) => {
 }
 
 /**
- * Link User action
+ * Add action to user
  *
  */
-module.exports.link = (accessToken, userId, action) => {
+module.exports.addAction = (accessToken, userIdTo, action) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then(({ id }) => {
       return Promise.all([
         UsersDB.get(id),
-        UsersDB.get(userId)
+        UsersDB.get(userIdTo)
       ])
       .then(([u1, u2]) => (u1 && u2 ? true : Promise.reject({ status: 404, message: 'user does not exist' })))
       .then(() => {
-        const newLink = new LinkDB({ sendUID: id, recUID: userId, action });
+        const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action });
         return LinkDB.create(newLink);
       })
-      .then(() => LinkDB.existsLink(id, userId))
-      .then((existsLink) => {
-        return (existsLink) ?
-          Promise.resolve({ link: true }) : // coming soon --> Notification
-          Promise.resolve({ link: false })
+      .then(() => {
+        if (action === 'link') {
+          return onLinkAction(id, userIdTo);
+        } else if (action === 'super-link') {
+          return onSuperLinkAction(id, userIdTo);
+        } else if (action === 'block') {
+          return onBlockAction(id, userIdTo);
+        } else if (action === 'report') {
+          return onReportAction(id, userIdTo);
+        }
       })
     })
+}
+
+const onLinkAction = (id, userIdTo) => {
+  return LinkDB.existsLink(id, userIdTo)
+    .then((existsLink) => {
+      return (existsLink) ?
+        Promise.resolve({ link: true }) : // coming soon --> Notification
+        Promise.resolve({ link: false })
+    })
+}
+
+// eslint-disable-next-line
+const onSuperLinkAction = (id, userIdTo) => {
+  return Promise.resolve(); // coming soon --> Notification
+}
+
+const onBlockAction = (id, userIdTo) => {
+  return LinkDB.deleteLink(id, userIdTo).then(() => ({})); // coming soon --> Notification
+  // or delete not BLOCK ? TOD0
+}
+
+// eslint-disable-next-line
+const onReportAction = (id, userIdTo) => {
+  return Promise.resolve(); // coming soon --> Notification
 }
 
 /**
@@ -98,7 +128,7 @@ module.exports.deleteLink = (accessToken, userId) => {
 
 const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
   return candByProf.filter((cand) => {
-    const doMatchLinked = noCandByLink.filter(($cand) => ($cand.recUID === cand.id)).length > 0;
+    const doMatchLinked = noCandByLink.filter(($cand) => ($cand.recUID === cand.id || $cand.sendUID === cand.id)).length > 0;
 
     if (doMatchLinked || cand.id === user.profile.id) {
       return false;

@@ -33,18 +33,18 @@ router.get('/ping', (req, res) => statusController.ping(req, res));
 router.get('/login', (req, res) => loginController.login(req, res));
 
 // Users
-router.get('/user/candidates', (req, res) => usersController.getCandidates(req, res));
-router.put('/user/:userId/link', (req, res) => usersController.link(req, res));
-router.get('/user/links', (req, res) => usersController.getLinks(req, res));
-router.delete('/user/:userId/link', (req, res) => usersController.deleteLink(req, res));
+router.get('/users/me/candidates', (req, res) => usersController.getCandidates(req, res));
+router.get('/users/me/links', (req, res) => usersController.getLinks(req, res));
+router.put('/users/:userId/actions', (req, res) => usersController.addAction(req, res));
+router.delete('/users/:userId', (req, res) => usersController.deleteLink(req, res));
 
 // Profile
-router.get('/profile', (req, res) => usersController.get(req, res)); // users/profile
-router.patch('/profile', (req, res) => usersController.update(req, res));
+router.get('/users/me/profile', (req, res) => usersController.get(req, res));
+router.patch('/users/me/profile', (req, res) => usersController.update(req, res));
 
 // Settings
-router.get('/settings', (req, res) => settingsController.get(req, res));
-router.patch('/settings', (req, res) => settingsController.update(req, res));
+router.get('/users/me/settings', (req, res) => settingsController.get(req, res));
+router.patch('/users/me/settings', (req, res) => settingsController.update(req, res));
 
 app.use(router);
 

@@ -96,7 +96,7 @@ Respuesta:
 
 ## Perfil
 
-### GET /profile
+### GET /users/me/profile
 
 Mensaje:
 
@@ -128,7 +128,7 @@ Respuesta:
 	  }
 
 
-### PATCH /profile (update)
+### PATCH /users/me/profile (update)
 
 Mensaje:
 
@@ -153,7 +153,7 @@ Respuesta:
 
 ## Settings
 
-### GET /settings
+### GET /users/me/settings
 
 Mensaje:
 
@@ -179,7 +179,7 @@ Respuesta:
 	  }
 
 
-### PATCH /settings (update)
+### PATCH /users/me/settings (update)
 
 Mensaje:
 
@@ -208,7 +208,7 @@ Respuesta:
 
 ## Users (candidates)
 
-### GET /user/candidates
+### GET /users/me/candidates
 
 Mensaje:
 
@@ -226,7 +226,7 @@ Respuesta:
 
 ## Links
 
-### PUT /user/{id}/link
+### PUT /users/{id}/actions
 
 Mensaje:
 
@@ -234,7 +234,8 @@ Mensaje:
       Authorization: 'access_token'
     }
     body: {
-      action: 'link' // 'super-link', 'reject'
+      action: 'link', // 'super-link', 'reject', 'block', 'report'
+      message: ''     // 'Reporto al usuario por irrespetuoso e ignorante'
     }
 
 Respuesta:
@@ -243,7 +244,7 @@ Respuesta:
 	  body: { link: false }
 
 
-### GET /user/links
+### GET /users/me/links
 
 Mensaje:
 
@@ -259,7 +260,7 @@ Respuesta:
 	    profiles: []
 	  }
 
-### DELETE /user/{id}/link
+### DELETE /users/{id}
 
 Mensaje:
 
@@ -270,5 +271,5 @@ Mensaje:
 
 Respuesta:
 
-	respuesta --> 203
+	respuesta --> 204
 	  body: {}

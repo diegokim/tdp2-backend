@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const _ = require('lodash');
 
 //  Link Schema
 const LinkSchema = mongoose.Schema({
@@ -9,7 +10,7 @@ const LinkSchema = mongoose.Schema({
     type: String
   },
   action: {
-    type: String // link, super-link, reject
+    type: String // link, super-link, reject, block, report
   }
 })
 
@@ -40,11 +41,11 @@ module.exports.existsLink = function (userId1, userId2) {
 }
 
 module.exports.getLinks = function (userId) {
-  const sendQuery = { sendUID: userId, action: 'link' }; // TOD0: SUPERLINK
+  const sendQuery = { sendUID: userId, action: 'link' }; // TOD0: SUPERLINK, LO HARIA CON LINK Y QUE SUPERLINK SOLO MANDE NOTIF
 
   return Link.find(sendQuery)
-    .then((links) => {
-      const recQuery = links.map((link) => ({ sendUID: link.recUID, recUID: userId, action: 'link' }))
+    .then((links) => { // filter by links
+      const recQuery = links.map((link) => ({ sendUID: link.recUID, recUID: userId, action: 'link' }));
 
       return recQuery.length ? Link.find({ $or: recQuery }).sort({ __v: 1 }) : [];
     })
@@ -52,15 +53,15 @@ module.exports.getLinks = function (userId) {
 
 module.exports.deleteLink = function (id, userId) {
   const query = { $or: [
-    { sendUID: userId, recUID: id },
-    { sendUID: id, recUID: userId }
+    { sendUID: userId, recUID: id, action: 'link' },
+    { sendUID: id, recUID: userId, action: 'link' }
   ]}
 
   return Link.remove(query);
 }
 
 module.exports.search = function (params) {
-  const sendQuery = { sendUID: params.sendUID };
+  const query = _.pick(params, ['sendUID', 'recUID', 'action']);
 
-  return Link.find(sendQuery);
+  return Link.find(query);
 }

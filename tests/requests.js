@@ -9,56 +9,56 @@ module.exports.login = (accessToken) => Promise.resolve(
 );
 
 module.exports.getProfile = (accessToken) => Promise.resolve(
-  request.get(baseUrl + '/profile')
+  request.get(baseUrl + '/users/me/profile')
     .set({'Authorization': accessToken})
     .send()
     .catch((err) => err)
 );
 
 module.exports.updateProfile = (accessToken, profile) => Promise.resolve(
-  request.patch(baseUrl + '/profile')
+  request.patch(baseUrl + '/users/me/profile')
     .set({'Authorization': accessToken})
     .send(profile)
     .catch((err) => err)
 );
 
 module.exports.getSettings = (accessToken) => Promise.resolve(
-  request.get(baseUrl + '/settings')
+  request.get(baseUrl + '/users/me/settings')
     .set({'Authorization': accessToken})
     .send()
     .catch((err) => err)
 );
 
 module.exports.updateSettings = (accessToken, settings) => Promise.resolve(
-  request.patch(baseUrl + '/settings')
+  request.patch(baseUrl + '/users/me/settings')
     .set({'Authorization': accessToken})
     .send(settings)
     .catch((err) => err)
 );
 
 module.exports.getCandidates = (accessToken) => Promise.resolve(
-  request.get(baseUrl + '/user/candidates')
+  request.get(baseUrl + '/users/me/candidates')
     .set({'Authorization': accessToken})
     .send()
     .catch((err) => err)
 );
 
-module.exports.linkUser = (accessToken, userId, action) => Promise.resolve(
-  request.put(baseUrl + `/user/${userId}/link`)
+module.exports.actionUser = (accessToken, userId, action) => Promise.resolve(
+  request.put(baseUrl + `/users/${userId}/actions`)
     .set({'Authorization': accessToken})
     .send({ action })
     .catch((err) => err)
 );
 
 module.exports.getLinks = (accessToken) => Promise.resolve(
-  request.get(baseUrl + '/user/links')
+  request.get(baseUrl + '/users/me/links')
     .set({'Authorization': accessToken})
     .send()
     .catch((err) => err)
 );
 
 module.exports.deleteLink = (accessToken, userId) => Promise.resolve(
-  request.delete(baseUrl + `/user/${userId}/link`)
+  request.delete(baseUrl + `/users/${userId}`)
   .set({'Authorization': accessToken})
   .send()
   .catch((err) => err)
