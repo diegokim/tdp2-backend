@@ -23,12 +23,13 @@ module.exports.getCandidates = (accessToken, userId) => {
         SettingsDB.search(paramsToSearch),
         LinkDB.search({ sendUID: user.profile.id }),
         LinkDB.search({ recUID: user.profile.id, action: 'block' }),
+        LinkDB.search({ recUID: user.profile.id, action: 'report' }),
         user
         // TOD0: new people
       ])
     })
-    .then(([candByProf, candBySet, noCandByLink, noBlockByLink, user]) => {
-      return filterCandidates(candByProf, candBySet, noCandByLink.concat(noBlockByLink), user)
+    .then(([candByProf, candBySet, noCandByLink, blockedUsers, reportedUsers, user]) => {
+      return filterCandidates(candByProf, candBySet, noCandByLink.concat(blockedUsers).concat(reportedUsers), user)
     })
     .then((candidates) => {
       const parsedCandidates = candidates.map((candidate) => candidate); // (_.omit(candidate._doc, ['photos']
@@ -40,7 +41,7 @@ module.exports.getCandidates = (accessToken, userId) => {
  * Add action to user
  *
  */
-module.exports.addAction = (accessToken, userIdTo, action) => {
+module.exports.addAction = (accessToken, userIdTo, body) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then(({ id }) => {
       return Promise.all([
@@ -49,17 +50,18 @@ module.exports.addAction = (accessToken, userIdTo, action) => {
       ])
       .then(([u1, u2]) => (u1 && u2 ? true : Promise.reject({ status: 404, message: 'user does not exist' })))
       .then(() => {
-        const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action });
+        const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action, message: body.message });
+
         return LinkDB.create(newLink);
       })
       .then(() => {
-        if (action === 'link') {
+        if (body.action === 'link') {
           return onLinkAction(id, userIdTo);
-        } else if (action === 'super-link') {
+        } else if (body.action === 'super-link') {
           return onSuperLinkAction(id, userIdTo);
-        } else if (action === 'block') {
+        } else if (body.action === 'block') {
           return onBlockAction(id, userIdTo);
-        } else if (action === 'report') {
+        } else if (body.action === 'report') {
           return onReportAction(id, userIdTo);
         }
       })
@@ -87,7 +89,7 @@ const onBlockAction = (id, userIdTo) => {
 
 // eslint-disable-next-line
 const onReportAction = (id, userIdTo) => {
-  return Promise.resolve(); // coming soon --> Notification
+  return LinkDB.deleteLink(id, userIdTo).then(() => ({})); // coming soon --> Notification
 }
 
 /**

@@ -46,12 +46,12 @@ module.exports.addAction = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
   const userId = req.params.userId;
-  const action = req.body.action;
+  const body = req.body;
 
   return aux.validateToken(accessToken)
-    .then(() => validateAction(action))
+    .then(() => validateAction(body.action))
     .then(() => validateUserId(userId))
-    .then(() => linkService.addAction(accessToken, userId, action))
+    .then(() => linkService.addAction(accessToken, userId, body))
     .then((response) => {
       aux.onLog('Response:', response);
       return res.status(200).json(response)

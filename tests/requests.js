@@ -43,10 +43,10 @@ module.exports.getCandidates = (accessToken) => Promise.resolve(
     .catch((err) => err)
 );
 
-module.exports.actionUser = (accessToken, userId, action) => Promise.resolve(
+module.exports.actionUser = (accessToken, userId, body) => Promise.resolve(
   request.put(baseUrl + `/users/${userId}/actions`)
     .set({'Authorization': accessToken})
-    .send({ action })
+    .send(body)
     .catch((err) => err)
 );
 

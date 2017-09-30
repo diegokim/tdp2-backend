@@ -11,6 +11,9 @@ const LinkSchema = mongoose.Schema({
   },
   action: {
     type: String // link, super-link, reject, block, report
+  },
+  message: {
+    type: String
   }
 })
 
