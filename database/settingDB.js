@@ -61,5 +61,5 @@ module.exports.search = function (params) { // diferent id than I
     ]
   }
 
-  return Setting.find(query);
+  return Setting.find(query, '-name', { lean: true });
 }

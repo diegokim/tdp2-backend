@@ -94,11 +94,11 @@ module.exports.search = function (params) {
     ]
   }
 
-  return User.find(query);
+  return User.find(query, '-name', { lean: true });
 }
 
 module.exports.getUsers = function (userIds) {
   const queryIds = userIds.map((uid) => ({ id: uid }))
 
-  return queryIds.length ? User.find({ $or: queryIds }) : [];
+  return queryIds.length ? User.find({ $or: queryIds }, '-name', { lean: true }) : Promise.resolve([]);
 }

@@ -158,7 +158,7 @@ describe('Integration link tests', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -175,7 +175,7 @@ describe('Integration link tests', () => {
       describe('when a link does not occur', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => (response = request.actionUser('access_token', 'id2', { action: 'link' })));
 
@@ -205,7 +205,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -217,6 +217,7 @@ describe('Integration link tests', () => {
           .then((res) => {
             assert.equal(res.status, 200);
             assert.deepEqual(res.body.profiles[0].id, 'id2');
+            assert.deepEqual(res.body.profiles[0].type, 'male');
             assert.deepEqual(res.body.profiles[0].photo, 'foto2');
           }));
       })
@@ -228,7 +229,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id3' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile, anotherAnotherUserProfile] })
+          return DB.initialize({ users: [userProfile, anotherUserProfile, anotherAnotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -245,6 +246,8 @@ describe('Integration link tests', () => {
             assert.include(['id2', 'id3'], res.body.profiles[1].id);
             assert.include(['foto2', 'foto3'], res.body.profiles[0].photo);
             assert.include(['foto2', 'foto3'], res.body.profiles[1].photo);
+            assert.include(['male', 'female'], res.body.profiles[0].type);
+            assert.include(['male', 'female'], res.body.profiles[1].type);
           }));
       })
     });

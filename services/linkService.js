@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const geolib = require('geolib');
 const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
@@ -51,25 +50,29 @@ module.exports.addAction = (accessToken, userIdTo, body) => {
       .then(([u1, u2]) => (u1 && u2 ? true : Promise.reject({ status: 404, message: 'user does not exist' })))
       .then(() => {
         const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action, message: body.message });
-
-        return LinkDB.create(newLink);
-      })
-      .then(() => {
         if (body.action === 'link') {
-          return onLinkAction(id, userIdTo);
+          return onLinkAction(id, userIdTo, newLink);
         } else if (body.action === 'super-link') {
-          return onSuperLinkAction(id, userIdTo);
+          return LinkDB.create(newLink).then(() => onSuperLinkAction(id, userIdTo));
         } else if (body.action === 'block') {
-          return onBlockAction(id, userIdTo);
+          return LinkDB.create(newLink).then(() => onBlockAction(id, userIdTo));
         } else if (body.action === 'report') {
-          return onReportAction(id, userIdTo);
+          return LinkDB.create(newLink).then(() => onReportAction(id, userIdTo));
+        } else {
+          return LinkDB.create(newLink);
         }
       })
     })
 }
 
-const onLinkAction = (id, userIdTo) => {
-  return LinkDB.existsLink(id, userIdTo)
+const onLinkAction = (id, userIdTo, newLink) => {
+  return SettingsDB.get(id)
+    .then((settings) => settings.interestType)
+    .then((interestType) => {
+      newLink.type = interestType;
+      return LinkDB.create(newLink);
+    })
+    .then(() => LinkDB.existsLink(id, userIdTo))
     .then((existsLink) => {
       return (existsLink) ?
         Promise.resolve({ link: true }) : // coming soon --> Notification
@@ -99,9 +102,16 @@ const onReportAction = (id, userIdTo) => {
 module.exports.getLinks = (accessToken) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then(({ id }) => LinkDB.getLinks(id))
-    .then((userLinks) => userLinks.map((ul) => ul.sendUID))
-    .then((userIds) => UsersDB.getUsers(userIds))
-    .then((userProfiles) => userProfiles.map((up) => _.omit(up._doc, ['photos'])))
+    .then((userLinks) => {
+      const userIds = [];
+      const userTypes = {};
+      for (const user of userLinks) {
+        userIds.push(user.sendUID);
+        userTypes[user.sendUID] = user.type;
+      }
+      return UsersDB.getUsers(userIds)
+        .then((up) => (up.map((prof) => (Object.assign({}, prof, { type: userTypes[prof.id] })))))
+    })
 }
 
 const filterParamsToSearch = (user) => {
@@ -137,12 +147,7 @@ const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
     }
     return candBySet.filter(($cand) => ($cand.id === cand.id)).length > 0
   })
-  .map((cand) => { // TOD0: AVERIGUAR POR QUE PASA ESTO
-    if (cand._doc) {
-      return Object.assign({}, cand._doc, { distance: calculateDistance(user.profile.location, cand.location) })
-    }
-    return Object.assign({}, cand, { distance: calculateDistance(user.profile.location, cand.location) })
-  })
+  .map((cand) => (Object.assign({}, cand, { distance: calculateDistance(user.profile.location, cand.location) })))
 }
 
 const calculateDistance = (location1, location2) => {

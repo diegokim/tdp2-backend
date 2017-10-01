@@ -14,6 +14,9 @@ const LinkSchema = mongoose.Schema({
   },
   message: {
     type: String
+  },
+  type: {
+    type: String
   }
 })
 
@@ -39,14 +42,14 @@ module.exports.existsLink = function (userId1, userId2) {
     { sendUID: userId2, recUID: userId1, action: 'link' }
   ]}
 
-  return Link.find(query)
+  return Link.find(query, '-name', { lean: true })
     .then((res) => (res.length === 2))
 }
 
 module.exports.getLinks = function (userId) {
   const sendQuery = { sendUID: userId, action: 'link' }; // TOD0: SUPERLINK, LO HARIA CON LINK Y QUE SUPERLINK SOLO MANDE NOTIF
 
-  return Link.find(sendQuery)
+  return Link.find(sendQuery, '-name', { lean: true })
     .then((links) => { // filter by links
       const recQuery = links.map((link) => ({ sendUID: link.recUID, recUID: userId, action: 'link' }));
 
@@ -66,5 +69,5 @@ module.exports.deleteLink = function (id, userId) {
 module.exports.search = function (params) {
   const query = _.pick(params, ['sendUID', 'recUID', 'action']);
 
-  return Link.find(query);
+  return Link.find(query, '-name', { lean: true });
 }

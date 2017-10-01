@@ -42,7 +42,7 @@ module.exports.updateProfile = (accessToken, body) => {
 
       return UsersDB.updateProfile(Object.assign({}, profileToUpdate, { id: fbProfile.id }))
     })
-    .then((profile) => (_.omit(profile._doc, ['photo', 'photos'])))
+    .then((profile) => (_.omit(profile, ['photo', 'photos'])))
 }
 
 /**
