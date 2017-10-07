@@ -3,6 +3,7 @@ const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
 const SettingsDB = require('../database/settingDB');
 const faceAPI = require('../clients/faceAPI');
+const firebaseAPI = require('../clients/firebaseAPI');
 const usersService = require('./usersService');
 
 const MAX_CANDIDATES = 5;
@@ -134,8 +135,8 @@ const filterParamsToSearch = (user) => {
  */
 module.exports.deleteLink = (accessToken, userId) => {
   return faceAPI.getProfile(accessToken, ['id'])
-  .then(({ id }) => LinkDB.deleteLink(id, userId));
-  // TOD0: Delete the chat
+    .then(({ id }) => (LinkDB.deleteLink(id, userId)
+    .then(() => firebaseAPI.deleteConversation(id, userId))));
 }
 
 const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {

@@ -63,3 +63,10 @@ module.exports.deleteLink = (accessToken, userId) => Promise.resolve(
   .send()
   .catch((err) => err)
 );
+
+module.exports.sendChatMessage = (accessToken, userId, body) => Promise.resolve(
+  request.post(baseUrl + `/users/${userId}/chats/message`)
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);

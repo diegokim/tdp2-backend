@@ -7,7 +7,7 @@ const settingsController = require('./controllers/settingsController');
 const statusController = require('./controllers/statusController');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
-const firebaseAPI = require('./clients/firebaseAPI');
+const chatController = require('./controllers/chatController');
 const database = require('./database/database');
 
 const mocks = require('./database/mocks');
@@ -47,9 +47,8 @@ router.patch('/users/me/profile', (req, res) => usersController.update(req, res)
 router.get('/users/me/settings', (req, res) => settingsController.get(req, res));
 router.patch('/users/me/settings', (req, res) => settingsController.update(req, res));
 
-// Firebase
-router.get('/firebase', (req, res) => firebaseAPI.sendMessage(req, res));
-
+// Chat
+router.post('/users/:userId/chats/message', (req, res) => chatController.sendMessage(req, res));
 
 app.use(router);
 

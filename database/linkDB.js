@@ -27,6 +27,7 @@ module.exports.create = function (link) {
   const query = { sendUID: link.sendUID, recUID: link.recUID };
 
   return Link.findOne(query)
+    .then(normalizeResponse)
     .then((resp) => {
       const promise = link.save();
       if (resp) {
@@ -42,18 +43,19 @@ module.exports.existsLink = function (userId1, userId2) {
     { sendUID: userId2, recUID: userId1, action: 'link' }
   ]}
 
-  return Link.find(query, '-name', { lean: true })
+  return Link.find(query)
+    .then(normalizeResponse)
     .then((res) => (res.length === 2))
 }
 
 module.exports.getLinks = function (userId) {
   const sendQuery = { sendUID: userId, action: 'link' }; // TOD0: SUPERLINK, LO HARIA CON LINK Y QUE SUPERLINK SOLO MANDE NOTIF
 
-  return Link.find(sendQuery, '-name', { lean: true })
+  return Link.find(sendQuery).then(normalizeResponse)
     .then((links) => { // filter by links
       const recQuery = links.map((link) => ({ sendUID: link.recUID, recUID: userId, action: 'link' }));
 
-      return recQuery.length ? Link.find({ $or: recQuery }).sort({ __v: 1 }) : [];
+      return recQuery.length ? Link.find({ $or: recQuery }).sort({ __v: 1 }).then(normalizeResponse) : [];
     })
 }
 
@@ -63,11 +65,18 @@ module.exports.deleteLink = function (id, userId) {
     { sendUID: id, recUID: userId, action: 'link' }
   ]}
 
-  return Link.remove(query);
+  return Link.remove(query); // TOD0: if the link does not exits, it will be in a deadlock
 }
 
 module.exports.search = function (params) {
   const query = _.pick(params, ['sendUID', 'recUID', 'action']);
 
-  return Link.find(query, '-name', { lean: true });
+  return Link.find(query).then(normalizeResponse);
+}
+
+const normalizeResponse = (res) => {
+  if (_.isArray(res)) {
+    return res.map(normalizeResponse);
+  }
+  return res ? res.toObject() : res;
 }

@@ -273,3 +273,22 @@ Respuesta:
 
 	respuesta --> 204
 	  body: {}
+
+
+## CHAT
+
+### POST /users/{id}/chats/message
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      message: 'message to user'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {}

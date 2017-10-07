@@ -348,11 +348,14 @@ describe('Integration link tests', () => {
         }));
     });
 
-    describe('When can delete the user well', () => {
+    describe('When can delete the user well', function () {
+      this.timeout(10000);
+
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id2' })
         nockProfile(['id'], accessToken, { id: 'id' })
+        nockDeleteConversationFirebase({ sendUID: 'id', recUID: 'id2' }, { response: 'jajaja' })
         return DB.initialize({ users: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
@@ -418,6 +421,17 @@ const nockProfile = (params, accessToken, response) => {
   return nock('https://graph.facebook.com')
     .get(`/v2.3/me?fields=${paramsToSearch}&access_token=${accessToken}`)
     .reply(200, response);
+}
+
+const nockDeleteConversationFirebase = ({ sendUID, recUID }, response) => {
+  // TOD0: that does not work u.u
+  nock('https://tdp2-frontend-7028a.firebaseio.com')
+    .delete(`/chats/${sendUID}/messages/${recUID}`)
+    .reply(204, response);
+
+  nock('https://tdp2-frontend-7028a.firebaseio.com')
+    .delete(`/chats/${recUID}/messages/${sendUID}`)
+    .reply(204, response);
 }
 
 const userSetting = {

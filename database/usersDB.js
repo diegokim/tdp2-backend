@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const _ = require('lodash');
+const mongoose = require('mongoose');
 
 //  User Schema
 const UserSchema = mongoose.Schema({
@@ -47,7 +48,7 @@ module.exports.create = function (user) {
 module.exports.get = function (id) {
   const query = { id };
 
-  return User.findOne(query);
+  return User.findOne(query).then(normalizeResponse);
 }
 
 module.exports.updateProfile = function (user) {
@@ -57,7 +58,7 @@ module.exports.updateProfile = function (user) {
       Promise.reject({ status: 404, message: 'user is not login' }) :
       existUser.update(user)
   })
-  .then(() => User.findOne({ id: user.id }));
+  .then(() => User.findOne({ id: user.id })).then(normalizeResponse);
 }
 
 /**
@@ -94,11 +95,18 @@ module.exports.search = function (params) {
     ]
   }
 
-  return User.find(query, '-name', { lean: true });
+  return User.find(query).then(normalizeResponse);
 }
 
 module.exports.getUsers = function (userIds) {
   const queryIds = userIds.map((uid) => ({ id: uid }))
 
-  return queryIds.length ? User.find({ $or: queryIds }, '-name', { lean: true }) : Promise.resolve([]);
+  return queryIds.length ? User.find({ $or: queryIds }).then(normalizeResponse) : Promise.resolve([]);
+}
+
+const normalizeResponse = (res) => {
+  if (_.isArray(res)) {
+    return res.map(normalizeResponse);
+  }
+  return res ? res.toObject() : res;
 }

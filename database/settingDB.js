@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const mongoose = require('mongoose')
 
 //  Setting Schema
@@ -29,7 +30,7 @@ module.exports.create = function (setting) {
 module.exports.get = function (id) {
   const query = { id };
 
-  return Promise.resolve(Setting.findOne(query));
+  return Setting.findOne(query).then(normalizeResponse);
 }
 
 module.exports.updateSetting = function (setting) {
@@ -39,7 +40,7 @@ module.exports.updateSetting = function (setting) {
       Promise.reject({ status: 404, message: 'user is not login' }) :
       existSetting.update(setting)
   })
-  .then(() => Setting.findOne({ id: setting.id }));
+  .then(() => Setting.findOne({ id: setting.id })).then(normalizeResponse);
 }
 
 
@@ -61,5 +62,12 @@ module.exports.search = function (params) { // diferent id than I
     ]
   }
 
-  return Setting.find(query, '-name', { lean: true });
+  return Setting.find(query).then(normalizeResponse);
+}
+
+const normalizeResponse = (res) => {
+  if (_.isArray(res)) {
+    return res.map(normalizeResponse);
+  }
+  return res ? res.toObject() : res;
 }
