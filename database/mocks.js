@@ -52,38 +52,38 @@ module.exports.mockSettings = () => {
 
 module.exports.mockLinks = () => {
   const links = [
-    makeLink('id1', '10212279649380359', 'link'),
-    makeLink('id2', '10212279649380359', 'link'),
-    makeLink('id3', '10212279649380359', 'link'),
-    makeLink('id4', '10212279649380359', 'link'),
-    makeLink('id5', '10212279649380359', 'link'),
-    makeLink('id6', '10212279649380359', 'link'),
-    makeLink('id7', '10212279649380359', 'link'),
-    makeLink('id8', '10212279649380359', 'link'),
-    makeLink('id9', '10212279649380359', 'link'),
-    makeLink('id10', '10212279649380359', 'link'),
+    makeLink('id1', '10212279649380359', 'link', 'male'   ),
+    makeLink('id2', '10212279649380359', 'link', 'male'   ),
+    makeLink('id3', '10212279649380359', 'link', 'female' ),
+    makeLink('id4', '10212279649380359', 'link', 'both'   ),
+    makeLink('id5', '10212279649380359', 'link', 'friends'),
+    makeLink('id6', '10212279649380359', 'link', 'female' ),
+    makeLink('id7', '10212279649380359', 'link', 'female' ),
+    makeLink('id8', '10212279649380359', 'link', 'male'   ),
+    makeLink('id9', '10212279649380359', 'link', 'both'   ),
+    makeLink('id10', '10212279649380359', 'link', 'friends'),
 
-    makeLink('id1', '10211595473336432', 'link'),
-    makeLink('id2', '10211595473336432', 'link'),
-    makeLink('id3', '10211595473336432', 'link'),
-    makeLink('id4', '10211595473336432', 'link'),
-    makeLink('id5', '10211595473336432', 'link'),
-    makeLink('id6', '10211595473336432', 'link'),
-    makeLink('id7', '10211595473336432', 'link'),
-    makeLink('id8', '10211595473336432', 'link'),
-    makeLink('id9', '10211595473336432', 'link'),
-    makeLink('id10', '10211595473336432', 'link'),
+    makeLink('id1', '10211595473336432', 'link', 'male'   ),
+    makeLink('id2', '10211595473336432', 'link', 'male'   ),
+    makeLink('id3', '10211595473336432', 'link', 'female' ),
+    makeLink('id4', '10211595473336432', 'link', 'both'   ),
+    makeLink('id5', '10211595473336432', 'link', 'friends'),
+    makeLink('id6', '10211595473336432', 'link', 'female' ),
+    makeLink('id7', '10211595473336432', 'link', 'female' ),
+    makeLink('id8', '10211595473336432', 'link', 'male'   ),
+    makeLink('id9', '10211595473336432', 'link', 'both'   ),
+    makeLink('id10', '10211595473336432', 'link', 'friends'),
 
-    makeLink('id1', '1411063048948357', 'link'),
-    makeLink('id2', '1411063048948357', 'link'),
-    makeLink('id3', '1411063048948357', 'link'),
-    makeLink('id4', '1411063048948357', 'link'),
-    makeLink('id5', '1411063048948357', 'link'),
-    makeLink('id6', '1411063048948357', 'link'),
-    makeLink('id7', '1411063048948357', 'link'),
-    makeLink('id8', '1411063048948357', 'link'),
-    makeLink('id9', '1411063048948357', 'link'),
-    makeLink('id10', '1411063048948357', 'link')
+    makeLink('id1', '1411063048948357', 'link', 'male'   ),
+    makeLink('id2', '1411063048948357', 'link', 'male'   ),
+    makeLink('id3', '1411063048948357', 'link', 'female' ),
+    makeLink('id4', '1411063048948357', 'link', 'both'   ),
+    makeLink('id5', '1411063048948357', 'link', 'friends'),
+    makeLink('id6', '1411063048948357', 'link', 'female' ),
+    makeLink('id7', '1411063048948357', 'link', 'female' ),
+    makeLink('id8', '1411063048948357', 'link', 'male'   ),
+    makeLink('id9', '1411063048948357', 'link', 'both'   ),
+    makeLink('id10', '1411063048948357', 'link', 'friends')
   ]
 
   return links;
@@ -115,11 +115,12 @@ const makeSettings = (id, ageRange, distRange, invisible, interestType) => {
   }
 }
 
-const makeLink = (sendUID, recUID, action) => {
+const makeLink = (sendUID, recUID, action, type) => {
   return {
     sendUID,
     recUID,
-    action
+    action,
+    type
   }
 }
 
