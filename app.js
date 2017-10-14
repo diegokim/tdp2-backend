@@ -55,7 +55,8 @@ router.post('/users/:userId/chats/message', (req, res) => chatController.sendMes
 // Admin
 // Denounces
 router.get('/users/denounces', (req, res) => denouncesController.list(req, res));
-router.put('/users/denounceS', (req, res) => denouncesController.update(req, res));
+router.put('/users/denounces', (req, res) => denouncesController.update(req, res));
+router.get('/users/:userId/profile', (req, res) => usersController.getUserProfile(req, res));
 
 app.use(router);
 

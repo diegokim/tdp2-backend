@@ -30,6 +30,7 @@ module.exports.getProfile = (accessToken, userId) => {
     })
 }
 
+
 /**
  * Update profile.
  *

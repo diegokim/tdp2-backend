@@ -15,6 +15,13 @@ module.exports.getProfile = (accessToken) => Promise.resolve(
     .catch((err) => err)
 );
 
+module.exports.getUserProfile = (accessToken, userId) => Promise.resolve(
+  request.get(baseUrl + `/users/${userId}/profile`)
+    .set({'Authorization': accessToken})
+    .send()
+    .catch((err) => err)
+);
+
 module.exports.updateProfile = (accessToken, profile) => Promise.resolve(
   request.patch(baseUrl + '/users/me/profile')
     .set({'Authorization': accessToken})

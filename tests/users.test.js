@@ -7,6 +7,7 @@ const DB = require('../database/database');
 // Start the app
 const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
+const ADMIN_TOKEN = '02ba3f90-b5a3-4576-ba69-93df1c6772ec';
 
 describe('Integration user tests', () => {
   let response;
@@ -45,6 +46,46 @@ describe('Integration user tests', () => {
         }));
     });
   });
+
+  describe('get User Profile', () => {
+    describe('When the user does not exist', () => {
+      beforeEach(() => (response = request.getUserProfile(ADMIN_TOKEN, 'id')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.response.body.message, 'user is not login');
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.getUserProfile(accessToken, 'id'))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When the user exists', () => {
+      beforeEach(() => DB.initialize({ profiles: [userProfile] }))
+      beforeEach(() => (response = request.getUserProfile(ADMIN_TOKEN, 'id')));
+
+      it('should return the profile', () => response
+        .then((res) => {
+          const resultProf = formatDBResponse(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(resultProf, userProfile);
+        }));
+    });
+  });
+
 
   describe('update Profile', () => {
     describe('When the user is not login', () => {

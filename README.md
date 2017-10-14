@@ -127,6 +127,36 @@ Respuesta:
 	    education: 'High School'
 	  }
 
+### GET /users/{id}/profile
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    photo: 'http://google.com',
+	    photos: [
+	      'http://google.com',
+	      'http://imagen-perfil.com'
+	    ],
+	    description: 'description'
+	    work: 'maestro',
+	    id: '1411063048948357',
+	    name: 'papa noel',
+	    gender: 'male',
+	    birthday: '08/13/1993',
+	    interests: [
+	      'futbol',
+	      'mas futbol'
+	    ],
+	    education: 'High School'
+	  }
 
 ### PATCH /users/me/profile (update)
 

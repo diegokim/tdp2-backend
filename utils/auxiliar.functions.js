@@ -1,5 +1,6 @@
 const ENV = process.env.ENV;
 const TEST_ENV = 'env_test';
+const ADMIN_TOKEN = '02ba3f90-b5a3-4576-ba69-93df1c6772ec';
 
 module.exports.onError = (funName, res, err) => {
   if (err.stack && ENV !== TEST_ENV) {
@@ -23,7 +24,9 @@ module.exports.validateToken = (accessToken) => {
 }
 
 module.exports.validateAdminToken = (accessToken) => { // eslint-disable-line
-  return Promise.resolve(true);
+  return accessToken === undefined || accessToken !== ADMIN_TOKEN ?
+    Promise.reject({ status: 401, message: 'Invalid Token'}) :
+    Promise.resolve();
 }
 
 module.exports.parseProfileToLog = (profile) => {

@@ -7,6 +7,7 @@ const DB = require('../database/database');
 // Start the app
 const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
+const ADMIN_TOKEN = '02ba3f90-b5a3-4576-ba69-93df1c6772ec';
 
 describe('Integration denounces tests', () => {
   let response;
@@ -24,7 +25,7 @@ describe('Integration denounces tests', () => {
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo' })
           .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo eres' }))
-          .then(() => (response = request.listDenounces('access_token')))
+          .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
 
       it('should return the denounces in pendiente status', () => response
@@ -57,9 +58,22 @@ describe('Integration denounces tests', () => {
   });
 
   describe('Update denounce', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.updateDenounce(accessToken, { sendUID: 'id', recUID: 'id2' }))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    })
+
     describe('when update and invalid denounce', () => {
       beforeEach(() => (
-        response = request.updateDenounce('access_token', { sendUID: 'id', recUID: 'id2' }))
+        response = request.updateDenounce(ADMIN_TOKEN, { sendUID: 'id', recUID: 'id2' }))
       );
 
       it('should return 400', () => response
@@ -77,8 +91,8 @@ describe('Integration denounces tests', () => {
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo' })
-          .then(() => request.updateDenounce('access_token', { status: 'aceptada', sendUID: 'id', recUID: 'id2' }))
-          .then(() => (response = request.listDenounces('access_token')))
+          .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'aceptada', sendUID: 'id', recUID: 'id2' }))
+          .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
 
       it('should return the denounces with other status', () => response

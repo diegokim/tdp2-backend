@@ -15,6 +15,21 @@ module.exports.get = (req, res) => {
     .catch((err) => aux.onError('Get Profile', res, err))
 }
 
+module.exports.getUserProfile = (req, res) => {
+  aux.onLog('Request:', req.url)
+  const accessToken = req.headers.authorization;
+  const userId = req.params.userId;
+
+  return aux.validateAdminToken(accessToken)
+    .then(() => validateUserId(userId))
+    .then(() => usersService.getProfile(accessToken, userId))
+    .then((profile) => {
+      aux.onLog('Response:', aux.parseProfileToLog(profile));
+      return res.status(200).json(profile)
+    })
+    .catch((err) => aux.onError('Get user profile', res, err))
+}
+
 module.exports.update = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
