@@ -59,7 +59,7 @@ describe('Integration chat tests', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
         nockSendMessageFirebase({ sendUID: 'id', recUID: 'id2' }, {})
-        return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
       })
       beforeEach(() => (response = request.sendChatMessage('access_token', 'id2', { message: 'message' })));
 

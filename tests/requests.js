@@ -70,3 +70,17 @@ module.exports.sendChatMessage = (accessToken, userId, body) => Promise.resolve(
   .send(body)
   .catch((err) => err)
 );
+
+module.exports.listDenounces = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/users/denounces')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
+module.exports.updateDenounce = (accessToken, body) => Promise.resolve(
+  request.put(baseUrl + '/users/denounces')
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);

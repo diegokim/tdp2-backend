@@ -36,7 +36,7 @@ describe('Integration link tests', () => {
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
       })
       beforeEach(() => (response = request.getCandidates('access_token')));
 
@@ -56,7 +56,7 @@ describe('Integration link tests', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id2' })
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id', { action: 'block' })
@@ -77,7 +77,7 @@ describe('Integration link tests', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id2' })
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo' })
@@ -99,7 +99,7 @@ describe('Integration link tests', () => {
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([userSetting]) })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -158,7 +158,7 @@ describe('Integration link tests', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -175,7 +175,7 @@ describe('Integration link tests', () => {
       describe('when a link does not occur', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => (response = request.actionUser('access_token', 'id2', { action: 'link' })));
 
@@ -189,7 +189,7 @@ describe('Integration link tests', () => {
       describe('when get links but has not anyone', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => (response = request.getLinks('access_token')));
 
@@ -205,7 +205,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -229,7 +229,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id3' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile, anotherAnotherUserProfile], settings: settings.concat([userSetting]) })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile, anotherAnotherUserProfile], settings: settings.concat([userSetting]) })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -261,7 +261,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id2' })
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -280,7 +280,7 @@ describe('Integration link tests', () => {
       describe('when the block does occur', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
           return (response = request.actionUser('access_token', 'id2', { action: 'block' }))
@@ -303,7 +303,7 @@ describe('Integration link tests', () => {
           nockProfile(['id'], accessToken, { id: 'id2' })
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
           return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -322,7 +322,7 @@ describe('Integration link tests', () => {
       describe('when the report does occur', () => {
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
-          return DB.initialize({ users: [userProfile, anotherUserProfile] })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
         })
         beforeEach(() => {
           return (response = request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo' }))
@@ -356,7 +356,7 @@ describe('Integration link tests', () => {
         nockProfile(['id'], accessToken, { id: 'id2' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockDeleteConversationFirebase({ sendUID: 'id', recUID: 'id2' }, { response: 'jajaja' })
-        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -377,7 +377,7 @@ describe('Integration link tests', () => {
         nockProfile(['id'], accessToken, { id: 'id2' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'link' })
@@ -396,7 +396,7 @@ describe('Integration link tests', () => {
     describe('When the user does not exist', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile, anotherUserProfile] })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
         return (response = request.deleteLink('access_token', 'id2'))

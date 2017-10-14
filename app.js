@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const settingsController = require('./controllers/settingsController');
+const denouncesController = require('./controllers/denouncesController');
 const statusController = require('./controllers/statusController');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
@@ -14,6 +15,7 @@ const mocks = require('./database/mocks');
 const profiles = mocks.mockProfiles();
 const settings = mocks.mockSettings();
 const links = mocks.mockLinks();
+const denounces = mocks.mockDenounces();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,7 +23,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { users: profiles, settings, links }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces }));
 
 //  Middleware cors
 app.use(cors());
@@ -49,6 +51,11 @@ router.patch('/users/me/settings', (req, res) => settingsController.update(req, 
 
 // Chat
 router.post('/users/:userId/chats/message', (req, res) => chatController.sendMessage(req, res));
+
+// Admin
+// Denounces
+router.get('/users/denounces', (req, res) => denouncesController.list(req, res));
+router.put('/users/denounceS', (req, res) => denouncesController.update(req, res));
 
 app.use(router);
 

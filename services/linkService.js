@@ -2,11 +2,13 @@ const geolib = require('geolib');
 const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
 const SettingsDB = require('../database/settingDB');
+const DenouncesDB = require('../database/denouncesDB');
 const faceAPI = require('../clients/faceAPI');
 const firebaseAPI = require('../clients/firebaseAPI');
 const usersService = require('./usersService');
 
 const MAX_CANDIDATES = 5;
+const INITIAL_DENOUNCE_STATUS = 'pendiente';
 
 /**
  * Get Candidates.
@@ -48,9 +50,9 @@ module.exports.addAction = (accessToken, userIdTo, body) => {
         UsersDB.get(id),
         UsersDB.get(userIdTo)
       ])
-      .then(([u1, u2]) => (u1 && u2 ? true : Promise.reject({ status: 404, message: 'user does not exist' })))
-      .then(() => {
-        const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action, message: body.message });
+      .then(([u1, u2]) => (u1 && u2 ? [u1, u2] : Promise.reject({ status: 404, message: 'user does not exist' })))
+      .then(([u1, u2]) => {
+        const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action });
         if (body.action === 'link') {
           return onLinkAction(id, userIdTo, newLink);
         } else if (body.action === 'super-link') {
@@ -58,7 +60,7 @@ module.exports.addAction = (accessToken, userIdTo, body) => {
         } else if (body.action === 'block') {
           return LinkDB.create(newLink).then(() => onBlockAction(id, userIdTo));
         } else if (body.action === 'report') {
-          return LinkDB.create(newLink).then(() => onReportAction(id, userIdTo));
+          return LinkDB.create(newLink).then(() => onReportAction(u1, u2, body.message));
         } else {
           return LinkDB.create(newLink);
         }
@@ -92,8 +94,20 @@ const onBlockAction = (id, userIdTo) => {
 }
 
 // eslint-disable-next-line
-const onReportAction = (id, userIdTo) => {
-  return LinkDB.deleteLink(id, userIdTo).then(() => ({})); // coming soon --> Notification
+const onReportAction = (user, userTo, message = 'No message') => {
+  const params = {
+    message,
+    recUID: userTo.id,
+    sendUID: user.id,
+    recUName: userTo.name,
+    sendUName: user.name,
+    status: INITIAL_DENOUNCE_STATUS
+  }
+  const newDenounce = new DenouncesDB(params);
+
+  return LinkDB.deleteLink(user.id, userTo.id)
+    .then(() => DenouncesDB.create(newDenounce))
+    .then(() => ({})); // coming soon --> Notification
 }
 
 /**

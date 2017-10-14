@@ -87,7 +87,7 @@ describe('Search unit tests', () => {
             max: 10
           }
         }
-        return DB.initialize({ users: profiles })
+        return DB.initialize({ profiles })
       })
       beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -113,7 +113,7 @@ describe('Search unit tests', () => {
             max: 10
           }
         }
-        return DB.initialize({ users: profiles })
+        return DB.initialize({ profiles })
       })
       beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -139,7 +139,7 @@ describe('Search unit tests', () => {
             max: 10
           }
         }
-        return DB.initialize({ users: profiles })
+        return DB.initialize({ profiles })
       })
       beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -167,7 +167,7 @@ describe('Search unit tests', () => {
             max: 10
           }
         }
-        return DB.initialize({ users: profiles })
+        return DB.initialize({ profiles })
       })
       beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -193,7 +193,7 @@ describe('Search unit tests', () => {
               max: 5
             }
           }
-          return DB.initialize({ users: profiles })
+          return DB.initialize({ profiles })
         })
         beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -219,7 +219,7 @@ describe('Search unit tests', () => {
               max: 5
             }
           }
-          return DB.initialize({ users: profiles })
+          return DB.initialize({ profiles })
         })
         beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -244,7 +244,7 @@ describe('Search unit tests', () => {
               max: 0
             }
           }
-          return DB.initialize({ users: profiles })
+          return DB.initialize({ profiles })
         })
         beforeEach(() => (response = UserDB.search(searchParams)));
 
@@ -270,7 +270,7 @@ describe('Search unit tests', () => {
             max: 10
           }
         }
-        return DB.initialize({ users: profiles })
+        return DB.initialize({ profiles })
       })
       beforeEach(() => (response = UserDB.search(searchParams)));
 

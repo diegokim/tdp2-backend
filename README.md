@@ -292,3 +292,44 @@ Respuesta:
 
 	respuesta --> 200
 	  body: {}
+
+## DENOUNCES
+
+### GET /users/denounces
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: [{
+      sendUID: 'id-1',
+      recUID: 'id-2',
+      sendUName: 'user-name-1',
+      recUName: 'user-name-2',
+      message: 'malo malo',
+      status: 'pendiente'
+    }]
+
+### PUT /users/denounces
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      sendUID: 'id-1',
+      recUID: 'id-2',
+      status: 'aceptada'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {}

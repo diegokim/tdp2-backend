@@ -22,6 +22,10 @@ module.exports.validateToken = (accessToken) => {
     Promise.resolve();
 }
 
+module.exports.validateAdminToken = (accessToken) => { // eslint-disable-line
+  return Promise.resolve(true);
+}
+
 module.exports.parseProfileToLog = (profile) => {
   const profileToLog = Object.assign({}, profile);
   delete profileToLog.photo;

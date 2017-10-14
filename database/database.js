@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const UsersDB = require('./usersDB');
 const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
+const DenouncesDB = require('./denouncesDB');
 
 //  Uris for production and test environment
 //  Usar variables de ambiente es mas seguro
@@ -54,7 +55,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ users = [], settings = [], links = [] }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], denounces = {} }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -62,21 +63,32 @@ module.exports.initialize = function ({ users = [], settings = [], links = [] })
   const createUserProfiles = [];
   const createUserSettings = [];
   const createUserLink = [];
-  users.forEach((user) => {
+  const createDenounces = [];
+
+  profiles.forEach((user) => {
     const newUser = new UsersDB(user);
     createUserProfiles.push(UsersDB.create(newUser));
-  })
+  });
   settings.forEach((setting) => {
     const newSetting = new SettingDB(setting);
     createUserSettings.push(SettingDB.create(newSetting));
-  })
+  });
   links.forEach((link) => {
     const newLink = new LinkDB(link);
     createUserLink.push(LinkDB.create(newLink));
-  })
+  });
+  (denounces.denounces || []).forEach((denounce) => {
+    const newDenounce = new DenouncesDB(denounce);
+    createDenounces.push(DenouncesDB.create(newDenounce));
+  });
+  (denounces.links || []).forEach((link) => {
+    const newLink = new LinkDB(link);
+    createUserLink.push(LinkDB.create(newLink));
+  });
 
   return Promise.all(createUserProfiles)
     .then(() => Promise.all(createUserSettings))
     .then(() => Promise.all(createUserLink))
+    .then(() => Promise.all(createDenounces))
   ;
 }

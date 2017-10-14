@@ -32,7 +32,7 @@ describe('Integration user tests', () => {
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile] })
+        return DB.initialize({ profiles: [userProfile] })
       })
       beforeEach(() => (response = request.getProfile('access_token')));
 
@@ -64,7 +64,7 @@ describe('Integration user tests', () => {
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ users: [userProfile] })
+        return DB.initialize({ profiles: [userProfile] })
       })
       beforeEach(() => (response = request.updateProfile('access_token', updateParams)));
 

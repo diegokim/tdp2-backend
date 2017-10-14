@@ -26,7 +26,12 @@ module.exports.mockProfiles = () => {
     makeProfile('id7',  'Pablo',  33, 'male', mPhotos[1], [mPhotos[1], mPhotos[1], mPhotos[1], mPhotos[1], mPhotos[1]], ['women', 'tennis', 'tv', 'racing', 'boca']),
     makeProfile('id8',  'Jorge',  28, 'male', mPhotos[2], [mPhotos[2], mPhotos[2], mPhotos[2], mPhotos[2], mPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
     makeProfile('id9',  'Pedro',  24, 'male', mPhotos[3], [mPhotos[3], mPhotos[3], mPhotos[3], mPhotos[3], mPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id10', 'Thiago', 21, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
+    makeProfile('id10', 'Thiago', 21, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
+
+    // for denounces
+    makeProfile('id11',  'Claudia',  25, 'female', fPhotos[2], [fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id12',  'Martina',  24, 'female', fPhotos[3], [fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id13', 'Aurelio', 23, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
   ]
 
   return profiles;
@@ -50,43 +55,84 @@ module.exports.mockSettings = () => {
   return settings;
 }
 
-module.exports.mockLinks = () => {
+module.exports.mockLinks = (action = 'link') => {
   const links = [
-    makeLink('id1', '10212279649380359', 'link', 'male'   ),
-    makeLink('id2', '10212279649380359', 'link', 'male'   ),
-    makeLink('id3', '10212279649380359', 'link', 'female' ),
-    makeLink('id4', '10212279649380359', 'link', 'both'   ),
-    makeLink('id5', '10212279649380359', 'link', 'friends'),
-    makeLink('id6', '10212279649380359', 'link', 'female' ),
-    makeLink('id7', '10212279649380359', 'link', 'female' ),
-    makeLink('id8', '10212279649380359', 'link', 'male'   ),
-    makeLink('id9', '10212279649380359', 'link', 'both'   ),
-    makeLink('id10', '10212279649380359', 'link', 'friends'),
+    makeLink('id1', '10212279649380359', action, 'male'),
+    makeLink('id2', '10212279649380359', action, 'male'),
+    makeLink('id3', '10212279649380359', action, 'female'),
+    makeLink('id4', '10212279649380359', action, 'both'),
+    makeLink('id5', '10212279649380359', action, 'friends'),
+    makeLink('id6', '10212279649380359', action, 'female'),
+    makeLink('id7', '10212279649380359', action, 'female'),
+    makeLink('id8', '10212279649380359', action, 'male'),
+    makeLink('id9', '10212279649380359', action, 'both'),
+    makeLink('id10', '10212279649380359', action, 'friends'),
 
-    makeLink('id1', '10211595473336432', 'link', 'male'   ),
-    makeLink('id2', '10211595473336432', 'link', 'male'   ),
-    makeLink('id3', '10211595473336432', 'link', 'female' ),
-    makeLink('id4', '10211595473336432', 'link', 'both'   ),
-    makeLink('id5', '10211595473336432', 'link', 'friends'),
-    makeLink('id6', '10211595473336432', 'link', 'female' ),
-    makeLink('id7', '10211595473336432', 'link', 'female' ),
-    makeLink('id8', '10211595473336432', 'link', 'male'   ),
-    makeLink('id9', '10211595473336432', 'link', 'both'   ),
-    makeLink('id10', '10211595473336432', 'link', 'friends'),
+    makeLink('id1', '10211595473336432', action, 'male'),
+    makeLink('id2', '10211595473336432', action, 'male'),
+    makeLink('id3', '10211595473336432', action, 'female'),
+    makeLink('id4', '10211595473336432', action, 'both'),
+    makeLink('id5', '10211595473336432', action, 'friends'),
+    makeLink('id6', '10211595473336432', action, 'female'),
+    makeLink('id7', '10211595473336432', action, 'female'),
+    makeLink('id8', '10211595473336432', action, 'male'),
+    makeLink('id9', '10211595473336432', action, 'both'),
+    makeLink('id10', '10211595473336432', action, 'friends'),
 
-    makeLink('id1', '1411063048948357', 'link', 'male'   ),
-    makeLink('id2', '1411063048948357', 'link', 'male'   ),
-    makeLink('id3', '1411063048948357', 'link', 'female' ),
-    makeLink('id4', '1411063048948357', 'link', 'both'   ),
-    makeLink('id5', '1411063048948357', 'link', 'friends'),
-    makeLink('id6', '1411063048948357', 'link', 'female' ),
-    makeLink('id7', '1411063048948357', 'link', 'female' ),
-    makeLink('id8', '1411063048948357', 'link', 'male'   ),
-    makeLink('id9', '1411063048948357', 'link', 'both'   ),
-    makeLink('id10', '1411063048948357', 'link', 'friends')
+    makeLink('id1', '1411063048948357', action, 'male'),
+    makeLink('id2', '1411063048948357', action, 'male'),
+    makeLink('id3', '1411063048948357', action, 'female'),
+    makeLink('id4', '1411063048948357', action, 'both'),
+    makeLink('id5', '1411063048948357', action, 'friends'),
+    makeLink('id6', '1411063048948357', action, 'female'),
+    makeLink('id7', '1411063048948357', action, 'female'),
+    makeLink('id8', '1411063048948357', action, 'male'),
+    makeLink('id9', '1411063048948357', action, 'both'),
+    makeLink('id10', '1411063048948357', action, 'friends')
   ]
 
   return links;
+}
+
+module.exports.mockDenounces = () => {
+  const denounces = [
+    makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', 'se porto mal'),
+    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', 'terrible maldito'),
+    makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', 'lo denuncio por acoso sexual intermitente'),
+
+    makeDenounce('id11', 'Claudia', '10211595473336432', 'Joaquin', 'se porto mal'),
+    makeDenounce('id12', 'Martina', '10211595473336432', 'Joaquin', 'maldito desgraciado'),
+    makeDenounce('id13', 'Aurelio', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual intermitente')
+
+    // makeDenounce('id2', 'Flor',    '10212279649380359', 'Diego', 'terrible hijo de su madre'),
+    // makeDenounce('id3', 'Camila',  '10212279649380359', 'Diego', 'no puedo verlo devuelta'),
+    // makeDenounce('id4', 'Rogelia', '10212279649380359', 'Diego', 'ojala que se pudra'),
+    // makeDenounce('id5', 'Patri',   '10212279649380359', 'Diego', 'eramos amigos y me traiciono. muerte'),
+    // makeDenounce('id8', 'Jorge',   '10212279649380359', 'Diego', 'dejame en paz flaco'),
+    // makeDenounce('id9', 'Pedro',   '10212279649380359', 'Diego', 'fotos indebidas'),
+    // makeDenounce('id10', 'Thiago', '10212279649380359', 'Diego', 'yo no soy quien para hablar mal de nadie'),
+
+    // makeDenounce('id2', 'Flor',    '10211595473336432', 'Joaquin', 'terrible hijo de su madre'),
+    // makeDenounce('id3', 'Camila',  '10211595473336432', 'Joaquin', 'no puedo verlo devuelta'),
+    // makeDenounce('id4', 'Rogelia', '10211595473336432', 'Joaquin', 'ojala que se pudra'),
+    // makeDenounce('id5', 'Patri',   '10211595473336432', 'Joaquin', 'eramos amigos y me traiciono. muerte'),
+    // makeDenounce('id8', 'Jorge',   '10211595473336432', 'Joaquin', 'dejame en paz flaco'),
+    // makeDenounce('id9', 'Pedro',   '10211595473336432', 'Joaquin', 'fotos indebidas'),
+    // makeDenounce('id10', 'Thiago', '10211595473336432', 'Joaquin', 'yo no soy quien para hablar mal de nadie')
+  ]
+
+  // const links = this.mockLinks('report');
+  const links = [
+    makeLink('id11', '10212279649380359', 'report', 'male'),
+    makeLink('id12', '10212279649380359', 'report', 'female'),
+    makeLink('id13', '10212279649380359', 'report', 'female'),
+
+    makeLink('id11', '10211595473336432', 'report', 'male'),
+    makeLink('id12', '10211595473336432', 'report', 'female'),
+    makeLink('id13', '10211595473336432', 'report', 'female')
+  ]
+
+  return { denounces, links };
 }
 
 const makeProfile = (id, name, age, gender, photo, photos, interests) => {
@@ -121,6 +167,17 @@ const makeLink = (sendUID, recUID, action, type) => {
     recUID,
     action,
     type
+  }
+}
+
+const makeDenounce = (sendUID, sendUName, recUID, recUName, message, status = 'pendiente') => {
+  return {
+    sendUID,
+    sendUName,
+    recUID,
+    recUName,
+    message,
+    status
   }
 }
 
