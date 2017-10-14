@@ -17,6 +17,14 @@ const SettingSchema = mongoose.Schema({
   },
   interestType: {
     type: String
+  },
+  accountType: {
+    type: String, // free, premium
+    default: 'free'
+  },
+  superLinksCount: {
+    type: Number,
+    default: 1
   }
 })
 

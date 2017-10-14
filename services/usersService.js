@@ -61,21 +61,8 @@ module.exports.createProfile = (profile) => {
  */
 module.exports.createUser = (profile) => {
   const newUser = new UsersDB(profile);
-  const newSettings = Object.assign({}, defaultSettings, { id: profile.id })
+  const newSettings = Object.assign({}, settingsService.defaultSettings, { id: profile.id })
   return UsersDB.create(newUser)
     .then(() => settingsService.create(newSettings))
   ;
-}
-
-const defaultSettings = {
-  ageRange: {
-    min: 18,
-    max: 150
-  },
-  distRange: {
-    min: 1,
-    max: 30
-  },
-  invisible: false,
-  interestType: 'both'
 }

@@ -61,19 +61,35 @@ describe('Integration setting tests', () => {
         }));
     });
 
-    describe('When the user exists', () => {
+    describe('When the user exists and is free', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
         return DB.initialize({ settings: [userSetting] })
       })
       beforeEach(() => (response = request.updateSettings('access_token', updateParams)));
 
-      it('should return the updated settings', () => response
+      it('should return the updated settings with supper links count updated', () => response
         .then((res) => {
-          resultSet = Object.assign({}, formatDBResponse(res.body), userSetting);
+          resultSet = Object.assign({}, userSetting, updateParams, { superLinksCount: 5 });
 
           assert.equal(res.status, 200);
-          assert.deepEqual(resultSet, userSetting);
+          assert.deepEqual(resultSet, formatDBResponse(res.body));
+        }));
+    });
+
+    describe('When the user exists and is premium', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ settings: [Object.assign({}, userSetting, { accountType: 'premium' })] })
+      })
+      beforeEach(() => (response = request.updateSettings('access_token', Object.assign({}, updateParams, { accountType: 'free' }))));
+
+      it('should return the updated settings with supper links count updated', () => response
+        .then((res) => {
+          resultSet = Object.assign({}, userSetting, updateParams, { superLinksCount: 1, accountType: 'free' });
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(resultSet, formatDBResponse(res.body));
         }));
     });
   });
@@ -110,7 +126,9 @@ const userSetting = {
     max: 3
   },
   invisible: true,
-  interestType: 'male'
+  interestType: 'male',
+  accountType: 'free',
+  superLinksCount: 1
 }
 
 const updateParams = {
@@ -123,5 +141,6 @@ const updateParams = {
     max: 500
   },
   invisible: false,
-  interestType: 'female'
+  interestType: 'female',
+  accountType: 'premium'
 }

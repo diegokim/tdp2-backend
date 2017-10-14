@@ -294,7 +294,9 @@ const defaultSettings = {
     max: 30
   },
   invisible: false,
-  interestType: 'both'
+  interestType: 'both',
+  accountType: 'free',
+  superLinksCount: 1
 }
 
 const completeProfile = {

@@ -33,6 +33,7 @@ const validateSettings = (settings) => {
     settings.ageRange ||
     settings.distRange ||
     settings.invisible ||
+    settings.accountType ||
     settings.interestType;
 
   return validSettings ?
