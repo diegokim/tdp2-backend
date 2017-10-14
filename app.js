@@ -9,6 +9,7 @@ const statusController = require('./controllers/statusController');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
 const chatController = require('./controllers/chatController');
+const adminViewController = require('./admin-view/adminViewController')
 const database = require('./database/database');
 
 const mocks = require('./database/mocks');
@@ -56,7 +57,12 @@ router.post('/users/:userId/chats/message', (req, res) => chatController.sendMes
 // Denounces
 router.get('/users/denounces', (req, res) => denouncesController.list(req, res));
 router.put('/users/denounces', (req, res) => denouncesController.update(req, res));
+
+// Users
 router.get('/users/:userId/profile', (req, res) => usersController.getUserProfile(req, res));
+
+// Admin view
+router.get('/*', (req, res) => adminViewController.start(req, res));
 
 app.use(router);
 
