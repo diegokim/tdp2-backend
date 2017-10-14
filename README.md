@@ -205,7 +205,9 @@ Respuesta:
         max: 500
       },
       invisible: true,
-      interestType: 'female' // male, both, friends
+      interestType: 'female', // male, both, friends
+      accountType: 'free',
+      superLinksCount: 1
 	  }
 
 
@@ -226,7 +228,8 @@ Mensaje:
         max: 500
       },
       invisible: true,
-      interestType: 'female' // male, both, friends
+      interestType: 'female', // male, both, friends
+      accountType: 'premium'
 	  }
 
 Respuesta:

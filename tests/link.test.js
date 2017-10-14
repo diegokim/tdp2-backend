@@ -409,6 +409,124 @@ describe('Integration link tests', () => {
         }));
     });
   });
+
+  describe('Super Link User', () => {
+    describe('When the user does not exist', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+      })
+      beforeEach(() => (response = request.actionUser('access_token', 'id2', { action: 'super-link' })));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.response.body.message, 'user does not exist');
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When both users exist', () => {
+      describe('when a super-link does occur', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+        })
+        beforeEach(() => {
+          return request.actionUser('access_token', 'id2', { action: 'super-link' })
+            .then(() => (response = request.actionUser('access_token', 'id', { action: 'super-link' })))
+        });
+
+        it('should return true because a link has not occured', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { link: true });
+          }));
+      })
+
+      describe('when a link does not occur', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+        })
+        beforeEach(() => (response = request.actionUser('access_token', 'id2', { action: 'super-link' })));
+
+        it('should return false because a link has not occured', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, { link: false });
+          }));
+      })
+
+      describe('when get links with one user', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+        })
+        beforeEach(() => {
+          return request.actionUser('access_token', 'id2', { action: 'super-link' })
+            .then(() => request.actionUser('access_token', 'id', { action: 'super-link' }))
+            .then(() => (response = request.getLinks('access_token')))
+        });
+
+        it('should return the links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body.profiles[0].id, 'id2');
+            assert.deepEqual(res.body.profiles[0].type, 'male');
+            assert.deepEqual(res.body.profiles[0].photo, 'foto2');
+          }));
+      })
+
+      describe('when try to super link more than one user but user has a FREE account', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile, anotherAnotherUserProfile], settings: settings.concat([userSetting]) })
+        })
+        beforeEach(() => {
+          return request.actionUser('access_token', 'id', { action: 'super-link' })
+            .then(() => (response = request.actionUser('access_token', 'id', { action: 'super-link' })))
+        });
+
+        it('should return 409', () => response
+          .then((res) => {
+            assert.equal(res.status, 409);
+          }));
+      })
+
+      describe('when try to super link more than one user but user has a PREMIUM account', () => {
+        beforeEach(() => {
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id2' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          nockProfile(['id'], accessToken, { id: 'id3' })
+          nockProfile(['id'], accessToken, { id: 'id' })
+          return DB.initialize({ profiles: [userProfile, anotherUserProfile, anotherAnotherUserProfile], settings: settings.concat([Object.assign({}, userSetting, { superLinksCount: 5 })]) })
+        })
+        beforeEach(() => {
+          return request.actionUser('access_token', 'id2', { action: 'super-link' })
+            .then(() => request.actionUser('access_token', 'id', { action: 'super-link' }))
+            .then(() => request.actionUser('access_token', 'id3', { action: 'super-link' }))
+            .then(() => request.actionUser('access_token', 'id', { action: 'super-link' }))
+            .then(() => (response = request.getLinks('access_token')))
+        });
+
+        it('should return the links', () => response
+          .then((res) => {
+            assert.equal(res.status, 200);
+            assert.include(['id2', 'id3'], res.body.profiles[0].id);
+            assert.include(['id2', 'id3'], res.body.profiles[1].id);
+            assert.include(['foto2', 'foto3'], res.body.profiles[0].photo);
+            assert.include(['foto2', 'foto3'], res.body.profiles[1].photo);
+            assert.include(['male', 'female'], res.body.profiles[0].type);
+            assert.include(['male', 'female'], res.body.profiles[1].type);
+          }));
+      })
+    });
+  });
 });
 
 const nockProfile = (params, accessToken, response) => {

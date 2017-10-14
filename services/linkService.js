@@ -9,6 +9,10 @@ const usersService = require('./usersService');
 
 const MAX_CANDIDATES = 5;
 const INITIAL_DENOUNCE_STATUS = 'pendiente';
+const LINK_ACTION = 'link';
+const BLOCK_ACTION = 'block';
+const REPORT_ACTION = 'report';
+const SUPER_LINK_ACTION = 'super-link';
 
 /**
  * Get Candidates.
@@ -24,8 +28,8 @@ module.exports.getCandidates = (accessToken, userId) => {
         UsersDB.search(paramsToSearch),
         SettingsDB.search(paramsToSearch),
         LinkDB.search({ sendUID: user.profile.id }),
-        LinkDB.search({ recUID: user.profile.id, action: 'block' }),
-        LinkDB.search({ recUID: user.profile.id, action: 'report' }),
+        LinkDB.search({ recUID: user.profile.id, action: BLOCK_ACTION }),
+        LinkDB.search({ recUID: user.profile.id, action: REPORT_ACTION }),
         user
         // TOD0: new people
       ])
@@ -53,13 +57,13 @@ module.exports.addAction = (accessToken, userIdTo, body) => {
       .then(([u1, u2]) => (u1 && u2 ? [u1, u2] : Promise.reject({ status: 404, message: 'user does not exist' })))
       .then(([u1, u2]) => {
         const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action });
-        if (body.action === 'link') {
+        if (body.action === LINK_ACTION) {
           return onLinkAction(id, userIdTo, newLink);
-        } else if (body.action === 'super-link') {
-          return LinkDB.create(newLink).then(() => onSuperLinkAction(id, userIdTo));
-        } else if (body.action === 'block') {
+        } else if (body.action === SUPER_LINK_ACTION) {
+          return onSuperLinkAction(id, userIdTo, newLink);
+        } else if (body.action === BLOCK_ACTION) {
           return LinkDB.create(newLink).then(() => onBlockAction(id, userIdTo));
-        } else if (body.action === 'report') {
+        } else if (body.action === REPORT_ACTION) {
           return LinkDB.create(newLink).then(() => onReportAction(u1, u2, body.message));
         } else {
           return LinkDB.create(newLink);
@@ -83,9 +87,20 @@ const onLinkAction = (id, userIdTo, newLink) => {
     })
 }
 
-// eslint-disable-next-line
-const onSuperLinkAction = (id, userIdTo) => {
-  return Promise.resolve(); // coming soon --> Notification
+const onSuperLinkAction = (id, userIdTo, newSuperLink) => {
+  const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: LINK_ACTION });
+
+  return SettingsDB.get(id)
+    .then((settings) => {
+      const superLinksCount = settings.superLinksCount;
+      const settingsToUpdate = { id, superLinksCount: superLinksCount - 1 };
+
+      return (superLinksCount > 0) ?
+        SettingsDB.updateSetting(settingsToUpdate) :
+        Promise.reject({ status: 409, message: 'you have not more super links for today' })
+    })
+    .then(() => LinkDB.create(newSuperLink))
+    .then(() => onLinkAction(id, userIdTo, newLink))
 }
 
 const onBlockAction = (id, userIdTo) => {
