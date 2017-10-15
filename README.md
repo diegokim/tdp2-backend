@@ -326,6 +326,7 @@ Respuesta:
 	respuesta --> 200
 	  body: {}
 
+
 ## DENOUNCES
 
 ### GET /users/denounces
@@ -366,3 +367,23 @@ Respuesta:
 
 	respuesta --> 200
 	  body: {}
+
+
+## ADMIN
+
+### POST /admin/login
+
+Mensaje:
+
+    headers: {}
+    body: {
+      user: 'admin',
+      password: 'here-my-password'
+    }
+
+Respuesta:
+
+	respuesta --> 201
+	  body: {
+      token: 'access-token'
+    }

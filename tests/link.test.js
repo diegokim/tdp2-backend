@@ -115,6 +115,58 @@ describe('Integration link tests', () => {
           assert.deepEqual(resultSet, []);
         }));
     });
+
+    describe('sort candidates', () => {
+      describe('by super links', () => {
+        describe('when super-link exists for one user', () => {
+          beforeEach(() => {
+            nockProfile(['id'], accessToken, { id: 'id' })
+            const bothSettings = Object.assign({}, userSetting, { interestType: 'both' });
+            const links = [{
+              sendUID: 'id4', recUID: 'id', action: 'super-link'
+            }]
+
+            return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([bothSettings]), links })
+          })
+          beforeEach(() => (response = request.getCandidates('access_token')));
+
+          it('should return the apropiated candidates', () => response
+            .then((res) => {
+              const resultSet = res.body.profiles;
+
+              assert.equal(res.status, 200);
+              assert.equal('id4', resultSet[0].id);
+              assert.include(['id2', 'id8'], resultSet[1].id);
+              assert.include(['id2', 'id8'], resultSet[2].id);
+            }));
+        });
+
+        describe('when super-link exists for two users', () => {
+          beforeEach(() => {
+            nockProfile(['id'], accessToken, { id: 'id' })
+            const bothSettings = Object.assign({}, userSetting, { interestType: 'both' });
+            const links = [{
+              sendUID: 'id2', recUID: 'id', action: 'super-link'
+            }, {
+              sendUID: 'id8', recUID: 'id', action: 'super-link'
+            }]
+
+            return DB.initialize({ profiles: profiles.concat([userProfile]), settings: settings.concat([bothSettings]), links })
+          })
+          beforeEach(() => (response = request.getCandidates('access_token')));
+
+          it('should return the apropiated candidates', () => response
+            .then((res) => {
+              const resultSet = res.body.profiles;
+
+              assert.equal(res.status, 200);
+              assert.include(['id2', 'id8'], resultSet[0].id);
+              assert.include(['id2', 'id8'], resultSet[1].id);
+              assert.equal('id4', resultSet[2].id);
+            }));
+        });
+      });
+    });
   });
 
   describe('Link User', () => {

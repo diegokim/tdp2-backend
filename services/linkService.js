@@ -31,16 +31,47 @@ module.exports.getCandidates = (accessToken, userId) => {
         LinkDB.search({ recUID: user.profile.id, action: BLOCK_ACTION }),
         LinkDB.search({ recUID: user.profile.id, action: REPORT_ACTION }),
         user
-        // TOD0: new people
       ])
     })
     .then(([candByProf, candBySet, noCandByLink, blockedUsers, reportedUsers, user]) => {
-      return filterCandidates(candByProf, candBySet, noCandByLink.concat(blockedUsers).concat(reportedUsers), user)
+      const filter = filterCandidates(candByProf, candBySet, noCandByLink.concat(blockedUsers).concat(reportedUsers), user)
+      const sorted = sortCandidates(user, filter);
+
+      return sorted;
     })
     .then((candidates) => {
-      const parsedCandidates = candidates.map((candidate) => candidate); // (_.omit(candidate._doc, ['photos']
+      const parsedCandidates = candidates.map((candidate) => candidate);
       return parsedCandidates.splice(0, MAX_CANDIDATES);
     })
+}
+
+/**
+ * Get Links
+ *
+ */
+module.exports.getLinks = (accessToken) => {
+  return faceAPI.getProfile(accessToken, ['id'])
+    .then(({ id }) => LinkDB.getLinks(id))
+    .then((userLinks) => {
+      const userIds = [];
+      const userTypes = {};
+      for (const user of userLinks) {
+        userIds.push(user.sendUID);
+        userTypes[user.sendUID] = user.type;
+      }
+      return UsersDB.getUsers(userIds)
+        .then((up) => (up.map((prof) => (Object.assign({}, prof, { type: userTypes[prof.id] })))))
+    })
+}
+
+/**
+ * Delete Link
+ *
+ */
+module.exports.deleteLink = (accessToken, userId) => {
+  return faceAPI.getProfile(accessToken, ['id'])
+    .then(({ id }) => (LinkDB.deleteLink(id, userId)
+    .then(() => firebaseAPI.deleteConversation(id, userId))));
 }
 
 /**
@@ -108,7 +139,6 @@ const onBlockAction = (id, userIdTo) => {
   // or delete not BLOCK ? TOD0
 }
 
-// eslint-disable-next-line
 const onReportAction = (user, userTo, message = 'No message') => {
   const params = {
     message,
@@ -125,25 +155,6 @@ const onReportAction = (user, userTo, message = 'No message') => {
     .then(() => ({})); // coming soon --> Notification
 }
 
-/**
- * Get Links
- *
- */
-module.exports.getLinks = (accessToken) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-    .then(({ id }) => LinkDB.getLinks(id))
-    .then((userLinks) => {
-      const userIds = [];
-      const userTypes = {};
-      for (const user of userLinks) {
-        userIds.push(user.sendUID);
-        userTypes[user.sendUID] = user.type;
-      }
-      return UsersDB.getUsers(userIds)
-        .then((up) => (up.map((prof) => (Object.assign({}, prof, { type: userTypes[prof.id] })))))
-    })
-}
-
 const filterParamsToSearch = (user) => {
   return {
     id: user.profile.id,
@@ -158,16 +169,6 @@ const filterParamsToSearch = (user) => {
   };
 }
 
-/**
- * Delete Link
- *
- */
-module.exports.deleteLink = (accessToken, userId) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-    .then(({ id }) => (LinkDB.deleteLink(id, userId)
-    .then(() => firebaseAPI.deleteConversation(id, userId))));
-}
-
 const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
   return candByProf.filter((cand) => {
     const doMatchLinked = noCandByLink.filter(($cand) => ($cand.recUID === cand.id || $cand.sendUID === cand.id)).length > 0;
@@ -178,6 +179,27 @@ const filterCandidates = (candByProf, candBySet, noCandByLink, user) => {
     return candBySet.filter(($cand) => ($cand.id === cand.id)).length > 0
   })
   .map((cand) => (Object.assign({}, cand, { distance: calculateDistance(user.profile.location, cand.location) })))
+}
+
+const sortCandidates = (user, candidates) => {
+  return Promise.all([
+    SettingsDB.get(user.id),
+    LinkDB.search({ recUID: user.profile.id, action: SUPER_LINK_ACTION })
+  ])
+  .then(([settings, superLinks]) => { // eslint-disable-line
+    const superLinkMap = {};
+    superLinks.forEach((sl) => (superLinkMap[sl.sendUID] = sl));
+
+    candidates.sort((a, b) => {
+      const isAInSuperLinks = !!superLinkMap[a.id];
+      const isBInSuperLinks = !!superLinkMap[b.id];
+      const aFirst = ((isAInSuperLinks && !isBInSuperLinks) || (!isAInSuperLinks && !isBInSuperLinks));
+
+      return aFirst ? -1 : 1;
+    })
+
+    return candidates;
+  })
 }
 
 const calculateDistance = (location1, location2) => {
