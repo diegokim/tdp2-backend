@@ -91,3 +91,16 @@ module.exports.updateDenounce = (accessToken, body) => Promise.resolve(
   .send(body)
   .catch((err) => err)
 );
+
+module.exports.adminLogin = (body) => Promise.resolve(
+  request.post(baseUrl + '/admin/login')
+  .send(body)
+  .catch((err) => err)
+);
+
+module.exports.getView = (accessToken, path) => Promise.resolve(
+  request.get(baseUrl + `/${path}`)
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);

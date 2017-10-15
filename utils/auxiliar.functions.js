@@ -29,6 +29,12 @@ module.exports.validateAdminToken = (accessToken) => { // eslint-disable-line
     Promise.resolve();
 }
 
+module.exports.loginAdminUser = (user) => {
+  return user && user.user === 'admin' && user.password === '1234567890' ?
+    Promise.resolve({ token: ADMIN_TOKEN }) :
+    Promise.reject({ status: 403, message: 'Invalid Account'})
+}
+
 module.exports.parseProfileToLog = (profile) => {
   const profileToLog = Object.assign({}, profile);
   delete profileToLog.photo;
