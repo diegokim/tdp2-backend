@@ -1,13 +1,14 @@
 const usersService = require('../services/usersService');
 const linkService = require('../services/linkService');
 const aux = require('../utils/auxiliar.functions.js')
+const auth = require('../utils/auth.functions.js');
 
 module.exports.get = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateToken(accessToken)
-    .then(() => usersService.getProfile(accessToken))
+  return auth.validateToken(accessToken)
+    .then((userId) => usersService.getProfile(accessToken, userId))
     .then((profile) => {
       aux.onLog('Response:', aux.parseProfileToLog(profile));
       return res.status(200).json(profile)
@@ -20,7 +21,7 @@ module.exports.getUserProfile = (req, res) => {
   const accessToken = req.headers.authorization;
   const userId = req.params.userId;
 
-  return aux.validateAdminToken(accessToken)
+  return auth.validateAdminToken(accessToken)
     .then(() => validateUserId(userId))
     .then(() => usersService.getProfile(accessToken, userId))
     .then((profile) => {
@@ -34,9 +35,9 @@ module.exports.update = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateToken(accessToken)
-    .then(() => validateProfile(req.body))
-    .then(() => usersService.updateProfile(accessToken, req.body))
+  return validateProfile(req.body)
+    .then(() => auth.validateToken(accessToken))
+    .then((userId) => usersService.updateProfile(accessToken, req.body, userId))
     .then((profile) => {
       aux.onLog('Response:', aux.parseProfileToLog(profile));
       return res.status(200).json(profile)
@@ -48,8 +49,8 @@ module.exports.getCandidates = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateToken(accessToken)
-    .then(() => linkService.getCandidates(accessToken))
+  return auth.validateToken(accessToken)
+    .then((userId) => linkService.getCandidates(accessToken, userId))
     .then((profiles) => {
       aux.onLog('Response:', profiles.length);
       return res.status(200).json({ profiles })
@@ -60,13 +61,13 @@ module.exports.getCandidates = (req, res) => {
 module.exports.addAction = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
-  const userId = req.params.userId;
+  const userToId = req.params.userId;
   const body = req.body;
 
-  return aux.validateToken(accessToken)
+  return validateUserId(userToId)
     .then(() => validateAction(body.action))
-    .then(() => validateUserId(userId))
-    .then(() => linkService.addAction(accessToken, userId, body))
+    .then(() => auth.validateToken(accessToken))
+    .then((userId) => linkService.addAction(accessToken, userToId, body, userId))
     .then((response) => {
       aux.onLog('Response:', response);
       return res.status(200).json(response)
@@ -78,8 +79,8 @@ module.exports.getLinks = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateToken(accessToken)
-    .then(() => linkService.getLinks(accessToken))
+  return auth.validateToken(accessToken)
+    .then((userId) => linkService.getLinks(accessToken, userId))
     .then((profileLinks) => {
       aux.onLog('Response:', profileLinks.length);
       return res.status(200).json({ profiles: profileLinks })
@@ -89,14 +90,14 @@ module.exports.getLinks = (req, res) => {
 
 module.exports.deleteLink = (req, res) => {
   const accessToken = req.headers.authorization;
-  const userId = req.params.userId;
-  aux.onLog('Request: Delete link', userId);
+  const userIdTo = req.params.userId;
+  aux.onLog('Request: Delete link', userIdTo);
 
-  return aux.validateToken(accessToken)
-    .then(() => validateUserId(userId))
-    .then(() => linkService.deleteLink(accessToken, userId))
+  return validateUserId(userIdTo)
+    .then(() => auth.validateToken(accessToken))
+    .then((userId) => linkService.deleteLink(accessToken, userIdTo, userId))
     .then(() => {
-      aux.onLog('Response: deleted', userId);
+      aux.onLog('Response: deleted', userIdTo);
       return res.status(204).json({})
     })
     .catch((err) => aux.onError('Delete link', res, err))

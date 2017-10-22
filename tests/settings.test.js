@@ -24,15 +24,29 @@ describe('Integration setting tests', () => {
       it('should return not found', () => response
         .then((res) => {
           assert.equal(res.status, 404);
-          assert.equal(res.response.body.message, 'user is not login');
+          assert.equal(res.response.body.message, 'user does not exist');
           assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When user is blocked', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [Object.assign({}, userProfile, { status: 'blocked' })], settings: [userSetting] })
+      })
+      beforeEach(() => (response = request.getSettings('access_token')));
+
+      it('should return 403', () => response
+        .then((res) => {
+          assert.equal(res.status, 403);
+          assert.deepEqual(res.message, 'Forbidden');
         }));
     });
 
     describe('When the user exists', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ settings: [userSetting] })
+        return DB.initialize({ profiles: [userProfile], settings: [userSetting] })
       })
       beforeEach(() => (response = request.getSettings('access_token')));
 
@@ -56,7 +70,7 @@ describe('Integration setting tests', () => {
       it('should return not found', () => response
         .then((res) => {
           assert.equal(res.status, 404);
-          assert.equal(res.response.body.message, 'user is not login');
+          assert.equal(res.response.body.message, 'user does not exist');
           assert.equal(res.message, 'Not Found');
         }));
     });
@@ -64,7 +78,7 @@ describe('Integration setting tests', () => {
     describe('When the user exists and is free', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ settings: [userSetting] })
+        return DB.initialize({ profiles: [userProfile], settings: [userSetting] })
       })
       beforeEach(() => (response = request.updateSettings('access_token', updateParams)));
 
@@ -80,7 +94,7 @@ describe('Integration setting tests', () => {
     describe('When the user exists and is premium', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
-        return DB.initialize({ settings: [Object.assign({}, userSetting, { accountType: 'premium' })] })
+        return DB.initialize({ profiles: [userProfile], settings: [Object.assign({}, userSetting, { accountType: 'premium' })] })
       })
       beforeEach(() => (response = request.updateSettings('access_token', Object.assign({}, updateParams, { accountType: 'free' }))));
 
@@ -143,4 +157,9 @@ const updateParams = {
   invisible: false,
   interestType: 'female',
   accountType: 'premium'
+}
+
+const userProfile = {
+  id: 'id',
+  name: 'name'
 }

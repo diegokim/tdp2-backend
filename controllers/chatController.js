@@ -1,16 +1,17 @@
 const chatService = require('../services/chatService');
 const aux = require('../utils/auxiliar.functions.js')
+const auth = require('../utils/auth.functions.js');
 
 module.exports.sendMessage = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
-  const userId = req.params.userId;
+  const userToId = req.params.userId;
   const messageBody = req.body;
 
-  return aux.validateToken(accessToken)
-    .then(() => validateMessage(messageBody.message))
-    .then(() => validateUserId(userId))
-    .then(() => chatService.sendMessage(accessToken, userId, messageBody))
+  return validateMessage(messageBody.message)
+    .then(() => validateUserId(userToId))
+    .then(() => auth.validateToken(accessToken))
+    .then((userId) => chatService.sendMessage(accessToken, userId, userToId, messageBody))
     .then(() => {
       aux.onLog('Response: message sended', messageBody);
       return res.status(201).json({})

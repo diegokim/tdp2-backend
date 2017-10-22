@@ -28,8 +28,22 @@ describe('Integration link tests', () => {
       it('should return not found', () => response
         .then((res) => {
           assert.equal(res.status, 404);
-          assert.equal(res.response.body.message, 'user is not login');
+          assert.equal(res.response.body.message, 'user does not exist');
           assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When user is blocked', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: profiles.concat([Object.assign({}, userProfile, { status: 'blocked' })]), settings: settings.concat([userSetting]) })
+      })
+      beforeEach(() => (response = request.getCandidates('access_token')));
+
+      it('should return 403', () => response
+        .then((res) => {
+          assert.equal(res.status, 403);
+          assert.deepEqual(res.message, 'Forbidden');
         }));
     });
 

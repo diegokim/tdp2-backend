@@ -53,6 +53,20 @@ describe('Integration chat tests', () => {
         }));
     });
 
+    describe('When user is blocked', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [Object.assign({}, userProfile, { status: 'blocked' })] })
+      })
+      beforeEach(() => (response = request.sendChatMessage('access_token', 'id2', { message: 'message' })));
+
+      it('should return 403', () => response
+        .then((res) => {
+          assert.equal(res.status, 403);
+          assert.deepEqual(res.message, 'Forbidden');
+        }));
+    });
+
     describe('When both users exist', function () {
       this.timeout(10000);
 
@@ -63,10 +77,10 @@ describe('Integration chat tests', () => {
       })
       beforeEach(() => (response = request.sendChatMessage('access_token', 'id2', { message: 'message' })));
 
-      it('should return true because a link has not occured', () => response
+      it('should return empty body', () => response
         .then((res) => {
           assert.equal(res.status, 201);
-          assert.deepEqual(res.body, { });
+          assert.deepEqual(res.body, {});
         }));
     });
   });

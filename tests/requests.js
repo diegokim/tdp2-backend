@@ -104,3 +104,5 @@ module.exports.getView = (accessToken, path) => Promise.resolve(
   .send()
   .catch((err) => err)
 );
+
+// TOD0: ADD FUNCTION TO PARSE RESPONSE AND REMOVE _id and __v

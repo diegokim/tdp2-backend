@@ -1,14 +1,14 @@
 const UsersDB = require('../database/usersDB');
-const faceAPI = require('../clients/faceAPI');
+const usersService = require('./usersService');
 const firebaseAPI = require('../clients/firebaseAPI');
 
 /**
  * Send chat message
  *
  */
-module.exports.sendMessage = (accessToken, userIdTo, chatMessage) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-  .then(({ id }) => {
+module.exports.sendMessage = (accessToken, userId, userIdTo, chatMessage) => {
+  return usersService.getUserId(accessToken, userId)
+  .then((id) => {
     return Promise.all([
       UsersDB.get(id),
       UsersDB.get(userIdTo)

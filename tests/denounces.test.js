@@ -137,10 +137,10 @@ describe('Integration denounces tests', () => {
           .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo eres' }))
           .then(() => request.actionUser('access_token', 'id2', { action: 'report', message: 'desgraciado' }))
           .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'aceptada', sendUID: 'id2', recUID: 'id' }))
-          .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
 
-      it('should return all the denounces with the same recUID with aceptada status', () => response
+      it('should return all the denounces with the same recUID with aceptada status', () =>
+        request.listDenounces(ADMIN_TOKEN)
         .then((res) => {
           const expectedDenounces = [{
             sendUID: 'id2',
@@ -174,6 +174,18 @@ describe('Integration denounces tests', () => {
 
           assert.equal(res.status, 200);
           assert.deepEqual(res.body, expectedDenounces);
+        }));
+
+      it('should block the user', () =>
+        request.getUserProfile(ADMIN_TOKEN, 'id')
+        .then((res) => {
+          const expectedProfile = Object.assign({ status: 'blocked' }, userProfile);
+
+          delete res.body._id;
+          delete res.body.__v;
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, expectedProfile);
         }));
     })
   });

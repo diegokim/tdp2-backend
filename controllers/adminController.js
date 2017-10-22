@@ -1,4 +1,5 @@
-const aux = require('../utils/auxiliar.functions.js')
+const aux = require('../utils/auxiliar.functions.js');
+const auth = require('../utils/auth.functions.js');
 const path = require('path');
 
 module.exports.start = (req, res) => {
@@ -21,7 +22,7 @@ module.exports.login = (req, res) => {
   aux.onLog('Request:', req.url)
   const user = req.body;
 
-  return aux.loginAdminUser(user)
+  return auth.loginAdminUser(user)
     .then((token) => {
       aux.onLog('Response: ', token);
       return res.status(201).json(token)

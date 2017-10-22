@@ -26,6 +26,7 @@ describe('Integration auth tests', () => {
           photos: { data: [] }
         }
         nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(profileParams, accessToken, profile)
       })
       beforeEach(() => (response = request.login('access_token')));
@@ -45,6 +46,7 @@ describe('Integration auth tests', () => {
           photos: { data: [{ profile: '' }] }
         }
         nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(profileParams, accessToken, profile)
       })
       beforeEach(() => (response = request.login('access_token')));
@@ -63,6 +65,7 @@ describe('Integration auth tests', () => {
           birthday: '08/13/1990',
           photos: { data: [{ profile: '' }] }
         }
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(profileParams, accessToken, profile)
         nockGetPosts(accessToken, { data: [] })
@@ -88,6 +91,21 @@ describe('Integration auth tests', () => {
         }));
     });
 
+    describe('When user is blocked', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [Object.assign({}, littleProfile, { status: 'blocked' })] })
+      })
+      beforeEach(() => (response = request.login(accessToken)));
+
+      it('should return 403', () => response
+        .then((res) => {
+          assert.equal(res.status, 403);
+          assert.deepEqual(res.message, 'Forbidden');
+        }));
+    });
+
+
     describe('When the user has a valid profile and is the first login', () => {
       let photo;
 
@@ -104,6 +122,7 @@ describe('Integration auth tests', () => {
           }
           photo = { picture: 'test-url' }
 
+          nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(profileParams, accessToken, profile)
           nockProfile(['id'], accessToken, { id: 'id' })
           nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
@@ -123,6 +142,7 @@ describe('Integration auth tests', () => {
         beforeEach(() => {
           photo = { picture: 'test-url' }
 
+          nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(profileParams, accessToken, completeProfile)
           nockProfile(['id'], accessToken, { id: 'id' })
           nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
@@ -145,6 +165,7 @@ describe('Integration auth tests', () => {
           profileWithoutInterests = Object.assign({}, completeProfile);
           profileWithoutInterests.interested_in = []; // eslint-disable-line
 
+          nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(profileParams, accessToken, profileWithoutInterests)
           nockProfile(['id'], accessToken, { id: 'id' })
           nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
@@ -171,10 +192,12 @@ describe('Integration auth tests', () => {
       beforeEach(() => {
         photo = { picture: 'test-url' }
 
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(profileParams, accessToken, completeProfile)
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['photos'], accessToken, { photos: { data: [{ id: 'id1' }] } })
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockGetPhoto(['id1'], accessToken, photo)
         nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
         nockGetPosts(accessToken, { data: [{ id: 'data-id' }] })
@@ -217,8 +240,11 @@ describe('Integration auth tests', () => {
           location: [-58.368323, -34.617528]
         }
 
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(profileParams, accessToken, completeProfile)
         nockGetPhoto(['id1', 'id2', 'id3'], accessToken, photo)
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -298,6 +324,11 @@ const defaultSettings = {
   interestType: 'both',
   accountType: 'free',
   superLinksCount: 1
+}
+
+const littleProfile = {
+  id: 'id',
+  name: 'name'
 }
 
 const completeProfile = {

@@ -1,4 +1,5 @@
 const DenouncesDB = require('../database/denouncesDB');
+const usersService = require('./usersService');
 
 const BLOCKED_DENOUNCE_STATUS = 'usuario bloqueado';
 const ACCEPTED_DENOUNCE_STATUS = 'aceptada';
@@ -26,6 +27,7 @@ module.exports.update = (denounce) => {
         const promises = denounces.map(($denounce) => updateDenounceStatus($denounce, BLOCKED_DENOUNCE_STATUS));
         return Promise.all(promises);
       })
+      .then(() => usersService.blockUser(denounce.recUID))
   }
 
   return promise.then(() => DenouncesDB.updateDenounce(denounce.sendUID, denounce.recUID, denounce.status));

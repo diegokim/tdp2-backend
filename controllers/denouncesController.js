@@ -1,11 +1,12 @@
 const denouncesService = require('../services/denouncesService');
 const aux = require('../utils/auxiliar.functions.js')
+const auth = require('../utils/auth.functions.js');
 
 module.exports.list = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateAdminToken(accessToken)
+  return auth.validateAdminToken(accessToken)
     .then(() => denouncesService.list(accessToken))
     .then((denounces) => {
       aux.onLog('Response: denounces', denounces.length);
@@ -18,7 +19,7 @@ module.exports.update = (req, res) => {
   aux.onLog('Request:', req.url)
   const accessToken = req.headers.authorization;
 
-  return aux.validateAdminToken(accessToken)
+  return auth.validateAdminToken(accessToken)
     .then(() => validateDenounce(req.body))
     .then(() => denouncesService.update(req.body))
     .then((denounce) => {

@@ -3,7 +3,6 @@ const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
 const SettingsDB = require('../database/settingDB');
 const DenouncesDB = require('../database/denouncesDB');
-const faceAPI = require('../clients/faceAPI');
 const firebaseAPI = require('../clients/firebaseAPI');
 const usersService = require('./usersService');
 
@@ -19,8 +18,8 @@ const SUPER_LINK_ACTION = 'super-link';
  *
  */
 module.exports.getCandidates = (accessToken, userId) => {
-  return Promise.resolve(userId ? { id: userId } : faceAPI.getProfile(accessToken, ['id']))
-    .then((fbProfile) => usersService.get(accessToken, fbProfile.id))
+  return usersService.getUserId(accessToken, userId)
+    .then((id) => usersService.get(accessToken, id))
     .then((user) => {
       const paramsToSearch = filterParamsToSearch(user);
 
@@ -49,9 +48,9 @@ module.exports.getCandidates = (accessToken, userId) => {
  * Get Links
  *
  */
-module.exports.getLinks = (accessToken) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-    .then(({ id }) => LinkDB.getLinks(id))
+module.exports.getLinks = (accessToken, userId) => {
+  return usersService.getUserId(accessToken, userId)
+    .then((id) => LinkDB.getLinks(id))
     .then((userLinks) => {
       const userIds = [];
       const userTypes = {};
@@ -68,19 +67,19 @@ module.exports.getLinks = (accessToken) => {
  * Delete Link
  *
  */
-module.exports.deleteLink = (accessToken, userId) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-    .then(({ id }) => (LinkDB.deleteLink(id, userId)
-    .then(() => firebaseAPI.deleteConversation(id, userId))));
+module.exports.deleteLink = (accessToken, userIdTo, userId) => {
+  return usersService.getUserId(accessToken, userId)
+    .then((id) => (LinkDB.deleteLink(id, userIdTo)
+    .then(() => firebaseAPI.deleteConversation(id, userIdTo))));
 }
 
 /**
  * Add action to user
  *
  */
-module.exports.addAction = (accessToken, userIdTo, body) => {
-  return faceAPI.getProfile(accessToken, ['id'])
-    .then(({ id }) => {
+module.exports.addAction = (accessToken, userIdTo, body, userId) => {
+  return usersService.getUserId(accessToken, userId)
+    .then((id) => {
       return Promise.all([
         UsersDB.get(id),
         UsersDB.get(userIdTo)
