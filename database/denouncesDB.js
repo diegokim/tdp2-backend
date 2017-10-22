@@ -19,7 +19,7 @@ const DenounceSchema = mongoose.Schema({
     type: String
   },
   status: {
-    type: String // aceptada, pendiente, rechazada
+    type: String // usuario bloqueado, aceptada, pendiente, rechazada
   }
 })
 
@@ -32,6 +32,12 @@ module.exports.create = function (denounce) {
 
 module.exports.list = function () {
   return Denounce.find({}).then(normalizeResponse)
+}
+
+module.exports.search = function (params) {
+  const query = _.pick(params, ['sendUID', 'recUID', 'status']);
+
+  return Denounce.find(query).then(normalizeResponse);
 }
 
 module.exports.updateDenounce = function (sendUID, recUID, status) {

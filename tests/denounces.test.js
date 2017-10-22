@@ -34,13 +34,13 @@ describe('Integration denounces tests', () => {
             sendUID: 'id',
             recUID: 'id2',
             sendUName: 'name',
-            recUName: 'name',
+            recUName: 'name2',
             message: 'malo malo',
             status: 'pendiente'
           }, {
             sendUID: 'id2',
             recUID: 'id',
-            sendUName: 'name',
+            sendUName: 'name2',
             recUName: 'name',
             message: 'malo malo eres',
             status: 'pendiente'
@@ -84,14 +84,16 @@ describe('Integration denounces tests', () => {
         }));
     })
 
-    describe('when update the denounce', () => {
+    describe('when update the denounce with rechazado', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id2' })
         return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
         return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo' })
-          .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'aceptada', sendUID: 'id', recUID: 'id2' }))
+          .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo' }))
+          .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'rechazada', sendUID: 'id', recUID: 'id2' }))
           .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
 
@@ -101,13 +103,74 @@ describe('Integration denounces tests', () => {
             sendUID: 'id',
             recUID: 'id2',
             sendUName: 'name',
+            recUName: 'name2',
+            message: 'malo malo',
+            status: 'rechazada'
+          }, {
+            sendUID: 'id2',
+            recUID: 'id',
+            sendUName: 'name2',
             recUName: 'name',
             message: 'malo malo',
-            status: 'aceptada'
+            status: 'pendiente'
           }]
 
           delete res.body[0]._id;
           delete res.body[0].__v;
+          delete res.body[1]._id;
+          delete res.body[1].__v;
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, expectedDenounces);
+        }));
+    })
+
+    describe('when update the denounce with aceptada', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id2' })
+        nockProfile(['id'], accessToken, { id: 'id3' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile, anotherAnotherUserProfile] })
+      })
+      beforeEach(() => {
+        return request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo' })
+          .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo eres' }))
+          .then(() => request.actionUser('access_token', 'id2', { action: 'report', message: 'desgraciado' }))
+          .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'aceptada', sendUID: 'id2', recUID: 'id' }))
+          .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
+      });
+
+      it('should return all the denounces with the same recUID with aceptada status', () => response
+        .then((res) => {
+          const expectedDenounces = [{
+            sendUID: 'id2',
+            recUID: 'id',
+            sendUName: 'name2',
+            recUName: 'name',
+            message: 'malo malo',
+            status: 'aceptada'
+          }, {
+            sendUID: 'id3',
+            recUID: 'id',
+            sendUName: 'name3',
+            recUName: 'name',
+            message: 'malo eres',
+            status: 'usuario bloqueado'
+          }, {
+            sendUID: 'id',
+            recUID: 'id2',
+            sendUName: 'name',
+            recUName: 'name2',
+            message: 'desgraciado',
+            status: 'pendiente'
+          }]
+
+          delete res.body[0]._id;
+          delete res.body[0].__v;
+          delete res.body[1]._id;
+          delete res.body[1].__v;
+          delete res.body[2]._id;
+          delete res.body[2].__v;
 
           assert.equal(res.status, 200);
           assert.deepEqual(res.body, expectedDenounces);
@@ -150,6 +213,12 @@ const userProfile = {
 
 const anotherUserProfile = {
   id: 'id2',
-  name: 'name',
+  name: 'name2',
   photo: 'foto2'
+}
+
+const anotherAnotherUserProfile = {
+  id: 'id3',
+  name: 'name3',
+  photo: 'foto3'
 }

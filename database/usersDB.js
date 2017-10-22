@@ -35,6 +35,10 @@ const UserSchema = mongoose.Schema({
   },
   location: {
     type: [Number]
+  },
+  status: {
+    type: String,
+    default: 'enable'
   }
 })
 

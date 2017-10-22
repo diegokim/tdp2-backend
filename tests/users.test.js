@@ -157,6 +157,7 @@ const userProfile = {
     'racing',
     'fiuba'
   ],
+  status: 'enable',
   work: 'work description'
 }
 

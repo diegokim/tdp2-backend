@@ -213,6 +213,7 @@ describe('Integration auth tests', () => {
           name: 'name',
           photo: 'esta foto',
           work:  'work description',
+          status: 'enable',
           location: [-58.368323, -34.617528]
         }
 
