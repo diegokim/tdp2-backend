@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    /* background: url("../../../favicon.png") repeat; */
+} 
+
+.link-up-header {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 10em;
+    margin-right: 10em;
+    padding: 0.5em
+}
+
+#DivHeader
+{
+    position:relative;
+    display:inline-block;
+    width:100%;
+    font-family: Century Gothic, sans-serif;
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

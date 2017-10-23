@@ -1,0 +1,81 @@
+body{
+    font-family:"Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;font-size:13px;color:#3d464d;font-weight:normal
+    }
+    .list-group-item{
+        border: 0;
+        padding-left: 0;
+        border-top: 1px solid;
+        border-color: rgba(37,40,43,0.1);
+    }
+    .list-group .list-group-item:first-child{
+        border:0;
+    }
+    .list-group .list-group-item a{
+        color: #2895F1;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .list-group.list-group-header{
+        padding:0;
+        margin:0;
+    }
+    .list-group.list-group-body .glyphicon {
+     font-size: 25px; vertical-align: middle;
+    }
+    .list-group-panel{
+        border: 1px solid #ccdbeb;
+        border-radius: 0;
+    }
+
+
+
+    .points_table thead {
+        width: 100%;
+    }
+    
+    .points_table tbody {
+        height: 562px;
+        overflow-y: auto;
+        width: 100%;
+    }
+    
+    .points_table thead tr{
+        width: 99%;
+    }
+    
+     .points_table tr{
+         width: 100%;
+     }
+    
+    .points_table thead, .points_table tbody, .points_table tr, .points_table td, .points_table th{
+        display: inline-block;
+    }
+    
+    .points_table thead{
+        background: lightcoral;
+        color: #fff;
+    }
+    
+    .points_table tbody td, .points_table thead > tr> th{
+        float: left;
+        border-bottom-width: 0;
+    }
+    
+    .points_table>tbody>tr>td, .points_table>tbody>tr>th, .points_table>tfoot>tr>td, .points_table>tfoot>tr>th, .points_table>thead>tr>td, .points_table>thead>tr>th{
+        padding: 8px;
+        height: 50px;
+        text-align: center;
+        
+    }
+    
+    .odd {
+        background: #ffffff;
+        color: #000;
+    }
+    
+    .even {
+        background: #efefef;
+        color: #000;
+    }
+    
+    

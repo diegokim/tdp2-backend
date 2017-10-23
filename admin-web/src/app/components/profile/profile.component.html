@@ -1,0 +1,70 @@
+<!-- <img *ngIf="profile != null" [src]="getProfilePhoto"/> -->
+
+
+<div class="container" *ngIf="profile != null" style="padding-top:3em">    
+    <div class="row">
+        
+        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
+            <img alt="User Pic"  [src]="getProfilePhoto" id="profile-image1" class="img-circle img-responsive"> 
+        </div>
+
+        <div class="col-md-8 col-xs-12 col-sm-6 col-lg-8" >
+            <div class="container" >
+                <h2>{{profile.name}}</h2>
+                <h4>{{profile.age}} Años</h4>
+                
+            </div>
+            <hr>
+
+            <ul class="container details" >
+                
+                <li><p>trabaja en   <b> {{profile.work}}</b></p></li>
+                <li><p>estudio en   <b> {{profile.education}}</b></p></li>
+            </ul>
+
+            <hr>
+            <div class="col-sm-5 col-xs-6 tital " >ID del usuario:  {{profile.id}}</div>
+        
+        </div>
+    </div>
+
+    <hr>
+
+    <mat-tab-group>
+            <mat-tab label="Fotos">
+                <div class="row" style="padding-top:3em">
+                        <div *ngFor="let photo of profile.photos; let index = index" class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
+                                <img [src]="getPhoto(index)" class="img-responsive"/>
+                        </div>
+                </div>
+                
+            </mat-tab>
+            <mat-tab label="Descripción">
+                <div class="container" style="padding-top:3em">
+                        <div class="row">
+                                <div class="col-xs-3 well" >
+                                        <mat-list>
+                                            <mat-list-item> <h3>Intereses</h3> </mat-list-item>
+                                            <mat-list-item *ngFor="let interest of profile.interests">{{interest}}</mat-list-item>
+                                                
+                                        </mat-list>
+                                </div>
+                                <div class="col-xs-9">
+                                        
+                                        <h3 style="padding-left:2em">Descripción</h3>
+                                        <hr>
+                                        <h4 style="padding-left:3em">{{profile.description}}</h4>
+                                </div>
+                                
+                            </div>
+                </div>
+                
+
+            </mat-tab>
+          </mat-tab-group>
+
+</div>
+
+
+
+    

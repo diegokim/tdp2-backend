@@ -1,0 +1,71 @@
+<div class="container">
+  <h2 ><font color="grey"> Administracion de Denuncias</font></h2>
+  <hr>
+</div>
+
+
+<div class="container">
+	<div class="row">
+		<table class="points_table" style="height:100%">
+			<thead>
+				<tr>
+					<th class="col-xs-1">#</th>
+					<th class="col-xs-2">Acusador</th>
+					<th class="col-xs-2">Acusado</th>
+					<th class="col-xs-3">Motivo</th>
+                    <th class="col-xs-2">Estado</th>
+                    <th class="col-xs-1">Aceptar</th>
+                    <th class="col-xs-1">Rechazar</th>
+					
+				</tr>
+			</thead>
+
+			<tbody class="points_table_scrollbar">
+
+                        <tr *ngFor="let denounce of denounces; let index = index">
+                            <td class="col-xs-1 even" *ngIf="index % 2 == 0">{{index}}</td>
+                            <td class="col-xs-1 odd" *ngIf="index % 2 != 0">{{index}}</td>
+
+                            <td class="col-xs-2 even" *ngIf="index % 2 == 0"><a (click)="showProfile(denounce.sendUID)">{{denounce.sendUName}}</a></td>
+                            <td class="col-xs-2 odd" *ngIf="index % 2 != 0"><a (click)="showProfile(denounce.sendUID)">{{denounce.sendUName}}</a></td>
+                            
+                            <td class="col-xs-2 even" *ngIf="index % 2 == 0"><a (click)="showProfile(denounce.recUID)">{{denounce.recUName}}</a></td>
+                            <td class="col-xs-2 odd" *ngIf="index % 2 != 0"><a (click)="showProfile(denounce.recUID)">{{denounce.recUName}}</a></td>
+
+                            <td class="col-xs-3 even" *ngIf="index % 2 == 0"><p>{{denounce.message}}</p></td>
+                            <td class="col-xs-3 odd" *ngIf="index % 2 != 0">{{denounce.message}}</td>
+
+                            <td class="col-xs-2 even" *ngIf="index % 2 == 0">{{denounce.status}}</td>
+                            <td class="col-xs-2 odd" *ngIf="index % 2 != 0">{{denounce.status}}</td>
+
+                            <td class="col-xs-1 even" *ngIf="index % 2 == 0">
+                                <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-danger" *ngIf="denounce.status == 'pendiente'">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <td class="col-xs-1 odd" *ngIf="index % 2 != 0">
+                                <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-danger" *ngIf="denounce.status == 'pendiente'">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                </button>
+                            </td>
+
+                            <td class="col-xs-1 even" *ngIf="index % 2 == 0">
+                                <button type="button" (click)='rejectDenounce(denounce)' class="btn btn-warning" *ngIf="denounce.status == 'pendiente'">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <td class="col-xs-1 odd" *ngIf="index % 2 != 0">
+                                <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-warning" *ngIf="denounce.status == 'pendiente'">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let blank of fillEmptySpaces; let index = index">
+                                <td class="col-xs-12 even" *ngIf="index % 2 == 0"></td>
+                                <td class="col-xs-12 odd" *ngIf="index % 2 != 0"></td>
+                        </tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
