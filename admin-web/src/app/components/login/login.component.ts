@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   loginSucced(token: string) {
     localStorage.setItem('sessionToken', token)
     // TODO: Go to the corresponding page.
-    this.router.navigateByUrl('/denounces');
+    this.router.navigateByUrl('/main');
   }
 
   loginAction() {
@@ -40,6 +40,8 @@ export class LoginComponent implements OnInit {
       .then(response => this.loginSucced(response['token']))
       // TODO: Handle error
       .catch( err => this.showLoginError())
+    } else {
+      this.flashMessage.show('Ambos campos son obligatorios!', {cssClass: 'alert-danger', timeout: 3000})  
     }
   }
   showLoginError() {

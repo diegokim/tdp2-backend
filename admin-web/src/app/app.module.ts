@@ -14,6 +14,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { FlashMessagesModule} from 'angular2-flash-messages'
 import {MatListModule} from '@angular/material';
 import {MatTabsModule} from '@angular/material';
+import { MainComponent } from './components/main/main.component';
 
 
 const appRoutes: Routes = [
@@ -28,6 +29,10 @@ const appRoutes: Routes = [
   {
     path: 'profile/:id',
     component: ProfileComponent
+  },
+  {
+    path: 'main',
+    component: MainComponent
   }
   
 ]
@@ -38,7 +43,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     DenouncesComponent,
-    ProfileComponent
+    ProfileComponent,
+    MainComponent
     
   ],
   imports: [
