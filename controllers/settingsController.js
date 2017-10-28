@@ -35,6 +35,7 @@ const validateSettings = (settings) => {
     settings.distRange ||
     settings.invisible ||
     settings.accountType ||
+    settings.notifications ||
     settings.interestType;
 
   return validSettings ?

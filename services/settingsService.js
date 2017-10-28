@@ -30,7 +30,7 @@ module.exports.update = (accessToken, body, userId) => {
     ProjectSettingsDB.get(LINKS_FOR_PREMIUM_ACCOUNT_KEY)
   ])
   .then(([id, linksForFree, linksForPremium]) => {
-    const settingsToUpdate = _.pick(body, ['ageRange', 'distRange', 'invisible', 'interestType', 'accountType'])
+    const settingsToUpdate = _.pick(body, ['ageRange', 'distRange', 'invisible', 'interestType', 'accountType', 'notifications'])
 
     if (body.accountType && body.accountType === 'free') {
       settingsToUpdate.superLinksCount = linksForFree;
@@ -66,6 +66,7 @@ module.exports.defaultSettings = () => {
       invisible: false,
       interestType: 'both',
       accountType: 'free',
+      notifications: true,
       superLinksCount: value
     }))
 }

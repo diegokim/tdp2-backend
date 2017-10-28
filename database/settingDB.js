@@ -25,6 +25,10 @@ const SettingSchema = mongoose.Schema({
   superLinksCount: {
     type: Number,
     default: 1
+  },
+  notifications: {
+    type: Boolean,
+    default: true
   }
 })
 

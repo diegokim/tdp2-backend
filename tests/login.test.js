@@ -322,6 +322,7 @@ const defaultSettings = {
   invisible: false,
   interestType: 'both',
   accountType: 'free',
+  notifications: true,
   superLinksCount: 1
 }
 

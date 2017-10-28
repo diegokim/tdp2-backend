@@ -142,6 +142,7 @@ const userSetting = {
   invisible: true,
   interestType: 'male',
   accountType: 'free',
+  notifications: true,
   superLinksCount: 1
 }
 
