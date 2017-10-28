@@ -61,9 +61,10 @@ module.exports.createProfile = (profile) => {
  */
 module.exports.createUser = (profile) => {
   const newUser = new UsersDB(profile);
-  const newSettings = Object.assign({}, settingsService.defaultSettings, { id: profile.id })
+
   return UsersDB.create(newUser)
-    .then(() => settingsService.create(newSettings))
+    .then(() => settingsService.defaultSettings())
+    .then((defaultSettings) => settingsService.create(Object.assign(defaultSettings, { id: profile.id })))
   ;
 }
 

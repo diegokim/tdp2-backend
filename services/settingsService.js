@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const SettingDB = require('../database/settingDB');
+const ProjectSettingsDB = require('../database/projectSettingsDB');
 const usersService = require('./usersService');
 
-const LINKS_FOR_FREE_ACCOUNT = 1;
-const LINKS_FOR_PREMIUM_ACCOUNT = 5;
+const LINKS_FOR_FREE_ACCOUNT_KEY = 'linksForFreeAccount';
+const LINKS_FOR_PREMIUM_ACCOUNT_KEY = 'linksForPremiumAccount';
 
 /**
  * Get Settings
@@ -23,18 +24,22 @@ module.exports.get = (accessToken, userId) => {
  *
  */
 module.exports.update = (accessToken, body, userId) => {
-  return usersService.getUserId(accessToken, userId)
-    .then((id) => {
-      const settingsToUpdate = _.pick(body, ['ageRange', 'distRange', 'invisible', 'interestType', 'accountType'])
+  return Promise.all([
+    usersService.getUserId(accessToken, userId),
+    ProjectSettingsDB.get(LINKS_FOR_FREE_ACCOUNT_KEY),
+    ProjectSettingsDB.get(LINKS_FOR_PREMIUM_ACCOUNT_KEY)
+  ])
+  .then(([id, linksForFree, linksForPremium]) => {
+    const settingsToUpdate = _.pick(body, ['ageRange', 'distRange', 'invisible', 'interestType', 'accountType'])
 
-      if (body.accountType && body.accountType === 'free') {
-        settingsToUpdate.superLinksCount = LINKS_FOR_FREE_ACCOUNT;
-      } else if (body.accountType && body.accountType === 'premium') {
-        settingsToUpdate.superLinksCount = LINKS_FOR_PREMIUM_ACCOUNT;
-      }
+    if (body.accountType && body.accountType === 'free') {
+      settingsToUpdate.superLinksCount = linksForFree;
+    } else if (body.accountType && body.accountType === 'premium') {
+      settingsToUpdate.superLinksCount = linksForPremium;
+    }
 
-      return SettingDB.updateSetting(Object.assign({}, settingsToUpdate, { id }))
-    })
+    return SettingDB.updateSetting(Object.assign({}, settingsToUpdate, { id }))
+  })
 }
 
 /**
@@ -47,17 +52,20 @@ module.exports.create = (setting) => {
 }
 
 
-module.exports.defaultSettings = {
-  ageRange: {
-    min: 18,
-    max: 150
-  },
-  distRange: {
-    min: 1,
-    max: 30
-  },
-  invisible: false,
-  interestType: 'both',
-  accountType: 'free',
-  superLinksCount: 1
+module.exports.defaultSettings = () => {
+  return ProjectSettingsDB.get(LINKS_FOR_FREE_ACCOUNT_KEY)
+    .then((value) => ({
+      ageRange: {
+        min: 18,
+        max: 150
+      },
+      distRange: {
+        min: 1,
+        max: 30
+      },
+      invisible: false,
+      interestType: 'both',
+      accountType: 'free',
+      superLinksCount: value
+    }))
 }

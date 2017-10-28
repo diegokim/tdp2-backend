@@ -1,3 +1,4 @@
+const ProjectSettingsDB = require('../database/projectSettingsDB');
 const faceAPI = require('../clients/faceAPI');
 const usersService = require('./usersService');
 const bluebird = require('bluebird');
@@ -5,8 +6,10 @@ const base64 = bluebird.promisifyAll(require('node-base64-image'));
 
 const params = ['id', 'name', 'photos', 'birthday', 'education', 'work', 'gender', 'interested_in', 'favorite_teams', 'books{name}', 'movies{genre}', 'music{name}']
 
-const MAX_PHOTOS = 7;
-const MAX_INTEREST = 5;
+const MAX_PHOTOS_TO_LOGIN_KEY = 'maxPhotosToLogin';
+const MAX_INTEREST_TO_LOGIN_KEY = 'maxInterestsToLogin';
+const MIN_PHOTOS_TO_LOGIN = 'minPhotosToLogin'; // eslint-disable-line
+
 const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 1 * 365;
 
 /**
@@ -21,30 +24,35 @@ module.exports.login = (accessToken) => {
   return faceAPI.getProfile(accessToken, ['id'])
     .then((fbProfile) => usersService.get(accessToken, fbProfile.id))
     .catch((err) => (err && err.status === 404 ? null : Promise.reject(err)))
-    .then((user) => {
+    .then((user) => Promise.all([
+      user,
+      ProjectSettingsDB.get(MAX_PHOTOS_TO_LOGIN_KEY),
+      ProjectSettingsDB.get(MAX_INTEREST_TO_LOGIN_KEY)
+    ]))
+    .then(([user, maxPhotos, maxInterests]) => {
       if (!user) {
         return faceAPI.getProfile(accessToken, params)
           .then((profile) => validateProfile(profile)
             .then(() => validateUserCreationTime(accessToken))
-            .then(() => parseProfile(profile))
+            .then(() => parseProfile(profile, maxInterests))
             .then((pp) => usersService.createUser(pp))
-            .then(() => getPhotosLink(profile.photos.data, accessToken))
+            .then(() => getPhotosLink(profile.photos.data, accessToken, maxPhotos))
           )
       }
 
       if (!user.profile.photo) {
         return faceAPI.getProfile(accessToken, ['photos'])
-          .then((profile) => getPhotosLink(profile.photos.data, accessToken))
+          .then((profile) => getPhotosLink(profile.photos.data, accessToken, maxPhotos))
       }
       return user;
     })
     .catch((err) => Promise.reject(err));
 }
 
-const parseProfile = (profile) => {
+const parseProfile = (profile, maxInterest) => {
   const education = profile.education ? profile.education[0].type : '';
   const work = (profile.work || {}).description || '';
-  const interests = parseInterests(profile).slice(0, MAX_INTEREST);
+  const interests = parseInterests(profile).slice(0, maxInterest);
   const location = [-58.368323, -34.617528]; // la facu
   const newUser = {
     photo: '',
@@ -77,8 +85,8 @@ const parseInterests = (profile) => {
   return interests.map((interest) => interest.name).filter((interest) => (interest));
 }
 
-const getPhotosLink = (photosToGet, accessToken) => {
-  const allPhotos = photosToGet.slice(0, MAX_PHOTOS);
+const getPhotosLink = (photosToGet, accessToken, maxPhotos) => {
+  const allPhotos = photosToGet.slice(0, maxPhotos);
 
   return faceAPI.getProfilePhotos(accessToken)
     .then((profilePhotos) => {
@@ -108,7 +116,7 @@ const validateProfile = (profile) => {
   if (age < 18) {
     return Promise.reject({ status: 400, message: 'El usuario no es mayor de edad' });
   }
-  if (photos.length === 0) {
+  if (photos.length === 0) { // TOD0: manejar lo de las fotos aca
     return Promise.reject({ status: 400, message: 'El usuario no posee fotos' });
   }
   return Promise.resolve(profile);

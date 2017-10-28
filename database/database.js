@@ -3,6 +3,9 @@ const UsersDB = require('./usersDB');
 const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
 const DenouncesDB = require('./denouncesDB');
+const ProjectSettingsDB = require('./projectSettingsDB');
+
+const configs = require('../config/configs').configs;
 
 //  Uris for production and test environment
 //  Usar variables de ambiente es mas seguro
@@ -64,6 +67,13 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createUserSettings = [];
   const createUserLink = [];
   const createDenounces = [];
+  const createProjectConfigs = [];
+
+  // create project configs
+  for (const config in configs) { // eslint-disable-line
+    const newConfig = new ProjectSettingsDB({ name: config, value: configs[config] });
+    createProjectConfigs.push(ProjectSettingsDB.create(newConfig));
+  }
 
   profiles.forEach((user) => {
     const newUser = new UsersDB(user);
@@ -90,5 +100,6 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     .then(() => Promise.all(createUserSettings))
     .then(() => Promise.all(createUserLink))
     .then(() => Promise.all(createDenounces))
+    .then(() => Promise.all(createProjectConfigs))
   ;
 }

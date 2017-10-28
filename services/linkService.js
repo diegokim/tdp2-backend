@@ -3,10 +3,12 @@ const LinkDB = require('../database/linkDB');
 const UsersDB = require('../database/usersDB');
 const SettingsDB = require('../database/settingDB');
 const DenouncesDB = require('../database/denouncesDB');
+const ProjectSettingsDB = require('../database/projectSettingsDB');
 const firebaseAPI = require('../clients/firebaseAPI');
 const usersService = require('./usersService');
 
-const MAX_CANDIDATES = 5;
+const MAX_CANDIDATES_KEY = 'maxCandidatesToShow';
+
 const INITIAL_DENOUNCE_STATUS = 'pendiente';
 const LINK_ACTION = 'link';
 const BLOCK_ACTION = 'block';
@@ -38,9 +40,10 @@ module.exports.getCandidates = (accessToken, userId) => {
 
       return sorted;
     })
-    .then((candidates) => {
+    .then((candidates) => Promise.all([candidates, ProjectSettingsDB.get(MAX_CANDIDATES_KEY)]))
+    .then(([candidates, maxCandidatesToShow]) => {
       const parsedCandidates = candidates.map((candidate) => candidate);
-      return parsedCandidates.splice(0, MAX_CANDIDATES);
+      return parsedCandidates.splice(0, maxCandidatesToShow);
     })
 }
 

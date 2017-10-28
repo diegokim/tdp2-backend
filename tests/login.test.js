@@ -13,7 +13,7 @@ const profileParams = ['id', 'name', 'photos', 'birthday', 'education', 'work', 
 describe('Integration auth tests', () => {
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({})));
 
   describe('Login', () => {
     let profile;
@@ -104,7 +104,6 @@ describe('Integration auth tests', () => {
           assert.deepEqual(res.message, 'Forbidden');
         }));
     });
-
 
     describe('When the user has a valid profile and is the first login', () => {
       let photo;
