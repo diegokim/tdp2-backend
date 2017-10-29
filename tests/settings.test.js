@@ -106,6 +106,22 @@ describe('Integration setting tests', () => {
           assert.deepEqual(resultSet, formatDBResponse(res.body));
         }));
     });
+
+    describe('When the user exists and update registrationToken', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [userProfile], settings: [Object.assign({}, userSetting)] })
+      })
+      beforeEach(() => (response = request.updateSettings('access_token', Object.assign({}, userSetting, { registrationToken: 'reg' }))));
+
+      it('should return the updated settings', () => response
+        .then((res) => {
+          resultSet = Object.assign({}, userSetting, { registrationToken: 'reg' });
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(resultSet, formatDBResponse(res.body));
+        }));
+    });
   });
 });
 
@@ -157,7 +173,8 @@ const updateParams = {
   },
   invisible: false,
   interestType: 'female',
-  accountType: 'premium'
+  accountType: 'premium',
+  registrationToken: ''
 }
 
 const userProfile = {

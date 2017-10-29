@@ -79,16 +79,16 @@ module.exports.mockLinks = (action = 'link') => {
     makeLink('id9', '10211595473336432', action, 'both'),
     makeLink('id10', '10211595473336432', action, 'friends'),
 
-    makeLink('id1', '1411063048948357', action, 'male'),
-    makeLink('id2', '1411063048948357', action, 'male'),
-    makeLink('id3', '1411063048948357', action, 'female'),
-    makeLink('id4', '1411063048948357', action, 'both'),
-    makeLink('id5', '1411063048948357', action, 'friends'),
-    makeLink('id6', '1411063048948357', action, 'female'),
-    makeLink('id7', '1411063048948357', action, 'female'),
-    makeLink('id8', '1411063048948357', action, 'male'),
-    makeLink('id9', '1411063048948357', action, 'both'),
-    makeLink('id10', '1411063048948357', action, 'friends')
+    makeLink('id1', '1423327261055269', action, 'male'),
+    makeLink('id2', '1423327261055269', action, 'male'),
+    makeLink('id3', '1423327261055269', action, 'female'),
+    makeLink('id4', '1423327261055269', action, 'both'),
+    makeLink('id5', '1423327261055269', action, 'friends'),
+    makeLink('id6', '1423327261055269', action, 'female'),
+    makeLink('id7', '1423327261055269', action, 'female'),
+    makeLink('id8', '1423327261055269', action, 'male'),
+    makeLink('id9', '1423327261055269', action, 'both'),
+    makeLink('id10', '1423327261055269', action, 'friends')
   ]
 
   return links;
@@ -157,7 +157,8 @@ const makeSettings = (id, ageRange, distRange, invisible, interestType) => {
     ageRange,
     distRange,
     invisible,
-    interestType
+    interestType,
+    registrationToken: 'registration-token'
   }
 }
 

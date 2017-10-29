@@ -37,3 +37,15 @@ module.exports.deleteConversation = (sendUID, recUID) => {
     .then(() => recUIDRef.remove())
     .catch(() => Promise.reject({ status: 503, message: 'Error while deleting chat conversation' }));
 }
+
+module.exports.sendNotification = (userRegToken, notification) => {
+  const messaging = firebase.messaging();
+
+  const payload = { notification }
+
+  console.log('Token and payload', userRegToken, notification)
+
+  return messaging.sendToDevice(userRegToken, payload)
+    .then((res) => console.log('Notification result', JSON.stringify(res)))
+    .catch((err) => Promise.reject({ status: 503, message: err }));
+}

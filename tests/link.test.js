@@ -220,7 +220,9 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe('when a link does occur', () => {
+      describe.only('when a link does occur', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
@@ -231,7 +233,7 @@ describe('Integration link tests', () => {
             .then(() => (response = request.actionUser('access_token', 'id', { action: 'link' })))
         });
 
-        it('should return true because a link has not occured', () => response
+        it('should return true because a link has occured', () => response
           .then((res) => {
             assert.equal(res.status, 200);
             assert.deepEqual(res.body, { link: true });
@@ -266,7 +268,9 @@ describe('Integration link tests', () => {
           }));
       })
 
-      describe('when get links with one user', () => {
+      describe('when get links with one user', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
@@ -288,7 +292,9 @@ describe('Integration link tests', () => {
           }));
       })
 
-      describe('when get links with more than one user', () => {
+      describe('when get links with more than one user', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
@@ -415,7 +421,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When can delete the user well', function () {
-      this.timeout(10000);
+      this.timeout(20000);
 
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -492,7 +498,9 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe('when a super-link does occur', () => {
+      describe.only('when a super-link does occur', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
@@ -503,7 +511,7 @@ describe('Integration link tests', () => {
             .then(() => (response = request.actionUser('access_token', 'id', { action: 'super-link' })))
         });
 
-        it('should return true because a link has not occured', () => response
+        it('should return true because a link has occured', () => response
           .then((res) => {
             assert.equal(res.status, 200);
             assert.deepEqual(res.body, { link: true });
@@ -546,7 +554,9 @@ describe('Integration link tests', () => {
           }));
       })
 
-      describe('when try to super link more than one user but user has a FREE account', () => {
+      describe('when try to super link more than one user but user has a FREE account', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id' })
@@ -563,7 +573,9 @@ describe('Integration link tests', () => {
           }));
       })
 
-      describe('when try to super link more than one user but user has a PREMIUM account', () => {
+      describe('when try to super link more than one user but user has a PREMIUM account', function () {
+        this.timeout(20000);
+
         beforeEach(() => {
           nockProfile(['id'], accessToken, { id: 'id' })
           nockProfile(['id'], accessToken, { id: 'id2' })
@@ -629,6 +641,8 @@ const userSetting = {
     max: 10
   },
   invisible: true,
+  notifications: true,
+  registrationToken: 'registration-token',
   interestType: 'female'
 }
 

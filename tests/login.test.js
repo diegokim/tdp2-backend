@@ -323,6 +323,7 @@ const defaultSettings = {
   interestType: 'both',
   accountType: 'free',
   notifications: true,
+  registrationToken: 'empty-token',
   superLinksCount: 1
 }
 

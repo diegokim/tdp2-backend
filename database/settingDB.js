@@ -28,7 +28,10 @@ const SettingSchema = mongoose.Schema({
   },
   notifications: {
     type: Boolean,
-    default: true
+    default: false
+  },
+  registrationToken: {
+    type: String
   }
 })
 

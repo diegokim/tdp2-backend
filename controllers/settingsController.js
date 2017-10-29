@@ -36,6 +36,7 @@ const validateSettings = (settings) => {
     settings.invisible ||
     settings.accountType ||
     settings.notifications ||
+    settings.registrationToken ||
     settings.interestType;
 
   return validSettings ?

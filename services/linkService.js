@@ -91,9 +91,9 @@ module.exports.addAction = (accessToken, userIdTo, body, userId) => {
       .then(([u1, u2]) => {
         const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: body.action });
         if (body.action === LINK_ACTION) {
-          return onLinkAction(id, userIdTo, newLink);
+          return onLinkAction(u1, u2, newLink);
         } else if (body.action === SUPER_LINK_ACTION) {
-          return onSuperLinkAction(id, userIdTo, newLink);
+          return onSuperLinkAction(u1, u2, newLink);
         } else if (body.action === BLOCK_ACTION) {
           return LinkDB.create(newLink).then(() => onBlockAction(id, userIdTo));
         } else if (body.action === REPORT_ACTION) {
@@ -105,39 +105,56 @@ module.exports.addAction = (accessToken, userIdTo, body, userId) => {
     })
 }
 
-const onLinkAction = (id, userIdTo, newLink) => {
-  return SettingsDB.get(id)
+const onLinkAction = (user, userTo, newLink) => {
+  return SettingsDB.get(user.id)
     .then((settings) => settings.interestType)
     .then((interestType) => {
       newLink.type = interestType;
       return LinkDB.create(newLink);
     })
-    .then(() => LinkDB.existsLink(id, userIdTo))
+    .then(() => LinkDB.existsLink(user.id, userTo.id))
     .then((existsLink) => {
       return (existsLink) ?
-        Promise.resolve({ link: true }) : // coming soon --> Notification
+        sendLinkNotification(user, userTo).then(() => Promise.resolve({ link: true })) :
         Promise.resolve({ link: false })
     })
 }
 
-const onSuperLinkAction = (id, userIdTo, newSuperLink) => {
-  const newLink = new LinkDB({ sendUID: id, recUID: userIdTo, action: LINK_ACTION });
+const sendLinkNotification = (user, userTo) => {
+  return SettingsDB.get(user.id)
+    .then((sett1) => {
+      if (sett1.notifications) {
+        return firebaseAPI.sendNotification(sett1.registrationToken, { title: 'Se produjo un link', body: userTo.name });
+      }
+      return Promise.resolve();
+    })
+    .then(() => SettingsDB.get(userTo.id))
+    .then((sett2) => {
+      if (sett2.notifications) {
+        return firebaseAPI.sendNotification(sett2.registrationToken, { title: 'Se produjo un link', body: user.name });
+      }
+      return Promise.resolve();
+    })
+}
 
-  return SettingsDB.get(id)
+const onSuperLinkAction = (user, userTo, newSuperLink) => {
+  const newLink = new LinkDB({ sendUID: user.id, recUID: userTo.id, action: LINK_ACTION });
+
+  return SettingsDB.get(user.id)
     .then((settings) => {
       const superLinksCount = settings.superLinksCount;
-      const settingsToUpdate = { id, superLinksCount: superLinksCount - 1 };
+      const settingsToUpdate = { id: user.id, superLinksCount: superLinksCount - 1 };
 
       return (superLinksCount > 0) ?
         SettingsDB.updateSetting(settingsToUpdate) :
         Promise.reject({ status: 409, message: 'you have not more super links for today' })
     })
     .then(() => LinkDB.create(newSuperLink))
-    .then(() => onLinkAction(id, userIdTo, newLink))
+    .then(() => onLinkAction(user, userTo, newLink))
 }
 
 const onBlockAction = (id, userIdTo) => {
-  return LinkDB.deleteLink(id, userIdTo).then(() => ({})); // coming soon --> Notification
+  return LinkDB.deleteLink(id, userIdTo).then(() => ({}));
   // or delete not BLOCK ? TOD0
 }
 
@@ -154,7 +171,7 @@ const onReportAction = (user, userTo, message = 'No message') => {
 
   return LinkDB.deleteLink(user.id, userTo.id)
     .then(() => DenouncesDB.create(newDenounce))
-    .then(() => ({})); // coming soon --> Notification
+    .then(() => ({}));
 }
 
 const filterParamsToSearch = (user) => {
