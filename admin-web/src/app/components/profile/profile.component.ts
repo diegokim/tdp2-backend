@@ -32,11 +32,11 @@ export class ProfileComponent implements OnInit {
   }
 
   getPhoto(index) {
-    return this._sanitizer.bypassSecurityTrustUrl( `${this.profile.photos[index]}`);
+    return this._sanitizer.bypassSecurityTrustUrl( `data:image/jpeg;base64,${this.profile.photos[index]}`);
   } 
 
   get getProfilePhoto() {
-    return this._sanitizer.bypassSecurityTrustUrl( `${this.profile.photo}`);
+    return this._sanitizer.bypassSecurityTrustUrl( `data:image/jpeg;base64,${this.profile.photo}`);
   }
 
   ngOnInit() {
