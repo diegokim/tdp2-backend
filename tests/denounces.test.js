@@ -23,7 +23,7 @@ describe('Integration denounces tests', () => {
         return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
-        return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo', type: 'other' })
+        return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo', type: 'otro' })
           .then(() => request.actionUser('access_token', 'id', { action: 'report', type: 'spam' }))
           .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
@@ -37,7 +37,7 @@ describe('Integration denounces tests', () => {
             recUName: 'name2',
             message: 'malo malo',
             status: 'pendiente',
-            type: 'other'
+            type: 'otro'
           }, {
             sendUID: 'id2',
             recUID: 'id',
@@ -108,7 +108,7 @@ describe('Integration denounces tests', () => {
             recUName: 'name2',
             message: 'malo malo',
             status: 'rechazada',
-            type: 'other'
+            type: 'otro'
           }, {
             sendUID: 'id2',
             recUID: 'id',
@@ -116,7 +116,7 @@ describe('Integration denounces tests', () => {
             recUName: 'name',
             message: 'malo malo',
             status: 'pendiente',
-            type: 'other'
+            type: 'otro'
           }]
 
           delete res.body[0]._id;
@@ -161,7 +161,7 @@ describe('Integration denounces tests', () => {
             recUName: 'name',
             message: 'malo eres',
             status: 'usuario bloqueado',
-            type: 'other'
+            type: 'otro'
           }, {
             sendUID: 'id',
             recUID: 'id2',
@@ -169,7 +169,7 @@ describe('Integration denounces tests', () => {
             recUName: 'name2',
             message: 'desgraciado',
             status: 'pendiente',
-            type: 'other'
+            type: 'otro'
           }]
 
           delete res.body[0]._id;

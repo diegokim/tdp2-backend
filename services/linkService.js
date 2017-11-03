@@ -158,7 +158,7 @@ const onBlockAction = (id, userIdTo) => {
   // or delete not BLOCK ? TOD0
 }
 
-const onReportAction = (user, userTo, message = 'No message', type = 'other') => {
+const onReportAction = (user, userTo, message = 'No message', type = 'otro') => {
   const params = {
     type,
     message,

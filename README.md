@@ -369,6 +369,53 @@ Respuesta:
 	  body: {}
 
 
+## REPORTS
+
+### POST /users/reports
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      startDate: '', // filters
+      endDate: ''
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      activeUsers: {
+        sampling: [{
+          x: 0,
+          y: 10
+        }, {
+          x: 1,
+          y: 20
+        }, {
+          x: 2,
+          y: 30
+        }]
+      },
+      denounces: {
+        otro: {
+          count: 150,
+          percentage: 40
+        },
+        spam: {
+          count: 75,
+          percentage: 20
+        },
+        comp: {
+          count: 150,
+          percentage: 40
+        }
+      }
+    }
+
+
 ## ADMIN
 
 ### POST /admin/login

@@ -105,4 +105,11 @@ module.exports.getView = (accessToken, path) => Promise.resolve(
   .catch((err) => err)
 );
 
+module.exports.getReports = (accessToken, body = {}) => Promise.resolve(
+  request.post(baseUrl + '/users/reports')
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);
+
 // TOD0: ADD FUNCTION TO PARSE RESPONSE AND REMOVE _id and __v
