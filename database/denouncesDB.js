@@ -20,6 +20,10 @@ const DenounceSchema = mongoose.Schema({
   },
   status: {
     type: String // usuario bloqueado, aceptada, pendiente, rechazada
+  },
+  type: {
+    type: String, // other, spam, comportamiento extraño
+    default: 'other'
   }
 })
 

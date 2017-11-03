@@ -1,5 +1,7 @@
 const firebase = require('firebase-admin');
 const serviceAccount = require('./credentials.json');
+const ENV = process.env.ENV;
+const TEST_ENV = 'env_test';
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
@@ -43,7 +45,11 @@ module.exports.sendNotification = (userRegToken, notification) => {
 
   const payload = { notification }
 
-  console.log('Token and payload', userRegToken, notification)
+  console.log('Token and payload', userRegToken, notification);
+
+  if (ENV === TEST_ENV) { // TOD0: NO HACER ESTAS COSAS
+    return Promise.resolve();
+  }
 
   return messaging.sendToDevice(userRegToken, payload)
     .then((res) => console.log('Notification result', JSON.stringify(res)))

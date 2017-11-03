@@ -220,7 +220,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe.only('when a link does occur', function () {
+      describe('when a link does occur', function () {
         this.timeout(20000);
 
         beforeEach(() => {
@@ -498,7 +498,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe.only('when a super-link does occur', function () {
+      describe('when a super-link does occur', function () {
         this.timeout(20000);
 
         beforeEach(() => {

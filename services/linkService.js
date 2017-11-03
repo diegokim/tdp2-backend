@@ -97,7 +97,7 @@ module.exports.addAction = (accessToken, userIdTo, body, userId) => {
         } else if (body.action === BLOCK_ACTION) {
           return LinkDB.create(newLink).then(() => onBlockAction(id, userIdTo));
         } else if (body.action === REPORT_ACTION) {
-          return LinkDB.create(newLink).then(() => onReportAction(u1, u2, body.message));
+          return LinkDB.create(newLink).then(() => onReportAction(u1, u2, body.message, body.type));
         } else {
           return LinkDB.create(newLink);
         }
@@ -158,8 +158,9 @@ const onBlockAction = (id, userIdTo) => {
   // or delete not BLOCK ? TOD0
 }
 
-const onReportAction = (user, userTo, message = 'No message') => {
+const onReportAction = (user, userTo, message = 'No message', type = 'other') => {
   const params = {
+    type,
     message,
     recUID: userTo.id,
     sendUID: user.id,
