@@ -126,7 +126,6 @@ module.exports.updateConfig = (accessToken, configName, body = {}) => Promise.re
   .catch((err) => err)
 );
 
-
 module.exports.getProjectAdvertising = (accessToken) => Promise.resolve(
   request.get(baseUrl + '/project/advertising')
   .set({'Authorization': accessToken})
@@ -147,5 +146,27 @@ module.exports.deleteProjectAdvertising = (accessToken, advertId) => Promise.res
   .send()
   .catch((err) => err)
 );
+
+module.exports.getProjectHiddenWords = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/project/hiddenlanguage')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
+module.exports.createProjectHiddenWord = (accessToken, body = {}) => Promise.resolve(
+  request.post(baseUrl + '/project/hiddenlanguage')
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);
+
+module.exports.deleteProjectHiddenWord = (accessToken, wordId) => Promise.resolve(
+  request.delete(baseUrl + `/project/hiddenlanguage/${wordId}`)
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
 
 // TOD0: ADD FUNCTION TO PARSE RESPONSE AND REMOVE _id and __v

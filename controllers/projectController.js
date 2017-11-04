@@ -72,6 +72,47 @@ module.exports.deleteAdvertising = (req, res) => {
     .catch((err) => aux.onError('Delete project advertising', res, err))
 }
 
+// hidden language
+module.exports.getHiddenWords = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => projectService.getHiddenWords())
+    .then((words) => {
+      aux.onLog('Response:', words);
+      return res.status(200).json(words)
+    })
+    .catch((err) => aux.onError('Get project hidden words', res, err))
+}
+
+module.exports.createHiddenWord = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const body = req.body;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => validateHiddenWord(body))
+    .then(() => projectService.createHiddenWord(body.word))
+    .then((advert) => {
+      aux.onLog('Response: advertising created');
+      return res.status(200).json(advert)
+    })
+    .catch((err) => aux.onError('Create project hidden word', res, err))
+}
+
+module.exports.deleteHiddenWord = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const wordId = req.params.wordId
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => validateWordId(wordId))
+    .then(() => projectService.deleteHiddenWord(wordId))
+    .then(() => res.status(204).json())
+    .catch((err) => aux.onError('Delete project hidden word', res, err))
+}
+
 const validateConf = (conf) => {
   const validConf = conf.value;
 
@@ -98,4 +139,18 @@ const validateAdvertId = (advertId) => {
   return advertId ?
     Promise.resolve() :
     Promise.reject({ status: 400, message: 'missing advertId' })
+}
+
+const validateHiddenWord = (word) => {
+  const validWord = word.word;
+
+  return validWord ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing word' })
+}
+
+const validateWordId = (wordId) => {
+  return wordId ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing wordId' })
 }

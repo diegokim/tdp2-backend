@@ -219,6 +219,105 @@ describe('Integration Project tests', () => {
         }));
     });
   });
+
+  describe('Create hidden Word', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.createProjectHiddenWord(accessToken, { word: 'tonto' }))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When create the word', () => {
+      beforeEach(() => (response = request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tonto' })));
+
+      it('should return the created hidden word', () => response
+        .then((res) => {
+          formatDBResponse(res.body);
+
+          assert.equal(res.status, 200);
+          assert.equal(res.body.word, 'tonto');
+          assert.property(res.body, 'id');
+        }));
+    });
+  });
+
+  describe('List hidden Word', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.getProjectHiddenWords(accessToken))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When get the hidden words', () => {
+      beforeEach(() => request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tarado' })
+        .then(() => (response = request.getProjectHiddenWords(ADMIN_TOKEN)))
+      );
+
+      it('should return the hidden words list', () => response
+        .then((res) => {
+          formatDBResponseWithId(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, [{ word: 'tarado' }]);
+        }));
+    });
+  });
+
+  describe('Delete hidden word', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.deleteProjectHiddenWord(accessToken))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When delete the advertising', () => {
+      beforeEach(() => request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tonto' })
+        .then((res) => (response = request.deleteProjectHiddenWord(ADMIN_TOKEN, res.body.id)))
+      );
+
+      it('should return 204', () => response
+        .then((res) => {
+          assert.equal(res.status, 204);
+        }));
+    });
+
+    describe('When delete the hidden word', () => {
+      beforeEach(() => request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tonto' })
+        .then(() => request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tonto-to-delete' }))
+        .then((res) => request.deleteProjectHiddenWord(ADMIN_TOKEN, res.body.id))
+        .then(() => (response = request.getProjectHiddenWords(ADMIN_TOKEN)))
+      );
+
+      it('should not return the deleted word', () => response
+        .then((res) => {
+          formatDBResponseWithId(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, [{ word: 'tonto' }]);
+        }));
+    });
+  });
 });
 
 const formatDBResponse = (dbResponse) => {

@@ -145,6 +145,16 @@ module.exports.mockAdvertising = () => {
   return advertising;
 }
 
+module.exports.mockHiddenLanguage = () => {
+  const language = [
+    makeHiddenWord('a732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tonto'),
+    makeHiddenWord('a222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'idiota'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hijo de perra')
+  ]
+
+  return language;
+}
+
 const makeProfile = (id, name, age, gender, photo, photos, interests) => {
   return {
     id,
@@ -196,6 +206,13 @@ const makeAdvertising = (id, image) => {
   return {
     id,
     image
+  }
+}
+
+const makeHiddenWord = (id, word) => {
+  return {
+    id,
+    word
   }
 }
 

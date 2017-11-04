@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const ProjectSettingsDB = require('../database/projectSettingsDB');
 const ProjectAdvertisingDB = require('../database/projectAdvertisingDB');
+const ProjectHiddenLanguageDB = require('../database/projectHiddenLanguageDB');
 
 // configs
 module.exports.updateConfig = (configId, value) => {
@@ -25,4 +26,20 @@ module.exports.createAdvertising = (image) => {
 
 module.exports.deleteAdvertising = (advertId) => {
   return ProjectAdvertisingDB.removeAdvert(advertId);
+}
+
+// hidden language
+module.exports.getHiddenWords = () => {
+  return ProjectHiddenLanguageDB.list();
+}
+
+module.exports.createHiddenWord = (word) => {
+  const id = uuid.v1();
+  const newWord = new ProjectHiddenLanguageDB({ id, word });
+
+  return ProjectHiddenLanguageDB.create(newWord);
+}
+
+module.exports.deleteHiddenWord = (wordId) => {
+  return ProjectHiddenLanguageDB.removeWord(wordId);
 }

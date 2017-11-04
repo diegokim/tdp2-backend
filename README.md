@@ -520,6 +520,60 @@ Respuesta:
 	respuesta --> 204
 	  body: {}
 
+## GET /projects/hiddenlanguage
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: [{
+      id:    'id1'
+      word: 'malo'
+    }, {
+      id:    'id2'
+      word: 'desgraciado'
+    }]
+
+## POST /projects/hiddenlanguage
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      word: 'maldito'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      id:    'id1'
+      word: 'maldito'
+    }
+
+## DELETE /projects/hiddenlanguage/{wordId}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
+
+
 
 ## ADMIN
 

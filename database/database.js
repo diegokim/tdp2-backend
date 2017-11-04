@@ -4,6 +4,7 @@ const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
 const DenouncesDB = require('./denouncesDB');
 const ProjectAdvertisingDB = require('./projectAdvertisingDB');
+const ProjectHiddenLanguageDB = require('./projectHiddenLanguageDB');
 const ProjectSettingsDB = require('./projectSettingsDB');
 
 const configs = require('../config/configs').configs;
@@ -59,7 +60,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], denounces = {}, includeProjectConfs = false }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], hiddenLanguage = [], denounces = {}, includeProjectConfs = false }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -70,6 +71,7 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createDenounces = [];
   const createProjectConfigs = [];
   const createAdvertising = [];
+  const createHiddenLanguage = [];
 
   // create project configs
   if (includeProjectConfs) {
@@ -95,6 +97,10 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     const newAdvert = new ProjectAdvertisingDB(advert);
     createAdvertising.push(ProjectAdvertisingDB.create(newAdvert))
   });
+  hiddenLanguage.forEach((word) => {
+    const newWord = new ProjectHiddenLanguageDB(word);
+    createHiddenLanguage.push(ProjectHiddenLanguageDB.create(newWord))
+  });
   (denounces.denounces || []).forEach((denounce) => {
     const newDenounce = new DenouncesDB(denounce);
     createDenounces.push(DenouncesDB.create(newDenounce));
@@ -110,5 +116,6 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     .then(() => Promise.all(createDenounces))
     .then(() => Promise.all(createProjectConfigs))
     .then(() => Promise.all(createAdvertising))
+    .then(() => Promise.all(createHiddenLanguage))
   ;
 }
