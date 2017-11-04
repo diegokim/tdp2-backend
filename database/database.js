@@ -58,7 +58,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ profiles = [], settings = [], links = [], denounces = {} }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], denounces = {}, includeProjectConfs = false }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -70,9 +70,11 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createProjectConfigs = [];
 
   // create project configs
-  for (const config in configs) { // eslint-disable-line
-    const newConfig = new ProjectSettingsDB({ name: config, value: configs[config] });
-    createProjectConfigs.push(ProjectSettingsDB.create(newConfig));
+  if (includeProjectConfs) {
+    for (const config of configs) {
+      const newConfig = new ProjectSettingsDB(config);
+      createProjectConfigs.push(ProjectSettingsDB.create(newConfig));
+    }
   }
 
   profiles.forEach((user) => {

@@ -13,7 +13,7 @@ describe('Integration denounces tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('List denounces', () => {
     describe('when the report does occur', () => {

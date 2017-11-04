@@ -15,7 +15,7 @@ describe('Integration chat tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('Send message', () => {
     describe('When the user does not exist', () => {

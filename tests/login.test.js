@@ -13,7 +13,7 @@ const profileParams = ['id', 'name', 'photos', 'birthday', 'education', 'work', 
 describe('Integration auth tests', () => {
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop().then(() => DB.initialize({})));
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('Login', () => {
     let profile;

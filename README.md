@@ -415,6 +415,57 @@ Respuesta:
       }
     }
 
+## PROJECT
+
+### GET /project/configs
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 201
+	  body: [ 
+      { prettyName: 'Candidatos maximos para mostrar',
+        name: 'maxCandidatesToShow',
+        value: 5 },
+      { prettyName: 'Fotos minimas para loguearte',
+        name: 'minPhotosToLogin',
+        value: 5 },
+      { prettyName: 'Intereses maximos para mostrar en login',
+        name: 'maxInterestsToLogin',
+        value: 5 },
+      { prettyName: 'Links para cuenta Premium',
+        name: 'linksForPremiumAccount',
+        value: 5 },
+      { prettyName: 'Fotos maximas para mostrar en login',
+        name: 'maxPhotosToLogin',
+        value: 7 },
+      { prettyName: 'Links para cuenta Free',
+        name: 'linksForFreeAccount',
+        value: 1
+      }
+    ]
+
+### PUT /project/configs/{configName}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      value: 10
+    }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
 
 ## ADMIN
 

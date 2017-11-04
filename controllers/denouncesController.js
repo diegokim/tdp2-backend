@@ -3,7 +3,7 @@ const aux = require('../utils/auxiliar.functions.js')
 const auth = require('../utils/auth.functions.js');
 
 module.exports.list = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return auth.validateAdminToken(accessToken)
@@ -16,7 +16,7 @@ module.exports.list = (req, res) => {
 }
 
 module.exports.update = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return auth.validateAdminToken(accessToken)

@@ -5,7 +5,7 @@ const aux = require('../utils/auxiliar.functions.js')
 const auth = require('../utils/auth.functions.js');
 
 module.exports.get = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return auth.validateToken(accessToken)
@@ -18,7 +18,7 @@ module.exports.get = (req, res) => {
 }
 
 module.exports.getUserProfile = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
   const userId = req.params.userId;
 
@@ -33,7 +33,7 @@ module.exports.getUserProfile = (req, res) => {
 }
 
 module.exports.getReports = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
   const filters = req.body;
 
@@ -47,7 +47,7 @@ module.exports.getReports = (req, res) => {
 }
 
 module.exports.update = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return validateProfile(req.body)
@@ -61,7 +61,7 @@ module.exports.update = (req, res) => {
 }
 
 module.exports.getCandidates = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return auth.validateToken(accessToken)
@@ -74,7 +74,7 @@ module.exports.getCandidates = (req, res) => {
 }
 
 module.exports.addAction = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
   const userToId = req.params.userId;
   const body = req.body;
@@ -91,7 +91,7 @@ module.exports.addAction = (req, res) => {
 }
 
 module.exports.getLinks = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
 
   return auth.validateToken(accessToken)

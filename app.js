@@ -9,6 +9,7 @@ const statusController = require('./controllers/statusController');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
 const chatController = require('./controllers/chatController');
+const projectController = require('./controllers/projectController');
 const adminViewController = require('./controllers/adminController')
 const database = require('./database/database');
 
@@ -24,7 +25,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, includeProjectConfs: true }));
 
 //  Middleware cors
 app.use(cors());
@@ -64,6 +65,10 @@ router.post('/users/reports', (req, res) => usersController.getReports(req, res)
 
 // Login
 router.post('/admin/login', (req, res) => adminViewController.login(req, res));
+
+// Project
+router.get('/project/configs', (req, res) => projectController.getConfigs(req, res));
+router.put('/project/configs/:configName', (req, res) => projectController.updateConfig(req, res));
 
 // Admin view
 router.get('/*', (req, res) => adminViewController.start(req, res));

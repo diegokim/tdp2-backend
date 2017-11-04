@@ -112,4 +112,18 @@ module.exports.getReports = (accessToken, body = {}) => Promise.resolve(
   .catch((err) => err)
 );
 
+module.exports.getConfigs = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/project/configs')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
+module.exports.updateConfig = (accessToken, configName, body = {}) => Promise.resolve(
+  request.put(baseUrl + `/project/configs/${configName}`)
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);
+
 // TOD0: ADD FUNCTION TO PARSE RESPONSE AND REMOVE _id and __v
