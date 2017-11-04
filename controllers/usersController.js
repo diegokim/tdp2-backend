@@ -1,4 +1,4 @@
-const reportsService = require('../services/reportsService');
+const projectService = require('../services/projectService');
 const usersService = require('../services/usersService');
 const linkService = require('../services/linkService');
 const aux = require('../utils/auxiliar.functions.js')
@@ -30,20 +30,6 @@ module.exports.getUserProfile = (req, res) => {
       return res.status(200).json(profile)
     })
     .catch((err) => aux.onError('Get user profile', res, err))
-}
-
-module.exports.getReports = (req, res) => {
-  aux.onLog('Request:', `${req.method} ${req.url}`)
-  const accessToken = req.headers.authorization;
-  const filters = req.body;
-
-  return auth.validateAdminToken(accessToken)
-    .then(() => reportsService.filter(filters))
-    .then((report) => {
-      aux.onLog('Response:', report);
-      return res.status(200).json(report)
-    })
-    .catch((err) => aux.onError('Get user reports', res, err))
 }
 
 module.exports.update = (req, res) => {
@@ -117,6 +103,20 @@ module.exports.deleteLink = (req, res) => {
     })
     .catch((err) => aux.onError('Delete link', res, err))
 }
+
+module.exports.getAdvertising = (req, res) => {
+  const accessToken = req.headers.authorization;
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+
+  return auth.validateToken(accessToken)
+    .then(() => projectService.getRandomAdvertising())
+    .then((advert) => {
+      aux.onLog('Response: User Advertising');
+      return res.status(200).json(advert)
+    })
+    .catch((err) => aux.onError('Get User Advertising', res, err))
+}
+
 
 const validateProfile = (profile) => {
   const validProfile =

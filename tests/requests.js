@@ -78,6 +78,13 @@ module.exports.sendChatMessage = (accessToken, userId, body) => Promise.resolve(
   .catch((err) => err)
 );
 
+module.exports.getUserAdvertising = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/users/advertising')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
 module.exports.listDenounces = (accessToken) => Promise.resolve(
   request.get(baseUrl + '/users/denounces')
   .set({'Authorization': accessToken})
@@ -106,7 +113,7 @@ module.exports.getView = (accessToken, path) => Promise.resolve(
 );
 
 module.exports.getReports = (accessToken, body = {}) => Promise.resolve(
-  request.post(baseUrl + '/users/reports')
+  request.post(baseUrl + '/project/reports')
   .set({'Authorization': accessToken})
   .send(body)
   .catch((err) => err)

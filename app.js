@@ -56,6 +56,9 @@ router.patch('/users/me/settings', (req, res) => settingsController.update(req, 
 // Chat
 router.post('/users/:userId/chats/message', (req, res) => chatController.sendMessage(req, res));
 
+// Advertising
+router.get('/users/advertising', (req, res) => usersController.getAdvertising(req, res));
+
 // Admin
 // Denounces
 router.get('/users/denounces', (req, res) => denouncesController.list(req, res));
@@ -63,7 +66,6 @@ router.put('/users/denounces', (req, res) => denouncesController.update(req, res
 
 // Users
 router.get('/users/:userId/profile', (req, res) => usersController.getUserProfile(req, res));
-router.post('/users/reports', (req, res) => usersController.getReports(req, res));
 
 // Login
 router.post('/admin/login', (req, res) => adminViewController.login(req, res));
@@ -80,6 +82,8 @@ router.delete('/project/advertising/:advertId', (req, res) => projectController.
 router.get('/project/hiddenlanguage', (req, res) => projectController.getHiddenWords(req, res));
 router.post('/project/hiddenlanguage', (req, res) => projectController.createHiddenWord(req, res));
 router.delete('/project/hiddenlanguage/:wordId', (req, res) => projectController.deleteHiddenWord(req, res));
+  // Reports
+router.post('/project/reports', (req, res) => projectController.getReports(req, res));
 
 // Admin view
 router.get('/*', (req, res) => adminViewController.start(req, res));

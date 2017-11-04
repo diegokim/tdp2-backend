@@ -28,6 +28,15 @@ module.exports.deleteAdvertising = (advertId) => {
   return ProjectAdvertisingDB.removeAdvert(advertId);
 }
 
+module.exports.getRandomAdvertising = () => {
+  return ProjectAdvertisingDB.list()
+    .then((advertising) => {
+      const length = advertising.length;
+
+      return advertising[Math.floor(Math.random() * length)];
+    });
+}
+
 // hidden language
 module.exports.getHiddenWords = () => {
   return ProjectHiddenLanguageDB.list();

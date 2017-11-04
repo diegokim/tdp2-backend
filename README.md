@@ -239,6 +239,25 @@ Respuesta:
   body: // settings
 
 
+## Users (advertising)
+
+### GET /users/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    image: 'image in base 64'
+	  }
+
+
 ## Users (candidates)
 
 ### GET /users/me/candidates
@@ -369,9 +388,9 @@ Respuesta:
 	  body: {}
 
 
-## REPORTS
+## PROJECT
 
-### POST /users/reports
+### POST /project/reports
 
 Mensaje:
 
@@ -414,8 +433,6 @@ Respuesta:
         }
       }
     }
-
-## PROJECT
 
 ### GET /project/configs
 

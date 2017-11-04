@@ -1,4 +1,5 @@
 const projectService = require('../services/projectService');
+const reportsService = require('../services/reportsService');
 
 const aux = require('../utils/auxiliar.functions.js')
 const auth = require('../utils/auth.functions.js');
@@ -111,6 +112,21 @@ module.exports.deleteHiddenWord = (req, res) => {
     .then(() => projectService.deleteHiddenWord(wordId))
     .then(() => res.status(204).json())
     .catch((err) => aux.onError('Delete project hidden word', res, err))
+}
+
+// reports
+module.exports.getReports = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const filters = req.body;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => reportsService.filter(filters))
+    .then((report) => {
+      aux.onLog('Response:', report);
+      return res.status(200).json(report)
+    })
+    .catch((err) => aux.onError('Get user reports', res, err))
 }
 
 const validateConf = (conf) => {
