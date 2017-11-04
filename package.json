@@ -34,7 +34,8 @@
     "node-base64-image": "~1.0.4",
     "pg": "~7.0.0",
     "promise": "~7.3.0",
-    "superagent": "~3.5.2"
+    "superagent": "~3.5.2",
+    "uuid": "~3.1.0"
   },
   "author": "",
   "license": "ISC",

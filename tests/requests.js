@@ -126,4 +126,26 @@ module.exports.updateConfig = (accessToken, configName, body = {}) => Promise.re
   .catch((err) => err)
 );
 
+
+module.exports.getProjectAdvertising = (accessToken) => Promise.resolve(
+  request.get(baseUrl + '/project/advertising')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
+module.exports.createProjectAdvertising = (accessToken, body = {}) => Promise.resolve(
+  request.post(baseUrl + '/project/advertising')
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);
+
+module.exports.deleteProjectAdvertising = (accessToken, advertId) => Promise.resolve(
+  request.delete(baseUrl + `/project/advertising/${advertId}`)
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
 // TOD0: ADD FUNCTION TO PARSE RESPONSE AND REMOVE _id and __v

@@ -3,6 +3,7 @@ const UsersDB = require('./usersDB');
 const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
 const DenouncesDB = require('./denouncesDB');
+const ProjectAdvertisingDB = require('./projectAdvertisingDB');
 const ProjectSettingsDB = require('./projectSettingsDB');
 
 const configs = require('../config/configs').configs;
@@ -58,7 +59,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ profiles = [], settings = [], links = [], denounces = {}, includeProjectConfs = false }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], denounces = {}, includeProjectConfs = false }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -68,6 +69,7 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createUserLink = [];
   const createDenounces = [];
   const createProjectConfigs = [];
+  const createAdvertising = [];
 
   // create project configs
   if (includeProjectConfs) {
@@ -89,6 +91,10 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     const newLink = new LinkDB(link);
     createUserLink.push(LinkDB.create(newLink));
   });
+  advertising.forEach((advert) => {
+    const newAdvert = new ProjectAdvertisingDB(advert);
+    createAdvertising.push(ProjectAdvertisingDB.create(newAdvert))
+  });
   (denounces.denounces || []).forEach((denounce) => {
     const newDenounce = new DenouncesDB(denounce);
     createDenounces.push(DenouncesDB.create(newDenounce));
@@ -103,5 +109,6 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     .then(() => Promise.all(createUserLink))
     .then(() => Promise.all(createDenounces))
     .then(() => Promise.all(createProjectConfigs))
+    .then(() => Promise.all(createAdvertising))
   ;
 }

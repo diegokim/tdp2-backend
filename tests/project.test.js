@@ -1,7 +1,6 @@
 /* eslint no-undef:off */
 const _ = require('lodash');
 const assert = require('chai').assert;
-const nock = require('nock');
 const request = require('./requests.js')
 const DB = require('../database/database');
 
@@ -10,7 +9,7 @@ const server = require('../app.js'); // eslint-disable-line
 const accessToken = 'access_token';
 const ADMIN_TOKEN = '02ba3f90-b5a3-4576-ba69-93df1c6772ec';
 
-describe('Integration Project Setting tests', () => {
+describe('Integration Project tests', () => {
   let response;
 
   // Leave the database in a valid state
@@ -121,6 +120,105 @@ describe('Integration Project Setting tests', () => {
         }));
     });
   });
+
+  describe('Create Advertising', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.createProjectAdvertising(accessToken, { image: 'image' }))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When create the advertising', () => {
+      beforeEach(() => (response = request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })));
+
+      it('should return the created advertising', () => response
+        .then((res) => {
+          formatDBResponse(res.body);
+
+          assert.equal(res.status, 200);
+          assert.equal(res.body.image, 'image');
+          assert.property(res.body, 'id');
+        }));
+    });
+  });
+
+  describe('List Advertising', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.getProjectAdvertising(accessToken))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When create the advertising', () => {
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+        .then(() => (response = request.getProjectAdvertising(ADMIN_TOKEN)))
+      );
+
+      it('should return the advertising list', () => response
+        .then((res) => {
+          formatDBResponseWithId(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, [{ image: 'image' }]);
+        }));
+    });
+  });
+
+  describe('Delete Advertising', () => {
+    describe('when send an invalid token', () => {
+      beforeEach(() => (
+        response = request.deleteProjectAdvertising(accessToken))
+      );
+
+      it('should return 401', () => response
+        .then((res) => {
+          assert.equal(res.status, 401);
+          assert.equal(res.response.body.message, 'Invalid Token');
+          assert.equal(res.message, 'Unauthorized');
+        }));
+    });
+
+    describe('When delete the advertising', () => {
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+        .then((res) => (response = request.deleteProjectAdvertising(ADMIN_TOKEN, res.body.id)))
+      );
+
+      it('should return 204', () => response
+        .then((res) => {
+          assert.equal(res.status, 204);
+        }));
+    });
+
+    describe('When delete the advertising', () => {
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-to-delete' }))
+        .then((res) => request.deleteProjectAdvertising(ADMIN_TOKEN, res.body.id))
+        .then(() => (response = request.getProjectAdvertising(ADMIN_TOKEN)))
+      );
+
+      it('should not return the deleted advertising', () => response
+        .then((res) => {
+          formatDBResponseWithId(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, [{ image: 'image' }]);
+        }));
+    });
+  });
 });
 
 const formatDBResponse = (dbResponse) => {
@@ -133,4 +231,14 @@ const formatDBResponse = (dbResponse) => {
   delete result._id;
 
   return result;
+}
+
+const formatDBResponseWithId = (dbResponse) => {
+  if (_.isArray(dbResponse)) {
+    return dbResponse.map(formatDBResponseWithId);
+  }
+
+  delete dbResponse.id;
+
+  return formatDBResponse(dbResponse);
 }

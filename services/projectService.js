@@ -1,17 +1,28 @@
-const projectSettingsDB = require('../database/projectSettingsDB');
+const uuid = require('uuid');
+const ProjectSettingsDB = require('../database/projectSettingsDB');
+const ProjectAdvertisingDB = require('../database/projectAdvertisingDB');
 
-/**
- * Update project config
- *
- */
+// configs
 module.exports.updateConfig = (configId, value) => {
-  return projectSettingsDB.updateConfig(configId, value);
+  return ProjectSettingsDB.updateConfig(configId, value);
 }
 
-/**
- * Get project config
- *
- */
 module.exports.getConfigs = () => {
-  return projectSettingsDB.list();
+  return ProjectSettingsDB.list();
+}
+
+// advertising
+module.exports.getAdvertising = () => {
+  return ProjectAdvertisingDB.list();
+}
+
+module.exports.createAdvertising = (image) => {
+  const id = uuid.v1();
+  const newAdvert = new ProjectAdvertisingDB({ id, image });
+
+  return ProjectAdvertisingDB.create(newAdvert);
+}
+
+module.exports.deleteAdvertising = (advertId) => {
+  return ProjectAdvertisingDB.removeAdvert(advertId);
 }

@@ -18,6 +18,7 @@ const profiles = mocks.mockProfiles();
 const settings = mocks.mockSettings();
 const links = mocks.mockLinks();
 const denounces = mocks.mockDenounces();
+const advertising = mocks.mockAdvertising();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -25,7 +26,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, includeProjectConfs: true }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, advertising, includeProjectConfs: true }));
 
 //  Middleware cors
 app.use(cors());
@@ -67,8 +68,13 @@ router.post('/users/reports', (req, res) => usersController.getReports(req, res)
 router.post('/admin/login', (req, res) => adminViewController.login(req, res));
 
 // Project
+  // Configs
 router.get('/project/configs', (req, res) => projectController.getConfigs(req, res));
 router.put('/project/configs/:configName', (req, res) => projectController.updateConfig(req, res));
+  // Advertising
+router.get('/project/advertising', (req, res) => projectController.getAdvertising(req, res));
+router.post('/project/advertising', (req, res) => projectController.createAdvertising(req, res));
+router.delete('/project/advertising/:advertId', (req, res) => projectController.deleteAdvertising(req, res));
 
 // Admin view
 router.get('/*', (req, res) => adminViewController.start(req, res));

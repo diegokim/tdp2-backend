@@ -3,6 +3,7 @@ const projectService = require('../services/projectService');
 const aux = require('../utils/auxiliar.functions.js')
 const auth = require('../utils/auth.functions.js');
 
+// configs
 module.exports.updateConfig = (req, res) => {
   aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
@@ -30,6 +31,47 @@ module.exports.getConfigs = (req, res) => {
     .catch((err) => aux.onError('Get project config', res, err))
 }
 
+// advertising
+module.exports.getAdvertising = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => projectService.getAdvertising())
+    .then((advers) => {
+      aux.onLog('Response:', advers.length);
+      return res.status(200).json(advers)
+    })
+    .catch((err) => aux.onError('Get project advertising', res, err))
+}
+
+module.exports.createAdvertising = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const body = req.body;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => validateAdvert(body))
+    .then(() => projectService.createAdvertising(body.image))
+    .then((advert) => {
+      aux.onLog('Response: advertising created');
+      return res.status(200).json(advert)
+    })
+    .catch((err) => aux.onError('Create project advertising', res, err))
+}
+
+module.exports.deleteAdvertising = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const advertId = req.params.advertId
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => validateAdvertId(advertId))
+    .then(() => projectService.deleteAdvertising(advertId))
+    .then(() => res.status(204).json())
+    .catch((err) => aux.onError('Delete project advertising', res, err))
+}
+
 const validateConf = (conf) => {
   const validConf = conf.value;
 
@@ -42,4 +84,18 @@ const validateConfigId = (configId) => {
   return configId ?
     Promise.resolve() :
     Promise.reject({ status: 400, message: 'missing configId' })
+}
+
+const validateAdvert = (advert) => {
+  const validAdvert = advert.image;
+
+  return validAdvert ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing image' })
+}
+
+const validateAdvertId = (advertId) => {
+  return advertId ?
+    Promise.resolve() :
+    Promise.reject({ status: 400, message: 'missing advertId' })
 }

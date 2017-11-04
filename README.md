@@ -467,6 +467,60 @@ Respuesta:
 	respuesta --> 204
 	  body: {}
 
+## GET /projects/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: [{
+      id:    'id1'
+      image: 'image in base 64'
+    }, {
+      id:    'id2'
+      image: 'image in base 64'
+    }]
+
+## POST /projects/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      image: 'image in base 64'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      id:    'id1'
+      image: 'image in base 64'
+    }
+
+## DELETE /projects/advertising/{advertId}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
+
+
 ## ADMIN
 
 ### POST /admin/login
