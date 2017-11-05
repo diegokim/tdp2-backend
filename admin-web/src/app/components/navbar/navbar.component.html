@@ -1,0 +1,25 @@
+<nav *ngIf="shouldBeShown()" class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse" style="background-color: #455A64 !important; ">
+    
+    <a class="navbar-brand" style="padding-left: 3em !important" routerLink="/" >Link Up</a>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/main" routerLinkActive="active">Inicio </a>
+              </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/denounces" routerLinkActive="active">Denuncias </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" routerLink="/settings" routerLinkActive="active">Configuración </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reportes </a>
+          </li>
+        </ul>
+      </div>
+      <button mat-button (click)="logOut()">
+        
+        <span><i class="fa fa-sign-out fa-lg" aria-hidden="true" style="color:white"></i></span>
+        <span class="navbar-text" style="color:white; position: center"> Salir </span>
+      </button>
+  </nav>

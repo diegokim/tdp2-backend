@@ -1,0 +1,14 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+    padding-top: 3.5rem;
+  }
+  
+
+  .card-4 {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  }
+
+  .nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+ }

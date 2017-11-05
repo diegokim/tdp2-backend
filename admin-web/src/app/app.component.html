@@ -1,2 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<router-outlet></router-outlet>
+<app-navbar></app-navbar>
+<div style="height: 50px" *ngIf="thePageHasToolbar()"></div>
+<router-outlet (activate)="changeOfRoutes()"></router-outlet>
+
