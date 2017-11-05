@@ -239,6 +239,25 @@ Respuesta:
   body: // settings
 
 
+## Users (advertising)
+
+### GET /users/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+	    image: 'image in base 64'
+	  }
+
+
 ## Users (candidates)
 
 ### GET /users/me/candidates
@@ -367,6 +386,210 @@ Respuesta:
 
 	respuesta --> 200
 	  body: {}
+
+
+## PROJECT
+
+### POST /project/reports
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      startDate: '', // filters
+      endDate: ''
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      activeUsers: {
+        sampling: [{
+          x: 0,
+          y: 10
+        }, {
+          x: 1,
+          y: 20
+        }, {
+          x: 2,
+          y: 30
+        }]
+      },
+      denounces: {
+        otro: {
+          count: 150,
+          percentage: 40
+        },
+        spam: {
+          count: 75,
+          percentage: 20
+        },
+        comp: {
+          count: 150,
+          percentage: 40
+        }
+      }
+    }
+
+### GET /project/configs
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 201
+	  body: [ 
+      { prettyName: 'Candidatos maximos para mostrar',
+        name: 'maxCandidatesToShow',
+        value: 5 },
+      { prettyName: 'Fotos minimas para loguearte',
+        name: 'minPhotosToLogin',
+        value: 5 },
+      { prettyName: 'Intereses maximos para mostrar en login',
+        name: 'maxInterestsToLogin',
+        value: 5 },
+      { prettyName: 'Links para cuenta Premium',
+        name: 'linksForPremiumAccount',
+        value: 5 },
+      { prettyName: 'Fotos maximas para mostrar en login',
+        name: 'maxPhotosToLogin',
+        value: 7 },
+      { prettyName: 'Links para cuenta Free',
+        name: 'linksForFreeAccount',
+        value: 1
+      }
+    ]
+
+### PUT /project/configs/{configName}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      value: 10
+    }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
+
+## GET /projects/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: [{
+      id:    'id1'
+      image: 'image in base 64'
+    }, {
+      id:    'id2'
+      image: 'image in base 64'
+    }]
+
+## POST /projects/advertising
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      image: 'image in base 64'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      id:    'id1'
+      image: 'image in base 64'
+    }
+
+## DELETE /projects/advertising/{advertId}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
+
+## GET /projects/hiddenlanguage
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: [{
+      id:    'id1'
+      word: 'malo'
+    }, {
+      id:    'id2'
+      word: 'desgraciado'
+    }]
+
+## POST /projects/hiddenlanguage
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      word: 'maldito'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {
+      id:    'id1'
+      word: 'maldito'
+    }
+
+## DELETE /projects/hiddenlanguage/{wordId}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: { }
+
+Respuesta:
+
+	respuesta --> 204
+	  body: {}
+
 
 
 ## ADMIN

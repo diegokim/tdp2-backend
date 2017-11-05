@@ -9,6 +9,7 @@ const statusController = require('./controllers/statusController');
 const usersController = require('./controllers/usersController');
 const loginController = require('./controllers/loginController');
 const chatController = require('./controllers/chatController');
+const projectController = require('./controllers/projectController');
 const adminViewController = require('./controllers/adminController')
 const database = require('./database/database');
 
@@ -17,6 +18,8 @@ const profiles = mocks.mockProfiles();
 const settings = mocks.mockSettings();
 const links = mocks.mockLinks();
 const denounces = mocks.mockDenounces();
+const advertising = mocks.mockAdvertising();
+const hiddenLanguage = mocks.mockHiddenLanguage();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,7 +27,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, advertising, hiddenLanguage, includeProjectConfs: true }));
 
 //  Middleware cors
 app.use(cors());
@@ -53,6 +56,9 @@ router.patch('/users/me/settings', (req, res) => settingsController.update(req, 
 // Chat
 router.post('/users/:userId/chats/message', (req, res) => chatController.sendMessage(req, res));
 
+// Advertising
+router.get('/users/advertising', (req, res) => usersController.getAdvertising(req, res));
+
 // Admin
 // Denounces
 router.get('/users/denounces', (req, res) => denouncesController.list(req, res));
@@ -63,6 +69,21 @@ router.get('/users/:userId/profile', (req, res) => usersController.getUserProfil
 
 // Login
 router.post('/admin/login', (req, res) => adminViewController.login(req, res));
+
+// Project
+  // Configs
+router.get('/project/configs', (req, res) => projectController.getConfigs(req, res));
+router.put('/project/configs/:configName', (req, res) => projectController.updateConfig(req, res));
+  // Advertising
+router.get('/project/advertising', (req, res) => projectController.getAdvertising(req, res));
+router.post('/project/advertising', (req, res) => projectController.createAdvertising(req, res));
+router.delete('/project/advertising/:advertId', (req, res) => projectController.deleteAdvertising(req, res));
+  // Hidden language
+router.get('/project/hiddenlanguage', (req, res) => projectController.getHiddenWords(req, res));
+router.post('/project/hiddenlanguage', (req, res) => projectController.createHiddenWord(req, res));
+router.delete('/project/hiddenlanguage/:wordId', (req, res) => projectController.deleteHiddenWord(req, res));
+  // Reports
+router.post('/project/reports', (req, res) => projectController.getReports(req, res));
 
 // Admin view
 router.get('/*', (req, res) => adminViewController.start(req, res));

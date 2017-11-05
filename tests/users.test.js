@@ -13,7 +13,7 @@ describe('Integration user tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('get Profile', () => {
     describe('When the user is not login', () => {
@@ -131,6 +131,39 @@ describe('Integration user tests', () => {
         }));
     });
   });
+
+  describe('get Advertising', () => {
+    describe('When the user is not login', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+      })
+      beforeEach(() => (response = request.getUserAdvertising('access_token')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.response.body.message, 'user does not exist');
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When the user exists', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [userProfile] })
+      })
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-2' }))
+        .then(() => (response = request.getUserAdvertising(accessToken)))
+      );
+
+      it('should return the advertising', () => response
+        .then((res) => {
+          assert.equal(res.status, 200);
+          assert.include(['image', 'image-2'], res.body.image);
+        }));
+    });
+  })
 });
 
 const formatDBResponse = (dbResponse) => {

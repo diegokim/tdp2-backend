@@ -16,7 +16,7 @@ describe('Integration link tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('get Candidates', () => {
     describe('When the user is not login', () => {
@@ -220,7 +220,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe.only('when a link does occur', function () {
+      describe('when a link does occur', function () {
         this.timeout(20000);
 
         beforeEach(() => {
@@ -498,7 +498,7 @@ describe('Integration link tests', () => {
     });
 
     describe('When both users exist', () => {
-      describe.only('when a super-link does occur', function () {
+      describe('when a super-link does occur', function () {
         this.timeout(20000);
 
         beforeEach(() => {

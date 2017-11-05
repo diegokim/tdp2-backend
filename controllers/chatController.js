@@ -3,7 +3,7 @@ const aux = require('../utils/auxiliar.functions.js')
 const auth = require('../utils/auth.functions.js');
 
 module.exports.sendMessage = (req, res) => {
-  aux.onLog('Request:', req.url)
+  aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;
   const userToId = req.params.userId;
   const messageBody = req.body;

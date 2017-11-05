@@ -13,7 +13,7 @@ describe('Integration denounces tests', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('List denounces', () => {
     describe('when the report does occur', () => {
@@ -23,8 +23,8 @@ describe('Integration denounces tests', () => {
         return DB.initialize({ profiles: [userProfile, anotherUserProfile] })
       })
       beforeEach(() => {
-        return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo' })
-          .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo eres' }))
+        return request.actionUser('access_token', 'id2', { action: 'report', message: 'malo malo', type: 'otro' })
+          .then(() => request.actionUser('access_token', 'id', { action: 'report', type: 'spam' }))
           .then(() => (response = request.listDenounces(ADMIN_TOKEN)))
       });
 
@@ -36,14 +36,16 @@ describe('Integration denounces tests', () => {
             sendUName: 'name',
             recUName: 'name2',
             message: 'malo malo',
-            status: 'pendiente'
+            status: 'pendiente',
+            type: 'otro'
           }, {
             sendUID: 'id2',
             recUID: 'id',
             sendUName: 'name2',
             recUName: 'name',
-            message: 'malo malo eres',
-            status: 'pendiente'
+            message: 'No message',
+            status: 'pendiente',
+            type: 'spam'
           }]
 
           delete res.body[0]._id;
@@ -105,14 +107,16 @@ describe('Integration denounces tests', () => {
             sendUName: 'name',
             recUName: 'name2',
             message: 'malo malo',
-            status: 'rechazada'
+            status: 'rechazada',
+            type: 'otro'
           }, {
             sendUID: 'id2',
             recUID: 'id',
             sendUName: 'name2',
             recUName: 'name',
             message: 'malo malo',
-            status: 'pendiente'
+            status: 'pendiente',
+            type: 'otro'
           }]
 
           delete res.body[0]._id;
@@ -133,7 +137,7 @@ describe('Integration denounces tests', () => {
         return DB.initialize({ profiles: [userProfile, anotherUserProfile, anotherAnotherUserProfile] })
       })
       beforeEach(() => {
-        return request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo' })
+        return request.actionUser('access_token', 'id', { action: 'report', message: 'malo malo', type: 'comportamiento extraño' })
           .then(() => request.actionUser('access_token', 'id', { action: 'report', message: 'malo eres' }))
           .then(() => request.actionUser('access_token', 'id2', { action: 'report', message: 'desgraciado' }))
           .then(() => request.updateDenounce(ADMIN_TOKEN, { status: 'aceptada', sendUID: 'id2', recUID: 'id' }))
@@ -148,21 +152,24 @@ describe('Integration denounces tests', () => {
             sendUName: 'name2',
             recUName: 'name',
             message: 'malo malo',
-            status: 'aceptada'
+            status: 'aceptada',
+            type: 'comportamiento extraño'
           }, {
             sendUID: 'id3',
             recUID: 'id',
             sendUName: 'name3',
             recUName: 'name',
             message: 'malo eres',
-            status: 'usuario bloqueado'
+            status: 'usuario bloqueado',
+            type: 'otro'
           }, {
             sendUID: 'id',
             recUID: 'id2',
             sendUName: 'name',
             recUName: 'name2',
             message: 'desgraciado',
-            status: 'pendiente'
+            status: 'pendiente',
+            type: 'otro'
           }]
 
           delete res.body[0]._id;

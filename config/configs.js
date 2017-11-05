@@ -1,8 +1,25 @@
-module.exports.configs = {
-  minPhotosToLogin: 5,
-  maxPhotosToLogin: 7,
-  maxInterestsToLogin: 5,
-  maxCandidatesToShow: 5,
-  linksForFreeAccount: 1,
-  linksForPremiumAccount: 5
-}
+module.exports.configs = [{
+  prettyName: 'Fotos minimas para loguearte',
+  name: 'minPhotosToLogin',
+  value: 5
+}, {
+  prettyName: 'Fotos maximas para mostrar en login',
+  name: 'maxPhotosToLogin',
+  value: 7
+}, {
+  prettyName: 'Links para cuenta Premium',
+  name: 'linksForPremiumAccount',
+  value: 5
+}, {
+  prettyName: 'Intereses maximos para mostrar en login',
+  name: 'maxInterestsToLogin',
+  value: 5
+}, {
+  prettyName: 'Candidatos maximos para mostrar',
+  name: 'maxCandidatesToShow',
+  value: 5
+}, {
+  prettyName: 'Links para cuenta Free',
+  name: 'linksForFreeAccount',
+  value: 1
+}]

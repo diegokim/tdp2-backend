@@ -55,6 +55,10 @@ module.exports.get = function (id) {
   return User.findOne(query).then(normalizeResponse);
 }
 
+module.exports.list = function () {
+  return User.find({}).then(normalizeResponse)
+}
+
 module.exports.updateProfile = function (user) {
   return User.findOne({ id: user.id })
   .then((existUser) => {

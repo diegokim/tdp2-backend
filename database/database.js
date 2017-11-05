@@ -3,6 +3,8 @@ const UsersDB = require('./usersDB');
 const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
 const DenouncesDB = require('./denouncesDB');
+const ProjectAdvertisingDB = require('./projectAdvertisingDB');
+const ProjectHiddenLanguageDB = require('./projectHiddenLanguageDB');
 const ProjectSettingsDB = require('./projectSettingsDB');
 
 const configs = require('../config/configs').configs;
@@ -58,7 +60,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ profiles = [], settings = [], links = [], denounces = {} }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], hiddenLanguage = [], denounces = {}, includeProjectConfs = false }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -68,11 +70,15 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createUserLink = [];
   const createDenounces = [];
   const createProjectConfigs = [];
+  const createAdvertising = [];
+  const createHiddenLanguage = [];
 
   // create project configs
-  for (const config in configs) { // eslint-disable-line
-    const newConfig = new ProjectSettingsDB({ name: config, value: configs[config] });
-    createProjectConfigs.push(ProjectSettingsDB.create(newConfig));
+  if (includeProjectConfs) {
+    for (const config of configs) {
+      const newConfig = new ProjectSettingsDB(config);
+      createProjectConfigs.push(ProjectSettingsDB.create(newConfig));
+    }
   }
 
   profiles.forEach((user) => {
@@ -86,6 +92,14 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   links.forEach((link) => {
     const newLink = new LinkDB(link);
     createUserLink.push(LinkDB.create(newLink));
+  });
+  advertising.forEach((advert) => {
+    const newAdvert = new ProjectAdvertisingDB(advert);
+    createAdvertising.push(ProjectAdvertisingDB.create(newAdvert))
+  });
+  hiddenLanguage.forEach((word) => {
+    const newWord = new ProjectHiddenLanguageDB(word);
+    createHiddenLanguage.push(ProjectHiddenLanguageDB.create(newWord))
   });
   (denounces.denounces || []).forEach((denounce) => {
     const newDenounce = new DenouncesDB(denounce);
@@ -101,5 +115,7 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     .then(() => Promise.all(createUserLink))
     .then(() => Promise.all(createDenounces))
     .then(() => Promise.all(createProjectConfigs))
+    .then(() => Promise.all(createAdvertising))
+    .then(() => Promise.all(createHiddenLanguage))
   ;
 }

@@ -11,7 +11,7 @@ describe('Integration Admin', () => {
   let response;
 
   // Leave the database in a valid state
-  beforeEach(() => DB.drop());
+  beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
   describe('Login', () => {
     describe('When the user has permitions', () => {
