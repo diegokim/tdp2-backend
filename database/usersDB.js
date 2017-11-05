@@ -112,6 +112,16 @@ module.exports.getUsers = function (userIds) {
   return queryIds.length ? User.find({ $or: queryIds }).then(normalizeResponse) : Promise.resolve([]);
 }
 
+module.exports.removeUser = function (params) {
+  const query = _.pick(params, ['id']);
+
+  console.log("QUERY", query)
+  if (query) { // check that
+    return User.remove(query);
+  }
+  return Promise.resolve();
+}
+
 const normalizeResponse = (res) => {
   if (_.isArray(res)) {
     return res.map(normalizeResponse);

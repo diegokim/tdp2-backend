@@ -3,6 +3,10 @@ const assert = require('chai').assert;
 const nock = require('nock');
 const request = require('./requests.js')
 const DB = require('../database/database');
+const UsersDB = require('../database/usersDB');
+const DenouncesDB = require('../database/denouncesDB');
+const SettingDB = require('../database/settingDB');
+const LinkDB = require('../database/linkDB');
 
 // Start the app
 const server = require('../app.js'); // eslint-disable-line
@@ -15,7 +19,7 @@ describe('Integration user tests', () => {
   // Leave the database in a valid state
   beforeEach(() => DB.drop().then(() => DB.initialize({ includeProjectConfs: true })));
 
-  describe('get Profile', () => {
+  describe('Get Profile', () => {
     describe('When the user is not login', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -61,7 +65,7 @@ describe('Integration user tests', () => {
     });
   });
 
-  describe('get User Profile', () => {
+  describe('Get User Profile', () => {
     describe('When the user does not exist', () => {
       beforeEach(() => (response = request.getUserProfile(ADMIN_TOKEN, 'id')));
 
@@ -100,7 +104,7 @@ describe('Integration user tests', () => {
     });
   });
 
-  describe('update Profile', () => {
+  describe('Update Profile', () => {
     describe('When the user is not login', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -132,7 +136,7 @@ describe('Integration user tests', () => {
     });
   });
 
-  describe('get Advertising', () => {
+  describe('Get Advertising', () => {
     describe('When the user is not login', () => {
       beforeEach(() => {
         nockProfile(['id'], accessToken, { id: 'id' })
@@ -162,6 +166,92 @@ describe('Integration user tests', () => {
           assert.equal(res.status, 200);
           assert.include(['image', 'image-2'], res.body.image);
         }));
+    });
+  });
+
+  describe('Delete User', () => {
+    describe('When the user is not login', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+      })
+      beforeEach(() => (response = request.deleteUser('access_token')));
+
+      it('should return not found', () => response
+        .then((res) => {
+          assert.equal(res.status, 404);
+          assert.equal(res.response.body.message, 'user does not exist');
+          assert.equal(res.message, 'Not Found');
+        }));
+    });
+
+    describe('When the user exists', () => {
+      let profileResponse;
+      let settingsResponse;
+      let linksResponse;
+      let denouncesResponse;
+      let getProfileResponse;
+
+      beforeEach(() => {
+        const links = [{
+          sendUID: 'id',
+          recUID: 'id2',
+          action: 'link'
+        }, {
+          sendUID: 'id2',
+          recUID: 'id',
+          action: 'link'
+        }];
+        const denounces = [{
+          sendUID: 'id',
+          recUID: 'id2',
+          sendUName: 'nadie',
+          recUName: 'none',
+          message: 'message',
+          status: 'pendent'
+        }, {
+          sendUID: 'id2',
+          recUID: 'id',
+          sendUName: 'nadie',
+          recUName: 'none',
+          message: 'message',
+          status: 'pendent'
+        }];
+
+        nockProfile(['id'], accessToken, { id: 'id' })
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [userProfile], settings: [userSetting], denounces: { denounces }, links })
+      })
+      beforeEach(() => (response = request.deleteUser(accessToken))
+        .then(() => (profileResponse = UsersDB.list()))
+        .then(() => (settingsResponse = SettingDB.list()))
+        .then(() => (linksResponse = LinkDB.list()))
+        .then(() => (denouncesResponse = DenouncesDB.list()))
+        .then(() => (getProfileResponse = request.getProfile(accessToken)))
+      );
+
+      it('should return 204', () => response
+        .then((res) => { assert.equal(res.status, 204); })
+      );
+
+      it('user profile should not exist', () => profileResponse
+        .then((res) => { assert.deepEqual(res, []); })
+      );
+
+      it('user settings should not exist', () => settingsResponse
+        .then((res) => { assert.deepEqual(res, []); })
+      );
+
+      it('user links should not exist', () => linksResponse
+        .then((res) => { assert.deepEqual(res, []); })
+      );
+
+      it('user denounces should not exist', () => denouncesResponse
+        .then((res) => { assert.deepEqual(res, []); })
+      );
+
+      it('should return 404 get profile', () => getProfileResponse
+        .then((res) => { assert.equal(res.status, 404); })
+      );
     });
   })
 });
@@ -205,6 +295,23 @@ const userProfile = {
   ],
   status: 'enable',
   work: 'work description'
+}
+
+const userSetting = {
+  id: 'id',
+  ageRange: {
+    min: 18,
+    max: 29
+  },
+  distRange: {
+    min: 1,
+    max: 3
+  },
+  invisible: true,
+  interestType: 'male',
+  accountType: 'free',
+  notifications: true,
+  superLinksCount: 1
 }
 
 const updateParams = {

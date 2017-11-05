@@ -1,5 +1,9 @@
 const _ = require('lodash');
 const UsersDB = require('../database/usersDB');
+const DenouncesDB = require('../database/denouncesDB');
+const SettingDB = require('../database/settingDB');
+const LinkDB = require('../database/linkDB');
+
 const faceAPI = require('../clients/faceAPI');
 const settingsService = require('./settingsService');
 
@@ -83,4 +87,19 @@ module.exports.blockUser = (userId) => {
  */
 module.exports.getUserId = (accessToken, userId) => {
   return Promise.resolve(userId || faceAPI.getProfile(accessToken, ['id']))
+}
+
+/**
+ * Delete user
+ *
+ */
+module.exports.deleteUser = (userId) => {
+  return Promise.all([
+    UsersDB.removeUser({ id: userId }),
+    DenouncesDB.removeDenounces({ sendUID: userId }),
+    DenouncesDB.removeDenounces({ recUID: userId }),
+    LinkDB.removeAction({ sendUID: userId }),
+    LinkDB.removeAction({ recUID: userId }),
+    SettingDB.removeSetting({ id: userId }) // TOD0: should call services instead of DBs
+  ])
 }

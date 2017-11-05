@@ -44,6 +44,7 @@ router.get('/users/me/candidates', (req, res) => usersController.getCandidates(r
 router.get('/users/me/links', (req, res) => usersController.getLinks(req, res));
 router.put('/users/:userId/actions', (req, res) => usersController.addAction(req, res));
 router.delete('/users/:userId', (req, res) => usersController.deleteLink(req, res));
+router.delete('/users/me/account', (req, res) => usersController.deleteUser(req, res));
 
 // Profile
 router.get('/users/me/profile', (req, res) => usersController.get(req, res));

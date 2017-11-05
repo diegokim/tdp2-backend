@@ -53,6 +53,15 @@ module.exports.updateDenounce = function (sendUID, recUID, status) {
     })
 }
 
+module.exports.removeDenounces = function (params) {
+  const query = _.pick(params, ['sendUID', 'recUID']);
+
+  if (query) {
+    return Denounce.remove(query);
+  }
+  return Promise.resolve();
+}
+
 const normalizeResponse = (res) => {
   if (_.isArray(res)) {
     return res.map(normalizeResponse);

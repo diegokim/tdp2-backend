@@ -34,6 +34,10 @@ module.exports.create = function (link) {
     })
 }
 
+module.exports.list = function () {
+  return Link.find({}).then(normalizeResponse);
+}
+
 module.exports.existsLink = function (userId1, userId2) {
   const query = { $or: [
     { sendUID: userId1, recUID: userId2, action: 'link' },
@@ -69,6 +73,15 @@ module.exports.search = function (params) {
   const query = _.pick(params, ['sendUID', 'recUID', 'action']);
 
   return Link.find(query).then(normalizeResponse);
+}
+
+module.exports.removeAction = function (params) {
+  const query = _.pick(params, ['sendUID', 'recUID']);
+
+  if (query) {
+    return Link.remove(query);
+  }
+  return Promise.resolve();
 }
 
 const normalizeResponse = (res) => {

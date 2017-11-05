@@ -48,6 +48,10 @@ module.exports.get = function (id) {
   return Setting.findOne(query).then(normalizeResponse);
 }
 
+module.exports.list = function () {
+  return Setting.find({}).then(normalizeResponse);
+}
+
 module.exports.updateSetting = function (setting) {
   return Setting.findOne({ id: setting.id })
   .then((existSetting) => {
@@ -57,7 +61,6 @@ module.exports.updateSetting = function (setting) {
   })
   .then(() => Setting.findOne({ id: setting.id })).then(normalizeResponse);
 }
-
 
 /**
  * Search:
@@ -78,6 +81,15 @@ module.exports.search = function (params) { // diferent id than I
   }
 
   return Setting.find(query).then(normalizeResponse);
+}
+
+module.exports.removeSetting = function (params) {
+  const query = _.pick(params, ['id']);
+
+  if (query) {
+    return Setting.remove(query);
+  }
+  return Promise.resolve();
 }
 
 const normalizeResponse = (res) => {

@@ -46,6 +46,19 @@ module.exports.update = (req, res) => {
     .catch((err) => aux.onError('Update Profile', res, err))
 }
 
+module.exports.deleteUser = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+
+  return auth.validateToken(accessToken)
+    .then((userId) => usersService.deleteUser(userId))
+    .then(() => {
+      aux.onLog('Response: User deleted');
+      return res.status(204).json()
+    })
+    .catch((err) => aux.onError('Delete User', res, err))
+}
+
 module.exports.getCandidates = (req, res) => {
   aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;

@@ -276,6 +276,24 @@ Respuesta:
 	    profiles: []
 	  }
 
+
+## Users (borrado de cuenta)
+
+### DELETE /users/me/account
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {}
+
+Respuesta:
+
+	respuesta --> 204
+	  body: { }
+
+
 ## Links
 
 ### PUT /users/{id}/actions

@@ -78,6 +78,13 @@ module.exports.sendChatMessage = (accessToken, userId, body) => Promise.resolve(
   .catch((err) => err)
 );
 
+module.exports.deleteUser = (accessToken) => Promise.resolve(
+  request.delete(baseUrl + '/users/me/account')
+  .set({'Authorization': accessToken})
+  .send()
+  .catch((err) => err)
+);
+
 module.exports.getUserAdvertising = (accessToken) => Promise.resolve(
   request.get(baseUrl + '/users/advertising')
   .set({'Authorization': accessToken})
