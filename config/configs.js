@@ -1,8 +1,4 @@
 module.exports.configs = [{
-  prettyName: 'Fotos minimas para loguearte',
-  name: 'minPhotosToLogin',
-  value: 5
-}, {
   prettyName: 'Fotos maximas para mostrar en login',
   name: 'maxPhotosToLogin',
   value: 7

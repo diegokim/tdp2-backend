@@ -9,7 +9,17 @@ module.exports.updateConfig = (configId, value) => {
 }
 
 module.exports.getConfigs = () => {
-  return ProjectSettingsDB.list();
+  return ProjectSettingsDB.list()
+    .then((configs) => {
+      const objConfs = {};
+      configs.forEach((config) => {
+        delete config._id;
+        delete config.__v; // TOD0: DO NOT
+        objConfs[config.name] = config;
+      });
+
+      return objConfs;
+    });
 }
 
 // advertising
@@ -17,9 +27,9 @@ module.exports.getAdvertising = () => {
   return ProjectAdvertisingDB.list();
 }
 
-module.exports.createAdvertising = (image) => {
+module.exports.createAdvertising = (body) => {
   const id = uuid.v1();
-  const newAdvert = new ProjectAdvertisingDB({ id, image });
+  const newAdvert = new ProjectAdvertisingDB({ id, image: body.image || '', link: body.link || '' });
 
   return ProjectAdvertisingDB.create(newAdvert);
 }

@@ -137,9 +137,9 @@ module.exports.mockDenounces = () => {
 
 module.exports.mockAdvertising = () => {
   const advertising = [
-    makeAdvertising('b732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[0]),
-    makeAdvertising('b222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[1]),
-    makeAdvertising('b332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[2])
+    makeAdvertising('b732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[0], 'https://www.racingclub.com.ar/img/noticias/portada-socios-30-12-15.jpg'),
+    makeAdvertising('b222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[1], 'http://www.awesomeinventions.com/wp-content/uploads/2014/10/Hidden-messages.jpg'),
+    makeAdvertising('b332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[2], 'http://s1.thingpic.com/images/3J/M7tstKmnw6qaSPFj3RPPTRX3.jpeg')
   ]
 
   return advertising;
@@ -202,10 +202,11 @@ const makeDenounce = (sendUID, sendUName, recUID, recUName, message, status = 'p
   }
 }
 
-const makeAdvertising = (id, image) => {
+const makeAdvertising = (id, image, link) => {
   return {
     id,
-    image
+    image,
+    link
   }
 }
 

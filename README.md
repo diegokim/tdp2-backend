@@ -464,27 +464,33 @@ Mensaje:
 Respuesta:
 
 	respuesta --> 201
-	  body: [ 
-      { prettyName: 'Candidatos maximos para mostrar',
-        name: 'maxCandidatesToShow',
-        value: 5 },
-      { prettyName: 'Fotos minimas para loguearte',
-        name: 'minPhotosToLogin',
-        value: 5 },
-      { prettyName: 'Intereses maximos para mostrar en login',
-        name: 'maxInterestsToLogin',
-        value: 5 },
-      { prettyName: 'Links para cuenta Premium',
-        name: 'linksForPremiumAccount',
-        value: 5 },
-      { prettyName: 'Fotos maximas para mostrar en login',
-        name: 'maxPhotosToLogin',
-        value: 7 },
-      { prettyName: 'Links para cuenta Free',
-        name: 'linksForFreeAccount',
-        value: 1
+	  body: {
+      "maxInterestsToLogin": {
+        "prettyName": "Intereses maximos para mostrar en login",
+        "name": "maxInterestsToLogin",
+        "value": 5
+      },
+      "maxPhotosToLogin": {
+        "prettyName": "Fotos maximas para mostrar en login",
+        "name": "maxPhotosToLogin",
+        "value": 7
+      },
+      "linksForPremiumAccount": {
+        "prettyName": "Links para cuenta Premium",
+        "name": "linksForPremiumAccount",
+        "value": 5
+      },
+      "linksForFreeAccount": {
+        "prettyName": "Links para cuenta Free",
+        "name": "linksForFreeAccount",
+        "value": 1
+      },
+      "maxCandidatesToShow": {
+        "prettyName": "Candidatos maximos para mostrar",
+        "name": "maxCandidatesToShow",
+        "value": 5
       }
-    ]
+    }
 
 ### PUT /project/configs/{configName}
 
@@ -516,10 +522,12 @@ Respuesta:
 	respuesta --> 200
 	  body: [{
       id:    'id1'
-      image: 'image in base 64'
+      image: 'image in base 64',
+      link: 'link'
     }, {
       id:    'id2'
-      image: 'image in base 64'
+      image: 'image in base 64',
+      link: ''
     }]
 
 ## POST /projects/advertising
@@ -538,7 +546,8 @@ Respuesta:
 	respuesta --> 200
 	  body: {
       id:    'id1'
-      image: 'image in base 64'
+      image: 'image in base 64',
+      link: ''
     }
 
 ## DELETE /projects/advertising/{advertId}

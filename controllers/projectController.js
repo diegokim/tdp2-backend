@@ -53,7 +53,7 @@ module.exports.createAdvertising = (req, res) => {
 
   return auth.validateAdminToken(accessToken)
     .then(() => validateAdvert(body))
-    .then(() => projectService.createAdvertising(body.image))
+    .then(() => projectService.createAdvertising(body))
     .then((advert) => {
       aux.onLog('Response: advertising created');
       return res.status(200).json(advert)
@@ -144,7 +144,7 @@ const validateConfigId = (configId) => {
 }
 
 const validateAdvert = (advert) => {
-  const validAdvert = advert.image;
+  const validAdvert = advert.image || advert.link;
 
   return validAdvert ?
     Promise.resolve() :

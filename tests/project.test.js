@@ -30,31 +30,33 @@ describe('Integration Project tests', () => {
     });
 
     describe('When get the settings', () => {
-      const expectedResponse = [{
-        prettyName: 'Fotos minimas para loguearte',
-        name: 'minPhotosToLogin',
-        value: 5
-      }, {
-        prettyName: 'Fotos maximas para mostrar en login',
-        name: 'maxPhotosToLogin',
-        value: 7
-      }, {
-        prettyName: 'Links para cuenta Premium',
-        name: 'linksForPremiumAccount',
-        value: 5
-      }, {
-        prettyName: 'Intereses maximos para mostrar en login',
-        name: 'maxInterestsToLogin',
-        value: 5
-      }, {
-        prettyName: 'Candidatos maximos para mostrar',
-        name: 'maxCandidatesToShow',
-        value: 5
-      }, {
-        prettyName: 'Links para cuenta Free',
-        name: 'linksForFreeAccount',
-        value: 1
-      }]
+      const expectedResponse = {
+        maxPhotosToLogin: {
+          prettyName: 'Fotos maximas para mostrar en login',
+          name: 'maxPhotosToLogin',
+          value: 7
+        },
+        linksForPremiumAccount: {
+          prettyName: 'Links para cuenta Premium',
+          name: 'linksForPremiumAccount',
+          value: 5
+        },
+        maxInterestsToLogin: {
+          prettyName: 'Intereses maximos para mostrar en login',
+          name: 'maxInterestsToLogin',
+          value: 5
+        },
+        maxCandidatesToShow: {
+          prettyName: 'Candidatos maximos para mostrar',
+          name: 'maxCandidatesToShow',
+          value: 5
+        },
+        linksForFreeAccount: {
+          prettyName: 'Links para cuenta Free',
+          name: 'linksForFreeAccount',
+          value: 1
+        }
+      }
 
       beforeEach(() => (response = request.getConfigs(ADMIN_TOKEN)));
 
@@ -63,12 +65,7 @@ describe('Integration Project tests', () => {
           const formatResponse = formatDBResponse(res.body);
 
           assert.equal(res.status, 200);
-          assert.include(expectedResponse, formatResponse[0]);
-          assert.include(expectedResponse, formatResponse[1]);
-          assert.include(expectedResponse, formatResponse[2]);
-          assert.include(expectedResponse, formatResponse[3]);
-          assert.include(expectedResponse, formatResponse[4]);
-          assert.include(expectedResponse, formatResponse[5]);
+          assert.deepEqual(formatResponse, expectedResponse);
         }));
     });
   });
@@ -76,31 +73,33 @@ describe('Integration Project tests', () => {
   describe('Update Settings', () => {
     describe('When the user is admin', () => {
       const updateValue = 10;
-      const expectedResponse = [{
-        prettyName: 'Fotos minimas para loguearte',
-        name: 'minPhotosToLogin',
-        value: 5
-      }, {
-        prettyName: 'Fotos maximas para mostrar en login',
-        name: 'maxPhotosToLogin',
-        value: 7
-      }, {
-        prettyName: 'Links para cuenta Premium',
-        name: 'linksForPremiumAccount',
-        value: 5
-      }, {
-        prettyName: 'Intereses maximos para mostrar en login',
-        name: 'maxInterestsToLogin',
-        value: 5
-      }, {
-        prettyName: 'Candidatos maximos para mostrar',
-        name: 'maxCandidatesToShow',
-        value: 5
-      }, {
-        prettyName: 'Links para cuenta Free',
-        name: 'linksForFreeAccount',
-        value: updateValue
-      }]
+      const expectedResponse = {
+        maxPhotosToLogin: {
+          prettyName: 'Fotos maximas para mostrar en login',
+          name: 'maxPhotosToLogin',
+          value: 7
+        },
+        linksForPremiumAccount: {
+          prettyName: 'Links para cuenta Premium',
+          name: 'linksForPremiumAccount',
+          value: 5
+        },
+        maxInterestsToLogin: {
+          prettyName: 'Intereses maximos para mostrar en login',
+          name: 'maxInterestsToLogin',
+          value: 5
+        },
+        maxCandidatesToShow: {
+          prettyName: 'Candidatos maximos para mostrar',
+          name: 'maxCandidatesToShow',
+          value: 5
+        },
+        linksForFreeAccount: {
+          prettyName: 'Links para cuenta Free',
+          name: 'linksForFreeAccount',
+          value: updateValue
+        }
+      }
 
       beforeEach(() => request.updateConfig(ADMIN_TOKEN, 'linksForFreeAccount', { value: updateValue })
         .then(() => (response = request.getConfigs(ADMIN_TOKEN)))
@@ -111,12 +110,7 @@ describe('Integration Project tests', () => {
           const formatResponse = formatDBResponse(res.body);
 
           assert.equal(res.status, 200);
-          assert.include(expectedResponse, formatResponse[0]);
-          assert.include(expectedResponse, formatResponse[1]);
-          assert.include(expectedResponse, formatResponse[2]);
-          assert.include(expectedResponse, formatResponse[3]);
-          assert.include(expectedResponse, formatResponse[4]);
-          assert.include(expectedResponse, formatResponse[5]);
+          assert.deepEqual(formatResponse, expectedResponse);
         }));
     });
   });
@@ -124,7 +118,7 @@ describe('Integration Project tests', () => {
   describe('Create Advertising', () => {
     describe('when send an invalid token', () => {
       beforeEach(() => (
-        response = request.createProjectAdvertising(accessToken, { image: 'image' }))
+        response = request.createProjectAdvertising(accessToken, { image: 'image', link: 'link' }))
       );
 
       it('should return 401', () => response
@@ -136,7 +130,7 @@ describe('Integration Project tests', () => {
     });
 
     describe('When create the advertising', () => {
-      beforeEach(() => (response = request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })));
+      beforeEach(() => (response = request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', link: 'link' })));
 
       it('should return the created advertising', () => response
         .then((res) => {
@@ -144,6 +138,7 @@ describe('Integration Project tests', () => {
 
           assert.equal(res.status, 200);
           assert.equal(res.body.image, 'image');
+          assert.equal(res.body.link, 'link');
           assert.property(res.body, 'id');
         }));
     });
@@ -173,7 +168,7 @@ describe('Integration Project tests', () => {
           formatDBResponseWithId(res.body);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, [{ image: 'image' }]);
+          assert.deepEqual(res.body, [{ image: 'image', link: '' }]);
         }));
     });
   });
@@ -215,7 +210,7 @@ describe('Integration Project tests', () => {
           formatDBResponseWithId(res.body);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, [{ image: 'image' }]);
+          assert.deepEqual(res.body, [{ image: 'image', link: '' }]);
         }));
     });
   });

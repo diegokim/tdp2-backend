@@ -8,6 +8,9 @@ const ProjectAdvertisingSchema = mongoose.Schema({
   },
   image: {
     type: String
+  },
+  link: {
+    type: String
   }
 })
 

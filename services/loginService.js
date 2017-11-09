@@ -86,6 +86,9 @@ const parseInterests = (profile) => {
 }
 
 const getPhotosLink = (photosToGet, accessToken, maxPhotos) => {
+  if (maxPhotos < 5) {
+    maxPhotos = 5; // eslint-disable-line
+  }
   const allPhotos = photosToGet.slice(0, maxPhotos);
 
   return faceAPI.getProfilePhotos(accessToken)

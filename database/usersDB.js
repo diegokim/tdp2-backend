@@ -115,7 +115,6 @@ module.exports.getUsers = function (userIds) {
 module.exports.removeUser = function (params) {
   const query = _.pick(params, ['id']);
 
-  console.log("QUERY", query)
   if (query) { // check that
     return User.remove(query);
   }
