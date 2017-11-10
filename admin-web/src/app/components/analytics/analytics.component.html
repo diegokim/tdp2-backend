@@ -1,0 +1,73 @@
+
+
+<mat-sidenav-container fullscreen>     
+    <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
+        <ul class="nav flex-column">
+            <li class="nav-item active">
+              <a class="nav-link active" routerLink="/analytics" routerLinkActive="active">General</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link non-active" routerLink="/analytics/denounces" routerLinkActive="active">Reporte de denuncias</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link non-active" routerLink="/analytics/activeusers" routerLinkActive="active">Reporte de usuarios activos</a>
+            </li>
+
+          </ul>
+    </mat-sidenav>
+    <div class="container" style=" padding: 5em 3em 2em 3em !important ;">  
+        
+        
+            <h2 ><font color="grey"> Reportes</font></h2>
+        
+            <hr>
+            
+            <div class="container-fluid" style="width: 100%">
+              <div class="row">
+                <div class="col-md-6" style=" margin-bottom: 2em">
+                  <mat-card>
+                    <h4> <font color="grey">Usuarios Activos </font></h4>
+                    <hr>
+                    <div style="display: block;">
+                        <canvas baseChart  height="300"
+                                    [datasets]="lineChartData"
+                                    [labels]="lineChartLabels"
+                                    [options]="lineChartOptions"
+                                    [legend]="lineChartLegend"
+                                    [chartType]="lineChartType"
+                                    (chartHover)="lineChartHovered($event)"
+                                    (chartClick)="lineChartClicked($event)"></canvas>
+                        </div>     
+                  </mat-card>
+                    
+                </div>
+                <div class="col-md-6">
+                    
+                    <mat-card>
+                        <h4> <font color="grey">Denuncias </font></h4>
+                        <hr>
+                          <div style="display: block">
+                              <canvas baseChart
+                              height="300"
+                                      [data]="pieChartData"
+                                      [labels]="pieChartLabels"  
+                                      [chartType]="pieChartType"
+                                      (chartHover)="chartHovered($event)"
+                                      (chartClick)="chartClicked($event)"></canvas>
+                            </div>      
+                      </mat-card>
+                    
+                </div>
+              </div>
+            </div>
+
+    </div>
+          
+
+
+
+    
+</mat-sidenav-container>
+
+
+

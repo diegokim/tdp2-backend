@@ -9,7 +9,7 @@
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
                 <mat-cell *matCellDef="let denounce"> 
                         
-                        <button (click)="showProfile(denounce.recUID)" mat-button color="primary">
+                        <button (click)="showProfile(denounce.sendUID)" mat-button color="primary">
                               {{denounce.sendUName}}
                         </button>
                                      
@@ -47,10 +47,10 @@
 
             
               <ng-container matColumnDef="accept">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Aceptar </mat-header-cell>
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
                         <mat-cell *matCellDef="let denounce" > 
                               <div *ngIf="denounce.status == 'pendiente'">
-                                          <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-sm btn-success">Aceptar</button>
+                                          <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-sm btn-success"> <i class="fa fa-check" aria-hidden="true"></i> Bloquear </button>
                               </div>
                         </mat-cell>
                       </ng-container>
@@ -61,7 +61,7 @@
                   <mat-cell *matCellDef="let denounce" > 
                               <div *ngIf="denounce.status == 'pendiente'">
                                     
-                                    <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-sm btn-danger">Rechazar</button>
+                                    <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-sm btn-danger"> <i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
                               </div>
                         </mat-cell>
               </ng-container>

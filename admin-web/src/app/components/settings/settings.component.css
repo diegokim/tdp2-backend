@@ -1,0 +1,15 @@
+a.active {
+    color: gray;
+    background-color: #ECEFF1;
+    border-left: 4px solid #B0BEC5;
+    margin-left: -2px;
+  }
+
+a.non-active {
+    color: gray
+}
+
+
+/* .mat-card-header-text {
+    width: 50%
+} */
