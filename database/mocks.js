@@ -294,7 +294,16 @@ module.exports.mockHiddenLanguage = () => {
   const language = [
     makeHiddenWord('a732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tonto'),
     makeHiddenWord('a222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'idiota'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hijo de perra')
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hijo de perra'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'estupido'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarado'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarada'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'gil'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'imbesil'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'vigilante'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hincha del rojo'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'enfermo'),
+    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'bobo')
   ]
 
   return language;

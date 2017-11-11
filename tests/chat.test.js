@@ -71,11 +71,16 @@ describe('Integration chat tests', () => {
       this.timeout(10000);
 
       beforeEach(() => {
+        const hiddenLanguage = [
+          { id: 'id1', word: 'hijo de perra' },
+          { id: 'id2', word: 'tonto' },
+          { id: 'id3', word: 'tarado' }
+        ];
         nockProfile(['id'], accessToken, { id: 'id' })
         nockSendMessageFirebase({ sendUID: 'id', recUID: 'id2' }, {})
-        return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]) })
+        return DB.initialize({ profiles: [userProfile, anotherUserProfile], settings: settings.concat([userSetting]), hiddenLanguage })
       })
-      beforeEach(() => (response = request.sendChatMessage('access_token', 'id2', { message: 'message' })));
+      beforeEach(() => (response = request.sendChatMessage('access_token', 'id2', { message: 'message hijo de perra hola tonto hola hijo de perra' })));
 
       it('should return empty body', () => response
         .then((res) => {
