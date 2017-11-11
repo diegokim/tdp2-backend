@@ -313,6 +313,23 @@ describe('Integration Project tests', () => {
         }));
     });
   });
+
+  describe('Edit hidden word', () => {
+    describe('When edit a word', () => {
+      beforeEach(() => request.createProjectHiddenWord(ADMIN_TOKEN, { word: 'tonto' })
+        .then((res) => (response = request.editProjectHiddenWord(ADMIN_TOKEN, res.body.id, { word: 'tarado' })))
+        .then(() => (response = request.getProjectHiddenWords(ADMIN_TOKEN)))
+      );
+
+      it('should return the updated word', () => response
+        .then((res) => {
+          formatDBResponseWithId(res.body);
+
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, [{ word: 'tarado' }]);
+        }));
+    });
+  });
 });
 
 const formatDBResponse = (dbResponse) => {

@@ -31,7 +31,13 @@ module.exports.mockProfiles = () => {
     // for denounces
     makeProfile('id11',  'Claudia',  25, 'female', fPhotos[2], [fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
     makeProfile('id12',  'Martina',  24, 'female', fPhotos[3], [fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
-    makeProfile('id13', 'Aurelio', 23, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
+    makeProfile('id13', 'Aurelio', 23, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
+    makeProfile('id14',  'Marcela',  25, 'female', fPhotos[2], [fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id15',  'Candela',  24, 'female', fPhotos[3], [fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id16', 'Antonio', 23, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza']),
+    makeProfile('id17',  'Beatriz',  25, 'female', fPhotos[2], [fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2], fPhotos[2]], ['men', 'handball', 'musica', 'green day', 'strokes']),
+    makeProfile('id18',  'Panceta',  24, 'female', fPhotos[3], [fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3], fPhotos[3]], ['women', 'men', 'futbol', 'boca', 'river', 'baby']),
+    makeProfile('id19', 'Juan', 23, 'male', mPhotos[4], [mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4], mPhotos[4]], ['amigos', 'cine', 'fiesta', 'salidas', 'cerveza'])
   ]
 
   return profiles;
@@ -53,6 +59,86 @@ module.exports.mockSettings = () => {
   ]
 
   return settings;
+}
+
+module.exports.mockActiveUsers = () => {
+  const activeUsers = [
+    // '2017-11'
+    makeActiveUser('id1', 'Mariana', 11, 2017, 'free'),
+    makeActiveUser('id2', 'Flor', 11, 2017, 'free'),
+    makeActiveUser('id3', 'Camila', 11, 2017, 'free'),
+    makeActiveUser('id4', 'Rogelia', 11, 2017, 'free'),
+    makeActiveUser('id5', 'Patri', 11, 2017, 'free'),
+    makeActiveUser('id6', 'Lauti', 11, 2017, 'premium'),
+    makeActiveUser('id7', 'Pablo', 11, 2017, 'premium'),
+    makeActiveUser('id8', 'Jorge', 11, 2017, 'premium'),
+    makeActiveUser('id9', 'Pedro', 11, 2017, 'premium'),
+    makeActiveUser('id10', 'Thiago', 11, 2017, 'premium'),
+
+    makeActiveUser('id11', 'Claudia', 11, 2017, 'premium'),
+    makeActiveUser('id12', 'Martina', 11, 2017, 'premium'),
+    makeActiveUser('id13', 'Aurelio', 11, 2017, 'premium'),
+    makeActiveUser('id14', 'Marcela', 11, 2017, 'premium'),
+    makeActiveUser('id15', 'Candela', 11, 2017, 'premium'),
+    makeActiveUser('id16', 'Antonio', 11, 2017, 'premium'),
+    makeActiveUser('id17', 'Beatriz', 11, 2017, 'premium'),
+    makeActiveUser('id18', 'Panceta', 11, 2017, 'premium'),
+    makeActiveUser('id19', 'Juan', 11, 2017, 'premium'),
+
+    // '2017-10'
+    makeActiveUser('id7', 'Pablo', 11, 2017, 'free'),
+    makeActiveUser('id8', 'Jorge', 11, 2017, 'free'),
+    makeActiveUser('id9', 'Pedro', 11, 2017, 'free'),
+    makeActiveUser('id10', 'Thiago', 11, 2017, 'free'),
+
+    makeActiveUser('id11', 'Claudia', 10, 2017, 'premium'),
+    makeActiveUser('id12', 'Martina', 10, 2017, 'premium'),
+    makeActiveUser('id13', 'Aurelio', 10, 2017, 'premium'),
+    makeActiveUser('id14', 'Marcela', 10, 2017, 'premium'),
+    makeActiveUser('id15', 'Candela', 10, 2017, 'premium'),
+    makeActiveUser('id16', 'Antonio', 10, 2017, 'premium'),
+    makeActiveUser('id17', 'Beatriz', 10, 2017, 'premium'),
+    makeActiveUser('id18', 'Panceta', 10, 2017, 'premium'),
+    makeActiveUser('id19', 'Juan', 10, 2017, 'premium'),
+
+    // '2017-09'
+    makeActiveUser('id11', 'Claudia', 9, 2017, 'premium'),
+    makeActiveUser('id12', 'Martina', 9, 2017, 'premium'),
+    makeActiveUser('id13', 'Aurelio', 9, 2017, 'premium'),
+    makeActiveUser('id14', 'Marcela', 9, 2017, 'premium'),
+    makeActiveUser('id15', 'Candela', 9, 2017, 'premium'),
+    makeActiveUser('id16', 'Antonio', 9, 2017, 'premium'),
+    makeActiveUser('id17', 'Beatriz', 9, 2017, 'premium'),
+    makeActiveUser('id18', 'Panceta', 9, 2017, 'premium'),
+    makeActiveUser('id19', 'Juan', 9, 2017, 'premium'),
+
+    // '2017-08'
+    makeActiveUser('id11', 'Claudia', 8, 2017, 'premium'),
+    makeActiveUser('id12', 'Martina', 8, 2017, 'premium'),
+    makeActiveUser('id13', 'Aurelio', 8, 2017, 'premium'),
+    makeActiveUser('id14', 'Marcela', 8, 2017, 'premium'),
+    makeActiveUser('id15', 'Candela', 8, 2017, 'premium'),
+    makeActiveUser('id16', 'Antonio', 8, 2017, 'premium'),
+    makeActiveUser('id17', 'Beatriz', 8, 2017, 'free'),
+    makeActiveUser('id18', 'Panceta', 8, 2017, 'free'),
+    makeActiveUser('id19', 'Juan', 8, 2017, 'free'),
+
+    // '2017-07'
+    makeActiveUser('id11', 'Claudia', 7, 2017, 'premium'),
+    makeActiveUser('id12', 'Martina', 7, 2017, 'premium'),
+    makeActiveUser('id13', 'Aurelio', 7, 2017, 'premium'),
+    makeActiveUser('id14', 'Marcela', 7, 2017, 'premium'),
+    makeActiveUser('id15', 'Candela', 7, 2017, 'free'),
+    makeActiveUser('id16', 'Antonio', 7, 2017, 'free'),
+
+    // '2017-06'
+    makeActiveUser('id11', 'Claudia', 6, 2017, 'free'),
+    makeActiveUser('id12', 'Martina', 6, 2017, 'free'),
+    makeActiveUser('id13', 'Aurelio', 6, 2017, 'free'),
+    makeActiveUser('id14', 'Marcela', 6, 2017, 'free')
+  ];
+
+  return activeUsers;
 }
 
 module.exports.mockLinks = (action = 'link') => {
@@ -96,13 +182,72 @@ module.exports.mockLinks = (action = 'link') => {
 
 module.exports.mockDenounces = () => {
   const denounces = [
-    makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', 'se porto mal'),
-    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', 'terrible maldito'),
-    makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', 'lo denuncio por acoso sexual intermitente'),
+    // '2017-11-10'
+    makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id14', 'Marcela', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id15', 'Candela', '10212279649380359', 'Diego', '', 'spam', '2017-11-10'),
+    makeDenounce('id16', 'Antonio', '10212279649380359', 'Diego', '', 'spam', '2017-11-10'),
+    makeDenounce('id17', 'Beatriz', '10212279649380359', 'Diego', 'se porto mal', 'otro', '2017-11-10'),
+    makeDenounce('id18', 'Panceta', '10212279649380359', 'Diego', 'terrible maldito', 'otro', '2017-11-10'),
+    makeDenounce('id19', 'Juan', '10212279649380359', 'Diego', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
 
-    makeDenounce('id11', 'Claudia', '10211595473336432', 'Joaquin', 'se porto mal'),
-    makeDenounce('id12', 'Martina', '10211595473336432', 'Joaquin', 'maldito desgraciado'),
-    makeDenounce('id13', 'Aurelio', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual intermitente')
+    makeDenounce('id11', 'Claudia', '10211595473336432', 'Joaquin', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id12', 'Martina', '10211595473336432', 'Joaquin', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id13', 'Aurelio', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id14', 'Marcela', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id15', 'Candela', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
+    makeDenounce('id16', 'Antonio', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
+    makeDenounce('id17', 'Beatriz', '10211595473336432', 'Joaquin', 'se porto mal', 'otro', '2017-11-10'),
+    makeDenounce('id18', 'Panceta', '10211595473336432', 'Joaquin', 'maldito desgraciado', 'otro', '2017-11-10'),
+    makeDenounce('id19', 'Juan', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
+
+    makeDenounce('id11', 'Claudia', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id19', 'Juan', '', 'spam', '2017-11-10'),
+
+    // '2017-10-10'
+    makeDenounce('id12', 'Martina', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-10-10'),
+    makeDenounce('id12', 'Martina', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-10-10'), // repite
+    makeDenounce('id12', 'Martina', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-10-10'), // repite
+    makeDenounce('id12', 'Martina', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-10-10'), // repite
+    makeDenounce('id12', 'Martina', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-10-10'), // repite
+    makeDenounce('id12', 'Martina', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-10-10'),    // repite
+    makeDenounce('id12', 'Martina', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-10-10'),    // repite
+    makeDenounce('id12', 'Martina', 'id19', 'Juan', '', 'spam', '2017-10-10'),                      // repite
+
+    // '2017-09-10'
+    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-09-10'),    // repite
+    makeDenounce('id13', 'Aurelio', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-09-10'),    // repite
+    makeDenounce('id13', 'Aurelio', 'id19', 'Juan', '', 'spam', '2017-09-10'),                      // repite
+
+    // '2017-08-10'
+    makeDenounce('id14', 'Marcela', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-08-10'),    // repite
+    makeDenounce('id14', 'Marcela', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-08-10'),    // repite
+    makeDenounce('id14', 'Marcela', 'id19', 'Juan', '', 'spam', '2017-08-10'),                      // repite
+
+    // '2017-07-10'
+    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-07-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-07-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-07-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-07-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-07-10') // repite
 
     // makeDenounce('id2', 'Flor',    '10212279649380359', 'Diego', 'terrible hijo de su madre'),
     // makeDenounce('id3', 'Camila',  '10212279649380359', 'Diego', 'no puedo verlo devuelta'),
@@ -182,6 +327,16 @@ const makeSettings = (id, ageRange, distRange, invisible, interestType) => {
   }
 }
 
+const makeActiveUser = (id, name, month, year, accountType) => {
+  return {
+    id,
+    name,
+    month,
+    year,
+    accountType
+  }
+}
+
 const makeLink = (sendUID, recUID, action, type) => {
   return {
     sendUID,
@@ -191,14 +346,16 @@ const makeLink = (sendUID, recUID, action, type) => {
   }
 }
 
-const makeDenounce = (sendUID, sendUName, recUID, recUName, message, status = 'pendiente') => {
+const makeDenounce = (sendUID, sendUName, recUID, recUName, message, type, date, status = 'pendiente') => {
   return {
     sendUID,
     sendUName,
     recUID,
     recUName,
     message,
-    status
+    status,
+    date,
+    type
   }
 }
 

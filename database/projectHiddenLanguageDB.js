@@ -22,6 +22,17 @@ module.exports.list = function () {
   return ProjectHiddenLanguage.find({}).then(normalizeResponse);
 }
 
+module.exports.editWord = function (id, word) {
+  const query = { id };
+
+  return ProjectHiddenLanguage.findOne(query)
+    .then((existWord) => {
+      return (existWord === null) ?
+        Promise.reject({ status: 404, message: 'word not found' }) :
+        existWord.update({ word })
+    })
+}
+
 module.exports.removeWord = function (id) {
   const query = { id };
 

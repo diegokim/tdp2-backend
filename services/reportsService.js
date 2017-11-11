@@ -1,8 +1,9 @@
-const UsersDB = require('../database/usersDB');
+const ActiveUserDB = require('../database/activeUserDB');
 const DenouncesDB = require('../database/denouncesDB');
 
 const OTHER_DENOUNCE_TYPE = 'otro';
-const COMP_DENOUNCE_TYPE = 'comportamiento extraño';
+const MESS_DENOUNCE_TYPE = 'mensaje inapropiado';
+const COMP_DENOUNCE_TYPE = 'comportamiento abusivo';
 const SPAM_DENOUNCE_TYPE = 'spam';
 
 /**
@@ -19,41 +20,41 @@ module.exports.filter = (filters) => {
     })
 }
 
-const filterDenounces = (filters) => { // eslint-disable-line
+const filterDenounces = (filters) => {
   return DenouncesDB.list()
     .then((denounces) => {
-
       // filter by type
-      const otherDenouncesFilter = denounces.filter((denounce) => denounce.type === OTHER_DENOUNCE_TYPE);
-      const compDenouncesFilter = denounces.filter((denounce) => denounce.type === COMP_DENOUNCE_TYPE);
-      const spamDenouncesFilter = denounces.filter((denounce) => denounce.type === SPAM_DENOUNCE_TYPE);
-
-      // reduce by user
-      const otherDenounces = reduceByUser(otherDenouncesFilter);
-      const compDenounces = reduceByUser(compDenouncesFilter);
-      const spamDenounces = reduceByUser(spamDenouncesFilter);
+      const otherDenouncesByType = denounces.filter((denounce) => denounce.type === OTHER_DENOUNCE_TYPE);
+      const compDenouncesByType = denounces.filter((denounce) => denounce.type === COMP_DENOUNCE_TYPE);
+      const spamDenouncesByType = denounces.filter((denounce) => denounce.type === SPAM_DENOUNCE_TYPE);
+      const messDenouncesByType = denounces.filter((denounce) => denounce.type === MESS_DENOUNCE_TYPE);
 
       // reduce by filters
+      const otherDenouncesByFilters = reduceByFilters(otherDenouncesByType, filters);
+      const compDenouncesByFilters = reduceByFilters(compDenouncesByType, filters);
+      const spamDenouncesByFilters = reduceByFilters(spamDenouncesByType, filters);
+      const messDenouncesByFilters = reduceByFilters(messDenouncesByType, filters);
+
+      // reduce by user
+      const otherDenounces = reduceByUser(otherDenouncesByFilters);
+      const compDenounces = reduceByUser(compDenouncesByFilters);
+      const spamDenounces = reduceByUser(spamDenouncesByFilters);
+      const messDenounces = reduceByUser(messDenouncesByFilters);
 
       // calculate
       const otherLength = otherDenounces.length || 0;
       const compLength = compDenounces.length || 0;
       const spamLength = spamDenounces.length || 0;
-      const totalLength = compLength + otherLength + spamLength;
+      const messLength = messDenounces.length || 0;
+
+      const labels = ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'];
+      const data = [compLength, messLength, otherLength, spamLength];
+      const table = [].concat(otherDenounces).concat(compDenounces).concat(spamDenounces).concat(messDenounces);
 
       return {
-        otro: {
-          count: otherLength,
-          percentage: (otherLength / totalLength) * 100
-        },
-        spam: {
-          count: spamLength,
-          percentage: (spamLength / totalLength) * 100
-        },
-        comp: {
-          count: compLength,
-          percentage: (compLength / totalLength) * 100
-        }
+        labels,
+        data,
+        table
       }
     })
 }
@@ -74,23 +75,147 @@ const reduceByUser = (denounces) => {
   });
 }
 
-const filterActiveUsers = (filters) => { // eslint-disable-line
-  return UsersDB.list()
-    .then((users) => { // eslint-disable-line
-      // filter by filters
+const reduceByFilters = (denounces, filters) => {
+  const startDate = filters.startDate && new Date(filters.startDate);
+  const endDate = filters.endDate && new Date(filters.endDate);
 
-      // construct graphic points
+  return denounces.filter((denounce) => {
+    const denounceDate = new Date(denounce.date);
+    if (startDate && (denounceDate < startDate)) {
+      return false;
+    }
+    if (endDate && (denounceDate > endDate)) {
+      return false;
+    }
+    return true;
+  });
+}
+
+const filterActiveUsers = (filters) => {
+  return ActiveUserDB.list()
+    .then((users) => {
+      // filter by filters
+      const filterUsers = filterUsersByFilters(users, filters);
+
+      // filter by last year
+      // const filterUsersByLastYear = filterByLastYear(filterUsers);
+
+      const usersMonthYearArray = generateSortedUserByMonthArray(filterUsers);
+
+      const labels = [];
+      const total = [];
+      const premium = [];
+
+      usersMonthYearArray.forEach((userMonthYear) => {
+        labels.push(userMonthYear.label);
+        total.push(userMonthYear.total);
+        premium.push(userMonthYear.premium);
+      })
+
       return {
-        sampling: [{
-          x: 0,
-          y: 10
-        }, {
-          x: 1,
-          y: 20
-        }, {
-          x: 2,
-          y: 30
-        }]
+        labels,
+        data: [
+          { data: total, label: 'Usuarios Totales' },
+          { data: premium, label: 'Usuarios Premium' }
+        ],
+        table: sortUsersByDate(filterUsers)
       }
     })
 }
+
+const filterUsersByFilters = (users, filters) => {
+  // TOD0: HACIENDO ESTO, EN REALIDAD NOS ESTAMOS BASANDO EN LA HORA LOCAL, ENTONCES SI PONEMOS UNA FECHA: 2017-01-01
+  // el getMonth() = 11, getFullYear() = 2016
+  const startDate = filters.startDate && new Date(filters.startDate);
+  const endDate = filters.endDate && new Date(filters.endDate);
+
+  const startMonth = startDate && (startDate.getMonth() + 1);
+  const startYear = startDate && startDate.getFullYear();
+  const endMonth = endDate && (endDate.getMonth() + 1);
+  const endYear = endDate && endDate.getFullYear();
+
+  return users.filter((user) => {
+    if (startDate) {
+      if (user.year < startYear) {
+        return false;
+      } else if (user.year === startYear && user.month < startMonth) {
+        return false
+      }
+    }
+    if (endDate) {
+      if (user.year > endYear) {
+        return false;
+      } else if (user.year === endYear && user.month > endMonth) {
+        return false
+      }
+    }
+    return true;
+  })
+}
+
+const filterByLastYear = (users) => { // eslint-disable-line
+  const lastYear = new Date();
+  const lastYearYear = lastYear.getFullYear();
+  lastYear.setFullYear(lastYearYear - 1);
+
+  return filterUsersByFilters(users, { startDate: lastYear.toLocaleString(), endYear: new Date().toLocaleString()});
+}
+
+const generateSortedUserByMonthArray = (users) => {
+  const usersMap = {};
+
+  // generate map
+  users.forEach((user) => {
+    const label = `${user.year}/${user.month}`;
+    if (usersMap[label]) {
+      usersMap[label].total += 1;
+      usersMap[label].premium += (user.accountType === 'premium' ? 1 : 0);
+    } else {
+      usersMap[label] = {
+        total: 1,
+        premium: user.accountType === 'premium' ? 1 : 0
+      }
+    }
+  });
+
+  // generate array
+  const userByMonthArray = [];
+
+  Object.keys(usersMap).forEach((label) => {
+    userByMonthArray.push({
+      label,
+      total: usersMap[label].total,
+      premium: usersMap[label].premium
+    });
+  });
+
+  // sort array
+  const sortedUserByMonthArray = userByMonthArray.sort((a, b) => {
+    const aMonth = parseInt(a.label.split('/')[1], 10);
+    const bMonth = parseInt(b.label.split('/')[1], 10);
+    const aYear = parseInt(a.label.split('/')[0], 10);
+    const bYear = parseInt(b.label.split('/')[0], 10);
+
+    if (aYear < bYear) {
+      return -1;
+    } else if ((aYear === bYear) && (aMonth < bMonth)) {
+      return -1;
+    }
+    return 1;
+  });
+
+  return sortedUserByMonthArray;
+}
+
+const sortUsersByDate = (users) => {
+  return users.sort((a, b) => {
+    if (a.month < b.month) {
+      return -1;
+    } else if ((a.year === b.year) && (a.month < b.month)) {
+      return -1;
+    }
+    return 1;
+  });
+}
+
+

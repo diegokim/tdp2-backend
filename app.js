@@ -20,6 +20,7 @@ const links = mocks.mockLinks();
 const denounces = mocks.mockDenounces();
 const advertising = mocks.mockAdvertising();
 const hiddenLanguage = mocks.mockHiddenLanguage();
+const activeUsers = mocks.mockActiveUsers();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,7 +28,7 @@ const ENV = process.env.ENV;
 
 database.connect()
   .then(() => database.drop())
-  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, advertising, hiddenLanguage, includeProjectConfs: true }));
+  .then(() => database.initialize(ENV === 'env_test' ? {} : { profiles, settings, links, denounces, advertising, hiddenLanguage, activeUsers, includeProjectConfs: true }));
 
 //  Middleware cors
 app.use(cors());
@@ -82,6 +83,7 @@ router.delete('/project/advertising/:advertId', (req, res) => projectController.
   // Hidden language
 router.get('/project/hiddenlanguage', (req, res) => projectController.getHiddenWords(req, res));
 router.post('/project/hiddenlanguage', (req, res) => projectController.createHiddenWord(req, res));
+router.patch('/project/hiddenlanguage/:wordId', (req, res) => projectController.editHiddenWord(req, res));
 router.delete('/project/hiddenlanguage/:wordId', (req, res) => projectController.deleteHiddenWord(req, res));
   // Reports
 router.post('/project/reports', (req, res) => projectController.getReports(req, res));

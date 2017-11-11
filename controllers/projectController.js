@@ -102,6 +102,19 @@ module.exports.createHiddenWord = (req, res) => {
     .catch((err) => aux.onError('Create project hidden word', res, err))
 }
 
+module.exports.editHiddenWord = (req, res) => {
+  aux.onLog('Request:', `${req.method} ${req.url}`)
+  const accessToken = req.headers.authorization;
+  const wordId = req.params.wordId
+  const body = req.body;
+
+  return auth.validateAdminToken(accessToken)
+    .then(() => validateWordId(wordId))
+    .then(() => projectService.editHiddenWord(wordId, body.word))
+    .then(() => res.status(204).json())
+    .catch((err) => aux.onError('Edit project hidden word', res, err))
+}
+
 module.exports.deleteHiddenWord = (req, res) => {
   aux.onLog('Request:', `${req.method} ${req.url}`)
   const accessToken = req.headers.authorization;

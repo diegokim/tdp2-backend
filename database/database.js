@@ -3,6 +3,7 @@ const UsersDB = require('./usersDB');
 const SettingDB = require('./settingDB');
 const LinkDB = require('./linkDB');
 const DenouncesDB = require('./denouncesDB');
+const ActiveUserDB = require('./activeUserDB');
 const ProjectAdvertisingDB = require('./projectAdvertisingDB');
 const ProjectHiddenLanguageDB = require('./projectHiddenLanguageDB');
 const ProjectSettingsDB = require('./projectSettingsDB');
@@ -60,7 +61,7 @@ module.exports.drop = function () {
 };
 
 // Initialize database
-module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], hiddenLanguage = [], denounces = {}, includeProjectConfs = false }) {
+module.exports.initialize = function ({ profiles = [], settings = [], links = [], advertising = [], hiddenLanguage = [], activeUsers = [], denounces = {}, includeProjectConfs = false }) {
   // create indexes
   state.db.connection.collections.users.createIndex({ location: '2dsphere' })
 
@@ -72,6 +73,7 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
   const createProjectConfigs = [];
   const createAdvertising = [];
   const createHiddenLanguage = [];
+  const createActiveUsers = [];
 
   // create project configs
   if (includeProjectConfs) {
@@ -101,6 +103,10 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     const newWord = new ProjectHiddenLanguageDB(word);
     createHiddenLanguage.push(ProjectHiddenLanguageDB.create(newWord))
   });
+  activeUsers.forEach((activeUser) => {
+    const newActiveUser = new ActiveUserDB(activeUser);
+    createActiveUsers.push(ActiveUserDB.create(newActiveUser));
+  });
   (denounces.denounces || []).forEach((denounce) => {
     const newDenounce = new DenouncesDB(denounce);
     createDenounces.push(DenouncesDB.create(newDenounce));
@@ -117,5 +123,6 @@ module.exports.initialize = function ({ profiles = [], settings = [], links = []
     .then(() => Promise.all(createProjectConfigs))
     .then(() => Promise.all(createAdvertising))
     .then(() => Promise.all(createHiddenLanguage))
+    .then(() => Promise.all(createActiveUsers))
   ;
 }

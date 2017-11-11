@@ -425,30 +425,15 @@ Respuesta:
 	respuesta --> 200
 	  body: {
       activeUsers: {
-        sampling: [{
-          x: 0,
-          y: 10
-        }, {
-          x: 1,
-          y: 20
-        }, {
-          x: 2,
-          y: 30
-        }]
+        labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
+        data: [100, 25, 40, 15]
       },
       denounces: {
-        otro: {
-          count: 150,
-          percentage: 40
-        },
-        spam: {
-          count: 75,
-          percentage: 20
-        },
-        comp: {
-          count: 150,
-          percentage: 40
-        }
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']:,
+        data: [
+          { data: [65, 59, 80, 81, 56, 55, 40], label: 'Usuarios Totales'},
+          { data: [28, 48, 40, 19, 40, 27, 20], label: 'Usuarios Premium'}
+        ],
       }
     }
 
@@ -602,6 +587,22 @@ Respuesta:
       id:    'id1'
       word: 'maldito'
     }
+
+## PATCH /projects/hiddenlanguage/{wordId}
+
+Mensaje:
+
+    headers: {
+      Authorization: 'access_token'
+    }
+    body: {
+      word: 'maldito'
+    }
+
+Respuesta:
+
+	respuesta --> 200
+	  body: {}
 
 ## DELETE /projects/hiddenlanguage/{wordId}
 

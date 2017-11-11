@@ -59,6 +59,10 @@ module.exports.createHiddenWord = (word) => {
   return ProjectHiddenLanguageDB.create(newWord);
 }
 
+module.exports.editHiddenWord = (wordId, word) => {
+  return ProjectHiddenLanguageDB.editWord(wordId, word);
+}
+
 module.exports.deleteHiddenWord = (wordId) => {
   return ProjectHiddenLanguageDB.removeWord(wordId);
 }

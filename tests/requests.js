@@ -175,6 +175,13 @@ module.exports.createProjectHiddenWord = (accessToken, body = {}) => Promise.res
   .catch((err) => err)
 );
 
+module.exports.editProjectHiddenWord = (accessToken, wordId, body = {}) => Promise.resolve(
+  request.patch(baseUrl + `/project/hiddenlanguage/${wordId}`)
+  .set({'Authorization': accessToken})
+  .send(body)
+  .catch((err) => err)
+);
+
 module.exports.deleteProjectHiddenWord = (accessToken, wordId) => Promise.resolve(
   request.delete(baseUrl + `/project/hiddenlanguage/${wordId}`)
   .set({'Authorization': accessToken})

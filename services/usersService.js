@@ -3,6 +3,7 @@ const UsersDB = require('../database/usersDB');
 const DenouncesDB = require('../database/denouncesDB');
 const SettingDB = require('../database/settingDB');
 const LinkDB = require('../database/linkDB');
+const ActiveUserDB = require('../database/activeUserDB');
 
 const faceAPI = require('../clients/faceAPI');
 const settingsService = require('./settingsService');
@@ -102,4 +103,24 @@ module.exports.deleteUser = (userId) => {
     LinkDB.removeAction({ recUID: userId }),
     SettingDB.removeSetting({ id: userId }) // TOD0: should call services instead of DBs
   ])
+}
+
+/**
+ * Active user
+ *
+ */
+module.exports.updateActiveUser = (user, settings) => {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+
+  return ActiveUserDB.search({ id: user.id, month, year })
+    .then((res) => {
+      if (!res.length) { // if active user not exists, update it
+        const accountType = settings.accountType;
+        const newActiveUser = new ActiveUserDB({ id: user.id, name: user.name, month, year, accountType });
+
+        return ActiveUserDB.create(newActiveUser)
+      } // TODO: else if (res[0].accountType !== settings.accountType)
+    })
 }

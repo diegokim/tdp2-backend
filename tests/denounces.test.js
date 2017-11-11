@@ -49,9 +49,11 @@ describe('Integration denounces tests', () => {
           }]
 
           delete res.body[0]._id;
-          delete res.body[0].__v;
           delete res.body[1]._id;
+          delete res.body[0].__v;
           delete res.body[1].__v;
+          delete res.body[0].date;
+          delete res.body[1].date;
 
           assert.equal(res.status, 200);
           assert.deepEqual(res.body, expectedDenounces);
@@ -123,6 +125,8 @@ describe('Integration denounces tests', () => {
           delete res.body[0].__v;
           delete res.body[1]._id;
           delete res.body[1].__v;
+          delete res.body[0].date;
+          delete res.body[1].date;
 
           assert.equal(res.status, 200);
           assert.deepEqual(res.body, expectedDenounces);
@@ -178,6 +182,9 @@ describe('Integration denounces tests', () => {
           delete res.body[1].__v;
           delete res.body[2]._id;
           delete res.body[2].__v;
+          delete res.body[0].date;
+          delete res.body[1].date;
+          delete res.body[2].date;
 
           assert.equal(res.status, 200);
           assert.deepEqual(res.body, expectedDenounces);
