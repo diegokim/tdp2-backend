@@ -16,6 +16,8 @@ module.exports.sendMessage = (sendUID, recUID, chatMessage) => {
     to: recUID,
     message: chatMessage.message,
     highligth: chatMessage.highligth ? chatMessage.chatMessage : false,
+    messageUser: chatMessage.messageUser,
+    messageTime: chatMessage.messageTime,
     viewed: false
   }
 

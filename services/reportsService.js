@@ -35,11 +35,17 @@ const filterDenounces = (filters) => {
       const spamDenouncesByFilters = reduceByFilters(spamDenouncesByType, filters);
       const messDenouncesByFilters = reduceByFilters(messDenouncesByType, filters);
 
-      // calculate bloqued users
+      // calculate blocked users
       const otherDenouncesBlockeds = calculateBlockeds(otherDenouncesByFilters);
       const compDenouncesBlockeds = calculateBlockeds(compDenouncesByFilters);
       const spamDenouncesBlockeds = calculateBlockeds(spamDenouncesByFilters);
       const messDenouncesBlockeds = calculateBlockeds(messDenouncesByFilters);
+
+      // calculate rejected denounces
+      const otherDenouncesRejected = calculateRejecteds(otherDenouncesByFilters);
+      const compDenouncesRejected = calculateRejecteds(compDenouncesByFilters);
+      const spamDenouncesRejected = calculateRejecteds(spamDenouncesByFilters);
+      const messDenouncesRejected = calculateRejecteds(messDenouncesByFilters);
 
       // reduce by user
       const otherDenounces = reduceByUser(otherDenouncesByFilters);
@@ -55,13 +61,15 @@ const filterDenounces = (filters) => {
 
       const labels = ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'];
       const blockeds = [compDenouncesBlockeds, messDenouncesBlockeds, otherDenouncesBlockeds, spamDenouncesBlockeds];
+      const rejecteds = [compDenouncesRejected, messDenouncesRejected, otherDenouncesRejected, spamDenouncesRejected];
       const data = [compLength, messLength, otherLength, spamLength];
-      const table = [].concat(otherDenounces).concat(compDenounces).concat(spamDenounces).concat(messDenounces);
+      const table = [].concat(otherDenouncesByFilters).concat(compDenouncesByFilters).concat(spamDenouncesByFilters).concat(messDenouncesByFilters);
 
       return {
         labels,
         data,
         blockeds,
+        rejecteds,
         table
       }
     })
@@ -71,11 +79,7 @@ const reduceByUser = (denounces) => {
   const userMap = {};
 
   for (const denounce of denounces) {
-    userMap[denounce.recUID] = {
-      userId: denounce.recUID,
-      userName: denounce.recUName,
-      type: denounce.type
-    }
+    userMap[denounce.userId] = denounce
   }
 
   return Object.keys(userMap).map((key) => {
@@ -87,7 +91,7 @@ const reduceByFilters = (denounces, filters) => {
   const startDate = filters.startDate && new Date(filters.startDate);
   const endDate = filters.endDate && new Date(filters.endDate);
 
-  return denounces.filter((denounce) => {
+  const filteresDenounces = denounces.filter((denounce) => {
     const denounceDate = new Date(denounce.date);
     if (startDate && (denounceDate < startDate)) {
       return false;
@@ -97,6 +101,13 @@ const reduceByFilters = (denounces, filters) => {
     }
     return true;
   });
+
+  return filteresDenounces.map((denounce) => ({
+    userId: denounce.recUID,
+    userName: denounce.recUName,
+    status: denounce.status,
+    type: denounce.type
+  }));
 }
 
 const filterActiveUsers = (filters) => {
@@ -229,6 +240,14 @@ const sortUsersByDate = (users) => {
 const calculateBlockeds = (denounces) => {
   const acceptedDenounces = denounces.filter((denounce) => {
     return denounce.status === 'aceptada';
+  });
+
+  return acceptedDenounces.length;
+}
+
+const calculateRejecteds = (denounces) => {
+  const acceptedDenounces = denounces.filter((denounce) => {
+    return denounce.status === 'rechazada';
   });
 
   return acceptedDenounces.length;

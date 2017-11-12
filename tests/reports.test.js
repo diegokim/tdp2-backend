@@ -21,10 +21,10 @@ describe('Integration Reports tests', () => {
           makeDenounce('', '', 'id1', 'pedro', 'malo', 'aceptada', 'otro'),
           makeDenounce('', '', 'id2', 'carlos', 'malo', 'aceptada', 'otro'),
           makeDenounce('', '', 'id3', 'tincho', 'malo', 'aceptada', 'comportamiento abusivo'),
-          makeDenounce('', '', 'id4', 'pepepe', 'malo', 'pendiente', 'comportamiento abusivo'),
+          makeDenounce('', '', 'id4', 'pepepe', 'malo', 'rechazada', 'comportamiento abusivo'),
           makeDenounce('', '', 'id5', 'claudio', 'malo', 'pendiente', 'mensaje inapropiado'),
           makeDenounce('', '', 'id6', 'pirulo', 'malo', 'aceptada', 'spam'),
-          makeDenounce('', '', 'id7', 'pancho', 'malo', 'pendiente', 'spam'),
+          makeDenounce('', '', 'id7', 'pancho', 'malo', 'rechazada', 'spam'),
           makeDenounce('', '', 'id8', 'pepin', 'malo', 'pendiente', 'spam'),
           makeDenounce('', '', 'id9', 'bill', 'malo', 'pendiente', 'spam')
         ];
@@ -49,7 +49,8 @@ describe('Integration Reports tests', () => {
             denounces: {
               labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
               data: [2, 1, 3, 4],
-              blockeds: [1, 0, 3, 1]
+              blockeds: [1, 0, 3, 1],
+              rejecteds: [1, 0, 0, 1]
             }
           }
 
@@ -98,7 +99,8 @@ describe('Integration Reports tests', () => {
             denounces: {
               labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
               data: [2, 0, 3, 5],
-              blockeds: [0, 0, 0, 0]
+              blockeds: [0, 0, 0, 0],
+              rejecteds: [0, 0, 0, 0]
             }
           }
 
@@ -149,7 +151,8 @@ describe('Integration Reports tests', () => {
               denounces: {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [3, 3, 3, 3],
-                blockeds: [0, 0, 0, 0]
+                blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0]
               }
             }
 
@@ -176,7 +179,8 @@ describe('Integration Reports tests', () => {
               denounces: {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [3, 3, 3, 3],
-                blockeds: [0, 0, 0, 0]
+                blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0]
               }
             }
 
@@ -203,7 +207,8 @@ describe('Integration Reports tests', () => {
               denounces: {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [2, 2, 2, 2],
-                blockeds: [0, 0, 0, 0]
+                blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0]
               }
             }
 
@@ -268,6 +273,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0],
                 table: []
               }
             }
@@ -295,6 +301,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0],
                 table: []
               }
             }
@@ -322,6 +329,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0],
                 table: []
               }
             }
@@ -349,6 +357,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
+                rejecteds: [0, 0, 0, 0],
                 table: []
               }
             }

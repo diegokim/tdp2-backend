@@ -14,9 +14,14 @@ module.exports.sendMessage = (accessToken, userId, userIdTo, chatMessage) => {
       UsersDB.get(id),
       UsersDB.get(userIdTo)
     ])
-    .then(([u1, u2]) => (u1 && u2 ? true : Promise.reject({ status: 404, message: 'user does not exist' })))
-    .then(() => filterLanguage(chatMessage))
-    .then((filteredMessage) => firebaseAPI.sendMessage(id, userIdTo, { message: filteredMessage }))
+    .then(([u1, u2]) => (u1 && u2 ? u2 : Promise.reject({ status: 404, message: 'user does not exist' })))
+    .then((userTo) => filterLanguage(chatMessage)
+      .then((filteredMessage) => ({
+        message: filteredMessage,
+        messageUser: userTo.name,
+        messageTime: Math.floor(Date.now())
+      })))
+    .then((completeMessage) => firebaseAPI.sendMessage(id, userIdTo, completeMessage))
   });
 }
 

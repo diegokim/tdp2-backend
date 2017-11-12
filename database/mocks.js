@@ -183,12 +183,12 @@ module.exports.mockLinks = (action = 'link') => {
 module.exports.mockDenounces = () => {
   const denounces = [
     // '2017-11-10'
-    makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10'),
-    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
+    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
     makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
     makeDenounce('id14', 'Marcela', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
-    makeDenounce('id15', 'Candela', '10212279649380359', 'Diego', '', 'spam', '2017-11-10'),
-    makeDenounce('id16', 'Antonio', '10212279649380359', 'Diego', '', 'spam', '2017-11-10'),
+    makeDenounce('id15', 'Candela', '10212279649380359', 'Diego', '', 'spam', '2017-11-10', 'rechazada'),
+    makeDenounce('id16', 'Antonio', '10212279649380359', 'Diego', '', 'spam', '2017-11-10', 'rechazada'),
     makeDenounce('id17', 'Beatriz', '10212279649380359', 'Diego', 'se porto mal', 'otro', '2017-11-10'),
     makeDenounce('id18', 'Panceta', '10212279649380359', 'Diego', 'terrible maldito', 'otro', '2017-11-10'),
     makeDenounce('id19', 'Juan', '10212279649380359', 'Diego', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
@@ -199,13 +199,13 @@ module.exports.mockDenounces = () => {
     makeDenounce('id14', 'Marcela', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),
     makeDenounce('id15', 'Candela', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
     makeDenounce('id16', 'Antonio', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
-    makeDenounce('id17', 'Beatriz', '10211595473336432', 'Joaquin', 'se porto mal', 'otro', '2017-11-10'),
-    makeDenounce('id18', 'Panceta', '10211595473336432', 'Joaquin', 'maldito desgraciado', 'otro', '2017-11-10'),
+    makeDenounce('id17', 'Beatriz', '10211595473336432', 'Joaquin', 'se porto mal', 'otro', '2017-11-10', 'rechazada'),
+    makeDenounce('id18', 'Panceta', '10211595473336432', 'Joaquin', 'maldito desgraciado', 'otro', '2017-11-10', 'rechazada'),
     makeDenounce('id19', 'Juan', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
 
     makeDenounce('id11', 'Claudia', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-11-10', 'aceptada'),
     makeDenounce('id11', 'Claudia', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-11-10', 'aceptada'),
-    makeDenounce('id11', 'Claudia', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
     makeDenounce('id11', 'Claudia', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-11-10'),
     makeDenounce('id11', 'Claudia', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-11-10'),
     makeDenounce('id11', 'Claudia', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-11-10'),
@@ -213,19 +213,19 @@ module.exports.mockDenounces = () => {
     makeDenounce('id11', 'Claudia', 'id19', 'Juan', '', 'spam', '2017-11-10'),
 
     // '2017-10-10'
-    makeDenounce('id12', 'Martina', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-10-10'),
-    makeDenounce('id12', 'Martina', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-10-10'), // repite
-    makeDenounce('id12', 'Martina', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-10-10'), // repite
-    makeDenounce('id12', 'Martina', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-10-10'), // repite
-    makeDenounce('id12', 'Martina', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-10-10'), // repite
+    makeDenounce('id12', 'Martina', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
+    makeDenounce('id12', 'Martina', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
+    makeDenounce('id12', 'Martina', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
+    makeDenounce('id12', 'Martina', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
     makeDenounce('id12', 'Martina', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-10-10', 'aceptada'),    // repite
     makeDenounce('id12', 'Martina', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-10-10', 'aceptada'),    // repite
     makeDenounce('id12', 'Martina', 'id19', 'Juan', '', 'spam', '2017-10-10'),                      // repite
 
     // '2017-09-10'
-    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-09-10'), // repite
-    makeDenounce('id13', 'Aurelio', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-09-10'), // repite
-    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-09-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'), // repite
+    makeDenounce('id13', 'Aurelio', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'), // repite
+    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'), // repite
     makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-09-10'), // repite
     makeDenounce('id13', 'Aurelio', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-09-10'), // repite
     makeDenounce('id13', 'Aurelio', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-09-10'),    // repite
@@ -234,7 +234,7 @@ module.exports.mockDenounces = () => {
 
     // '2017-08-10'
     makeDenounce('id14', 'Marcela', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-08-10', 'aceptada'), // repite
-    makeDenounce('id14', 'Marcela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-08-10'), // repite
+    makeDenounce('id14', 'Marcela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-08-10', 'rechazada'), // repite
     makeDenounce('id14', 'Marcela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-08-10'), // repite
     makeDenounce('id14', 'Marcela', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-08-10'), // repite
     makeDenounce('id14', 'Marcela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-08-10'), // repite
@@ -243,7 +243,7 @@ module.exports.mockDenounces = () => {
     makeDenounce('id14', 'Marcela', 'id19', 'Juan', '', 'spam', '2017-08-10', 'aceptada'),                      // repite
 
     // '2017-07-10'
-    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-07-10'), // repite
+    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-07-10', 'rechazada'), // repite
     makeDenounce('id13', 'Aurelio', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-07-10'), // repite
     makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-07-10'), // repite
     makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-07-10'), // repite
