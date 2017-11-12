@@ -11,6 +11,15 @@ const ProjectAdvertisingSchema = mongoose.Schema({
   },
   link: {
     type: String
+  },
+  name: {
+    type: String
+  },
+  startDate: {
+    type: String
+  },
+  endDate: {
+    type: String
   }
 })
 

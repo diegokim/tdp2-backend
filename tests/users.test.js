@@ -156,8 +156,8 @@ describe('Integration user tests', () => {
         nockProfile(['id'], accessToken, { id: 'id' })
         return DB.initialize({ profiles: [userProfile] })
       })
-      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
-        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-2' }))
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', name: 'name', startDate: '2017-10-10', endDate: '2099-11-30' })
+        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-2', name: 'name', startDate: '2017-10-10', endDate: '2099-10-30' }))
         .then(() => (response = request.getUserAdvertising(accessToken)))
       );
 
@@ -165,6 +165,23 @@ describe('Integration user tests', () => {
         .then((res) => {
           assert.equal(res.status, 200);
           assert.include(['image', 'image-2'], res.body.image);
+        }));
+    });
+
+    describe('When return the advertising filtering by date', () => {
+      beforeEach(() => {
+        nockProfile(['id'], accessToken, { id: 'id' })
+        return DB.initialize({ profiles: [userProfile] })
+      })
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', name: 'name', startDate: '2016-10-10', endDate: '2017-10-30' })
+        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-2', name: 'name', startDate: '2017-10-10', endDate: '2099-10-30' }))
+        .then(() => (response = request.getUserAdvertising(accessToken)))
+      );
+
+      it('should return the advertising', () => response
+        .then((res) => {
+          assert.equal(res.status, 200);
+          assert.equal('image-2', res.body.image);
         }));
     });
   });

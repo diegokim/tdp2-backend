@@ -157,7 +157,7 @@ const validateConfigId = (configId) => {
 }
 
 const validateAdvert = (advert) => {
-  const validAdvert = advert.image || advert.link;
+  const validAdvert = (advert.image || advert.link) && advert.name && advert.startDate && advert.endDate;
 
   return validAdvert ?
     Promise.resolve() :

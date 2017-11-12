@@ -118,7 +118,7 @@ describe('Integration Project tests', () => {
   describe('Create Advertising', () => {
     describe('when send an invalid token', () => {
       beforeEach(() => (
-        response = request.createProjectAdvertising(accessToken, { image: 'image', link: 'link' }))
+        response = request.createProjectAdvertising(accessToken, { image: 'image', link: 'link', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' }))
       );
 
       it('should return 401', () => response
@@ -130,7 +130,7 @@ describe('Integration Project tests', () => {
     });
 
     describe('When create the advertising', () => {
-      beforeEach(() => (response = request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', link: 'link' })));
+      beforeEach(() => (response = request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', link: 'link', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' })));
 
       it('should return the created advertising', () => response
         .then((res) => {
@@ -139,6 +139,9 @@ describe('Integration Project tests', () => {
           assert.equal(res.status, 200);
           assert.equal(res.body.image, 'image');
           assert.equal(res.body.link, 'link');
+          assert.equal(res.body.name, 'name');
+          assert.equal(res.body.startDate, '2017-10-10');
+          assert.equal(res.body.endDate, '2017-10-10');
           assert.property(res.body, 'id');
         }));
     });
@@ -159,7 +162,7 @@ describe('Integration Project tests', () => {
     });
 
     describe('When create the advertising', () => {
-      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' })
         .then(() => (response = request.getProjectAdvertising(ADMIN_TOKEN)))
       );
 
@@ -168,7 +171,7 @@ describe('Integration Project tests', () => {
           formatDBResponseWithId(res.body);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, [{ image: 'image', link: '' }]);
+          assert.deepEqual(res.body, [{ image: 'image', link: '', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' }]);
         }));
     });
   });
@@ -188,7 +191,7 @@ describe('Integration Project tests', () => {
     });
 
     describe('When delete the advertising', () => {
-      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' })
         .then((res) => (response = request.deleteProjectAdvertising(ADMIN_TOKEN, res.body.id)))
       );
 
@@ -199,8 +202,8 @@ describe('Integration Project tests', () => {
     });
 
     describe('When delete the advertising', () => {
-      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image' })
-        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-to-delete' }))
+      beforeEach(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' })
+        .then(() => request.createProjectAdvertising(ADMIN_TOKEN, { image: 'image-to-delete', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' }))
         .then((res) => request.deleteProjectAdvertising(ADMIN_TOKEN, res.body.id))
         .then(() => (response = request.getProjectAdvertising(ADMIN_TOKEN)))
       );
@@ -210,7 +213,7 @@ describe('Integration Project tests', () => {
           formatDBResponseWithId(res.body);
 
           assert.equal(res.status, 200);
-          assert.deepEqual(res.body, [{ image: 'image', link: '' }]);
+          assert.deepEqual(res.body, [{ image: 'image', link: '', name: 'name', startDate: '2017-10-10', endDate: '2017-10-10' }]);
         }));
     });
   });

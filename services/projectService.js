@@ -29,7 +29,14 @@ module.exports.getAdvertising = () => {
 
 module.exports.createAdvertising = (body) => {
   const id = uuid.v1();
-  const newAdvert = new ProjectAdvertisingDB({ id, image: body.image || '', link: body.link || '' });
+  const newAdvert = new ProjectAdvertisingDB({
+    id,
+    image: body.image || '',
+    link: body.link || '',
+    name: body.name,
+    startDate: body.startDate,
+    endDate: body.endDate
+  });
 
   return ProjectAdvertisingDB.create(newAdvert);
 }
@@ -40,6 +47,13 @@ module.exports.deleteAdvertising = (advertId) => {
 
 module.exports.getRandomAdvertising = () => {
   return ProjectAdvertisingDB.list()
+    .then((advertising) => advertising.filter((advert) => {
+      const now = new Date();
+      const startDate = new Date(advert.startDate);
+      const endDate = new Date(advert.endDate);
+
+      return (startDate <= now && now <= endDate);
+    }))
     .then((advertising) => {
       const length = advertising.length;
 
