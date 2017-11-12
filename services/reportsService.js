@@ -35,6 +35,12 @@ const filterDenounces = (filters) => {
       const spamDenouncesByFilters = reduceByFilters(spamDenouncesByType, filters);
       const messDenouncesByFilters = reduceByFilters(messDenouncesByType, filters);
 
+      // calculate bloqued users
+      const otherDenouncesBlockeds = calculateBlockeds(otherDenouncesByFilters);
+      const compDenouncesBlockeds = calculateBlockeds(compDenouncesByFilters);
+      const spamDenouncesBlockeds = calculateBlockeds(spamDenouncesByFilters);
+      const messDenouncesBlockeds = calculateBlockeds(messDenouncesByFilters);
+
       // reduce by user
       const otherDenounces = reduceByUser(otherDenouncesByFilters);
       const compDenounces = reduceByUser(compDenouncesByFilters);
@@ -48,12 +54,14 @@ const filterDenounces = (filters) => {
       const messLength = messDenounces.length || 0;
 
       const labels = ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'];
+      const blockeds = [compDenouncesBlockeds, messDenouncesBlockeds, otherDenouncesBlockeds, spamDenouncesBlockeds];
       const data = [compLength, messLength, otherLength, spamLength];
       const table = [].concat(otherDenounces).concat(compDenounces).concat(spamDenounces).concat(messDenounces);
 
       return {
         labels,
         data,
+        blockeds,
         table
       }
     })
@@ -218,4 +226,10 @@ const sortUsersByDate = (users) => {
   });
 }
 
+const calculateBlockeds = (denounces) => {
+  const acceptedDenounces = denounces.filter((denounce) => {
+    return denounce.status === 'aceptada';
+  });
 
+  return acceptedDenounces.length;
+}
