@@ -119,7 +119,7 @@ const filterActiveUsers = (filters) => {
       // filter by last year
       // const filterUsersByLastYear = filterByLastYear(filterUsers);
 
-      const usersMonthYearArray = generateSortedUserByMonthArray(filterUsers);
+      const usersMonthYearArray = generateSortedUserByMonthArray(filterUsers, filters);
 
       const labels = [];
       const total = [];
@@ -180,7 +180,7 @@ const filterByLastYear = (users) => { // eslint-disable-line
   return filterUsersByFilters(users, { startDate: lastYear.toLocaleString(), endYear: new Date().toLocaleString()});
 }
 
-const generateSortedUserByMonthArray = (users) => {
+const generateSortedUserByMonthArray = (users, filters) => {
   const usersMap = {};
 
   // generate map
@@ -196,6 +196,44 @@ const generateSortedUserByMonthArray = (users) => {
       }
     }
   });
+
+  // complete empty dates with 0 total and premium
+  let startDate = filters.startDate && new Date(filters.startDate);
+  const endDate = (filters.endDate && new Date(filters.endDate)) || new Date();
+
+  if (!startDate) {
+    startDate = new Date();
+    startDate.setFullYear(startDate.getFullYear() - 1);
+  }
+  const startMonth = startDate.getMonth() + 1;
+  const endMonth = endDate.getMonth() + 1;
+  const startYear = startDate.getFullYear();
+  const endYear = endDate.getFullYear();
+
+  if (startYear === endYear) {
+    for (let month = startMonth; month <= endMonth; month += 1) {
+      const label = `${startYear}/${month}`;
+
+      if (!usersMap[label]) {
+        usersMap[label] = { total: 0, premium: 0 }
+      }
+    }
+  } else if (startYear < endYear) {
+    for (let month = startMonth; month <= 12; month += 1) {
+      const label = `${startYear}/${month}`;
+
+      if (!usersMap[label]) {
+        usersMap[label] = { total: 0, premium: 0 }
+      }
+    }
+    for (let month = 1; month < endMonth; month += 1) {
+      const label = `${endYear}/${month}`;
+
+      if (!usersMap[label]) {
+        usersMap[label] = { total: 0, premium: 0 }
+      }
+    }
+  }
 
   // generate array
   const userByMonthArray = [];
