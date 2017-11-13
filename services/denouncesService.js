@@ -9,7 +9,30 @@ const ACCEPTED_DENOUNCE_STATUS = 'aceptada';
  *
  */
 module.exports.list = () => {
-  return DenouncesDB.list();
+  return DenouncesDB.list()
+    .then((denounces) => {
+      return denounces.sort((a, b) => {
+        if (a.status === 'pendiente') {
+          return -1;
+        }
+        if (b.status === 'pendiente') {
+          return 1;
+        }
+        if (a.status === 'aceptada') {
+          return -1;
+        }
+        if (b.status === 'aceptada') {
+          return 1;
+        }
+        if (a.status === 'usuario bloqueado') {
+          return -1;
+        }
+        if (b.status === 'usuario bloqueado') {
+          return 1;
+        }
+        return 0;
+      });
+    });
 }
 
 

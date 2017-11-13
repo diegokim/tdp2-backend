@@ -104,20 +104,20 @@ describe('Integration denounces tests', () => {
       it('should return the denounces with other status', () => response
         .then((res) => {
           const expectedDenounces = [{
-            sendUID: 'id',
-            recUID: 'id2',
-            sendUName: 'name',
-            recUName: 'name2',
-            message: 'malo malo',
-            status: 'rechazada',
-            type: 'otro'
-          }, {
             sendUID: 'id2',
             recUID: 'id',
             sendUName: 'name2',
             recUName: 'name',
             message: 'malo malo',
             status: 'pendiente',
+            type: 'otro'
+          }, {
+            sendUID: 'id',
+            recUID: 'id2',
+            sendUName: 'name',
+            recUName: 'name2',
+            message: 'malo malo',
+            status: 'rechazada',
             type: 'otro'
           }]
 
@@ -151,6 +151,14 @@ describe('Integration denounces tests', () => {
         request.listDenounces(ADMIN_TOKEN)
         .then((res) => {
           const expectedDenounces = [{
+            sendUID: 'id',
+            recUID: 'id2',
+            sendUName: 'name',
+            recUName: 'name2',
+            message: 'desgraciado',
+            status: 'pendiente',
+            type: 'otro'
+          }, {
             sendUID: 'id2',
             recUID: 'id',
             sendUName: 'name2',
@@ -165,14 +173,6 @@ describe('Integration denounces tests', () => {
             recUName: 'name',
             message: 'malo eres',
             status: 'usuario bloqueado',
-            type: 'otro'
-          }, {
-            sendUID: 'id',
-            recUID: 'id2',
-            sendUName: 'name',
-            recUName: 'name2',
-            message: 'desgraciado',
-            status: 'pendiente',
             type: 'otro'
           }]
 
