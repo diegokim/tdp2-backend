@@ -30,6 +30,7 @@
     "jsonwebtoken": "~7.4.1",
     "lodash": "~4.17.4",
     "mongoose": "~4.10.6",
+    "ng2-md-datatable": "^1.5.2",
     "nock": "~9.0.14",
     "node-base64-image": "~1.0.4",
     "pg": "~7.0.0",

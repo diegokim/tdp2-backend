@@ -33,8 +33,10 @@ export class DenouncesComponent implements OnInit {
 export class Denounce {
   sendUID: string
   recUID: string
+  userName: string
   sendUName: string
   recUName: string
   message: string
   status: string
+  type: string
 }

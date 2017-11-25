@@ -1,46 +1,49 @@
-<mat-sidenav-container fullscreen>     
-    <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
-        <ul class="nav flex-column">
-            <li class="nav-item active">
-              <a class="nav-link active" routerLink="/analytics" routerLinkActive="active">General</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link non-active" routerLink="/analytics/denounces" routerLinkActive="active">Publicidad</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link non-active" routerLink="/analytics/activeusers" routerLinkActive="active">Lenguaje Abusivo</a>
-            </li>
+<mat-sidenav-container fullscreen>
+  <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
+    <ul class="nav flex-column">
+      <li class="nav-item active">
+        <a class="nav-link active" routerLink="/settings" routerLinkActive="active">General</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/settings/advertising" routerLinkActive="active">Publicidad</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/settings/language" routerLinkActive="active">Lenguaje Abusivo</a>
+      </li>
 
-          </ul>
-    </mat-sidenav>
-    <div class="container" style=" padding: 5em 3em 2em 3em !important ;">  
-        
-      
-            <div align="center">
-              <mat-card  style="width:70%" >
-                  <h3 ><font color="grey"> Configuración General</font></h3>
-                  <hr>
-                  <form *ngIf="settings != null" id="my_form"> 
+    </ul>
+  </mat-sidenav>
+  <div class="container" style=" padding: 5em 3em 2em 3em !important ;">
 
 
-                    <mat-form-field  style="width:100%">  
-                        <input [(ngModel)]="linksForFreeAccount" type="number" name="linksForFreeAccount"   min="1" matInput  placeholder="{{settings.linksForFreeAccount.prettyName}}">
-                      </mat-form-field>
-                      <mat-form-field  style="width:100%">  
-                          <input [(ngModel)]="linksForPremiumAccount" type="number" name="linksForPremiumAccount"   min="1" matInput  placeholder="{{settings.linksForPremiumAccount.prettyName}}">
-                        </mat-form-field>
-                        <mat-form-field  style="width:100%">  
-                            <input [(ngModel)]="maxCandidatesToShow" type="number" name="maxCandidatesToShow"   min="1" matInput  placeholder="{{settings.maxCandidatesToShow.prettyName}}">
-                          </mat-form-field>
-                          <mat-form-field  style="width:100%">  
-                              <input [(ngModel)]="maxPhotosToLogin" type="number" name="maxPhotosToLogin"   min="6" matInput  placeholder="{{settings.maxPhotosToLogin.prettyName}}">
-                            </mat-form-field>
-                  
-                  <button mat-raised-button class="btnAccept" (click)="updateSettings()" color="primary">Actualizar</button>
-                  <button mat-raised-button (click)="resetForm()" color="primary">Cancelar</button>
-                </form>
-              </mat-card>
-            </div>
+
+
+    <h3>
+      <font color="grey"> Configuración General</font>
+    </h3>
+    <hr>
+    <div align="center">
+      <form *ngIf="settings != null" id="my_form">
+
+
+        <mat-form-field style="width:100%">
+          <input [(ngModel)]="linksForFreeAccount" type="number" name="linksForFreeAccount" min="1" matInput placeholder="{{settings.linksForFreeAccount.prettyName}}">
+        </mat-form-field>
+        <mat-form-field style="width:100%">
+          <input [(ngModel)]="linksForPremiumAccount" type="number" name="linksForPremiumAccount" min="1" matInput placeholder="{{settings.linksForPremiumAccount.prettyName}}">
+        </mat-form-field>
+        <mat-form-field style="width:100%">
+          <input [(ngModel)]="maxCandidatesToShow" type="number" name="maxCandidatesToShow" min="1" matInput placeholder="{{settings.maxCandidatesToShow.prettyName}}">
+        </mat-form-field>
+        <mat-form-field style="width:100%">
+          <input [(ngModel)]="maxPhotosToLogin" type="number" name="maxPhotosToLogin" min="6" matInput placeholder="{{settings.maxPhotosToLogin.prettyName}}">
+        </mat-form-field>
+
+        <button class="btn btn-success" (click)="updateSettings()" style=" width: 30%; margin-right: 1em">Actualizar</button>
+        <button class="btn btn-danger" (click)="resetForm()" style="width: 30%">Cancelar</button>
+      </form>
+
     </div>
-          
+  </div>
+
 </mat-sidenav-container>

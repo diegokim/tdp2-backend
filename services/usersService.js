@@ -3,9 +3,11 @@ const UsersDB = require('../database/usersDB');
 const DenouncesDB = require('../database/denouncesDB');
 const SettingDB = require('../database/settingDB');
 const LinkDB = require('../database/linkDB');
+const firebaseAPI = require('../clients/firebaseAPI');
 const ActiveUserDB = require('../database/activeUserDB');
 
 const faceAPI = require('../clients/faceAPI');
+const linkService = require('./linkService');
 const settingsService = require('./settingsService');
 
 /**
@@ -95,14 +97,19 @@ module.exports.getUserId = (accessToken, userId) => {
  *
  */
 module.exports.deleteUser = (userId) => {
-  return Promise.all([
+  return linkService.getLinks('', userId)
+  .then((links) => {
+    const promises = links.map((link) => firebaseAPI.deleteConversation(link.id, userId));
+    return Promise.all(promises);
+  })
+  .then(() => Promise.all([
     UsersDB.removeUser({ id: userId }),
     DenouncesDB.removeDenounces({ sendUID: userId }),
     DenouncesDB.removeDenounces({ recUID: userId }),
     LinkDB.removeAction({ sendUID: userId }),
-    LinkDB.removeAction({ recUID: userId }),
+    // LinkDB.removeAction({ recUID: userId }), // TOD0: it is only a legal hack based on our product
     SettingDB.removeSetting({ id: userId }) // TOD0: should call services instead of DBs
-  ])
+  ]))
 }
 
 /**

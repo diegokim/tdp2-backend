@@ -165,16 +165,16 @@ module.exports.mockLinks = (action = 'link') => {
     makeLink('id9', '10211595473336432', action, 'both'),
     makeLink('id10', '10211595473336432', action, 'friends'),
 
-    makeLink('id1', '1423327261055269', action, 'male'),
-    makeLink('id2', '1423327261055269', action, 'male'),
-    makeLink('id3', '1423327261055269', action, 'female'),
-    makeLink('id4', '1423327261055269', action, 'both'),
-    makeLink('id5', '1423327261055269', action, 'friends'),
-    makeLink('id6', '1423327261055269', action, 'female'),
-    makeLink('id7', '1423327261055269', action, 'female'),
-    makeLink('id8', '1423327261055269', action, 'male'),
-    makeLink('id9', '1423327261055269', action, 'both'),
-    makeLink('id10', '1423327261055269', action, 'friends')
+    makeLink('id1', '1411063048948357', action, 'male'),
+    makeLink('id2', '1411063048948357', action, 'male'),
+    makeLink('id3', '1411063048948357', action, 'female'),
+    makeLink('id4', '1411063048948357', action, 'both'),
+    makeLink('id5', '1411063048948357', action, 'friends'),
+    makeLink('id6', '1411063048948357', action, 'female'),
+    makeLink('id7', '1411063048948357', action, 'female'),
+    makeLink('id8', '1411063048948357', action, 'male'),
+    makeLink('id9', '1411063048948357', action, 'both'),
+    makeLink('id10', '1411063048948357', action, 'friends')
   ]
 
   return links;
@@ -184,68 +184,68 @@ module.exports.mockDenounces = () => {
   const denounces = [
     // '2017-11-10'
     makeDenounce('id11', 'Claudia', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
-    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
-    makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id12', 'Martina', '10212279649380359', 'Diego', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'), // repite
+    makeDenounce('id13', 'Aurelio', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),  // repite
     makeDenounce('id14', 'Marcela', '10212279649380359', 'Diego', '', 'mensaje inapropiado', '2017-11-10'),
-    makeDenounce('id15', 'Candela', '10212279649380359', 'Diego', '', 'spam', '2017-11-10', 'rechazada'),
+    makeDenounce('id15', 'Candela', '10212279649380359', 'Diego', '', 'spam', '2017-11-10', 'rechazada'),  // repite
     makeDenounce('id16', 'Antonio', '10212279649380359', 'Diego', '', 'spam', '2017-11-10', 'rechazada'),
-    makeDenounce('id17', 'Beatriz', '10212279649380359', 'Diego', 'se porto mal', 'otro', '2017-11-10'),
-    makeDenounce('id18', 'Panceta', '10212279649380359', 'Diego', 'terrible maldito', 'otro', '2017-11-10'),
+    makeDenounce('id17', 'Beatriz', '10212279649380359', 'Diego', 'se porto mal', 'otro', '2017-11-10'),  // repite
+    makeDenounce('id18', 'Panceta', '10212279649380359', 'Diego', 'terrible maldito', 'otro', '2017-11-10'),  // repite
     makeDenounce('id19', 'Juan', '10212279649380359', 'Diego', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
 
-    makeDenounce('id11', 'Claudia', '10211595473336432', 'Joaquin', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', '10211595473336432', 'Joaquin', '', 'comportamiento abusivo', '2017-11-10'),  // repite
     makeDenounce('id12', 'Martina', '10211595473336432', 'Joaquin', '', 'comportamiento abusivo', '2017-11-10'),
-    makeDenounce('id13', 'Aurelio', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),
+    makeDenounce('id13', 'Aurelio', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),  // repite
     makeDenounce('id14', 'Marcela', '10211595473336432', 'Joaquin', '', 'mensaje inapropiado', '2017-11-10'),
-    makeDenounce('id15', 'Candela', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
+    makeDenounce('id15', 'Candela', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),  // repite
     makeDenounce('id16', 'Antonio', '10211595473336432', 'Joaquin', '', 'spam', '2017-11-10'),
-    makeDenounce('id17', 'Beatriz', '10211595473336432', 'Joaquin', 'se porto mal', 'otro', '2017-11-10', 'rechazada'),
+    makeDenounce('id17', 'Beatriz', '10211595473336432', 'Joaquin', 'se porto mal', 'otro', '2017-11-10', 'rechazada'),  // repite
     makeDenounce('id18', 'Panceta', '10211595473336432', 'Joaquin', 'maldito desgraciado', 'otro', '2017-11-10', 'rechazada'),
-    makeDenounce('id19', 'Juan', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),
+    makeDenounce('id19', 'Juan', '10211595473336432', 'Joaquin', 'lo denuncio por acoso sexual', 'otro', '2017-11-10'),  // repite
 
     makeDenounce('id11', 'Claudia', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
     makeDenounce('id11', 'Claudia', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
-    makeDenounce('id11', 'Claudia', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-11-10', 'rechazada'),
+    makeDenounce('id11', 'Claudia', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-11-10', 'aceptada'),
     makeDenounce('id11', 'Claudia', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-11-10'),
-    makeDenounce('id11', 'Claudia', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id16', 'Pepito', '', 'otro', '2017-11-10', 'aceptada'),
     makeDenounce('id11', 'Claudia', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-11-10'),
     makeDenounce('id11', 'Claudia', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-11-10'),
-    makeDenounce('id11', 'Claudia', 'id19', 'Juan', '', 'spam', '2017-11-10'),
+    makeDenounce('id11', 'Claudia', 'id19', 'Juan', '', 'spam', '2017-11-10', 'aceptada'),
 
     // '2017-10-10'
-    makeDenounce('id12', 'Martina', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'),
-    makeDenounce('id12', 'Martina', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
-    makeDenounce('id12', 'Martina', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
-    makeDenounce('id12', 'Martina', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
-    makeDenounce('id12', 'Martina', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-10-10', 'rechazada'), // repite
-    makeDenounce('id12', 'Martina', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-10-10', 'rechazada'),    // repite
-    makeDenounce('id12', 'Martina', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-10-10', 'rechazada'),    // repite
-    makeDenounce('id12', 'Martina', 'id19', 'Juan', '', 'spam', '2017-10-10'),                      // repite
+    makeDenounce('id12', 'Martina', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id16', 'Antonio', '', 'otro', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-10-21', 'rechazada'),
+    makeDenounce('id12', 'Martina', 'id19', 'Juan', '', 'spam', '2017-10-21'),
 
     // '2017-09-10'
-    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'), // repite
-    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'), // repite
-    makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-09-10'), // repite
-    makeDenounce('id13', 'Aurelio', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-09-10'), // repite
-    makeDenounce('id13', 'Aurelio', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-09-10'),    // repite
-    makeDenounce('id13', 'Aurelio', 'id18', 'Panceta', 'mal tipo', 'otro', '2017-09-10', 'rechazada'),    // repite
-    makeDenounce('id13', 'Aurelio', 'id19', 'Juan', '', 'spam', '2017-09-10'),                      // repite
+    makeDenounce('id13', 'Aurelio', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'),
+    makeDenounce('id13', 'Aurelio', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-09-10', 'rechazada'),
+    makeDenounce('id13', 'Aurelio', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-09-10'),
+    makeDenounce('id13', 'Aurelio', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-09-10'),
+    makeDenounce('id13', 'Aurelio', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-09-10'),
+    makeDenounce('id13', 'Aurelio', 'id18', 'Panceta', 'mal tipo', 'otro', '2017-09-10', 'rechazada'),
+    makeDenounce('id13', 'Aurelio', 'id19', 'Juan', '', 'spam', '2017-09-10'),
 
     // '2017-08-10'
-    makeDenounce('id14', 'Marcela', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-08-10', 'rechazada'), // repite
-    makeDenounce('id14', 'Marcela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-08-10', 'rechazada'), // repite
-    makeDenounce('id14', 'Marcela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-08-10'), // repite
-    makeDenounce('id14', 'Marcela', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-08-10'), // repite
-    makeDenounce('id14', 'Marcela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-08-10'), // repite
-    makeDenounce('id14', 'Marcela', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-08-10', 'rechazada'),    // repite
-    makeDenounce('id14', 'Marcela', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-08-10'),    // repite
-    makeDenounce('id14', 'Marcela', 'id19', 'Juan', '', 'spam', '2017-08-10', 'rechazada'),                      // repite
+    makeDenounce('id14', 'Marcela', 'id11', 'Claudia', '', 'comportamiento abusivo', '2017-08-10', 'rechazada'),
+    makeDenounce('id14', 'Marcela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-08-10', 'rechazada'),
+    makeDenounce('id14', 'Marcela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-08-10'),
+    makeDenounce('id14', 'Marcela', 'id15', 'Candela', '', 'comportamiento abusivo', '2017-08-10'),
+    makeDenounce('id14', 'Marcela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-08-10'),
+    makeDenounce('id14', 'Marcela', 'id17', 'Beatriz', '', 'mensaje inapropiado', '2017-08-10', 'rechazada'),
+    makeDenounce('id14', 'Marcela', 'id18', 'Panceta', '', 'mensaje inapropiado', '2017-08-10'),
+    makeDenounce('id14', 'Marcela', 'id19', 'Juan', '', 'spam', '2017-08-10', 'rechazada'),
 
     // '2017-07-10'
-    makeDenounce('id15', 'Candela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-07-10', 'rechazada'), // repite
-    makeDenounce('id15', 'Candela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-07-10'), // repite
-    makeDenounce('id15', 'Candela', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-07-10'), // repite
-    makeDenounce('id15', 'Candela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-07-10') // repite
+    makeDenounce('id15', 'Candela', 'id12', 'Martina', '', 'comportamiento abusivo', '2017-07-10', 'rechazada'),
+    makeDenounce('id15', 'Candela', 'id13', 'Aurelio', '', 'comportamiento abusivo', '2017-07-10'),
+    makeDenounce('id15', 'Candela', 'id14', 'Marcela', '', 'comportamiento abusivo', '2017-07-10'),
+    makeDenounce('id15', 'Candela', 'id16', 'Antonio', '', 'comportamiento abusivo', '2017-07-10')
 
     // makeDenounce('id2', 'Flor',    '10212279649380359', 'Diego', 'terrible hijo de su madre'),
     // makeDenounce('id3', 'Camila',  '10212279649380359', 'Diego', 'no puedo verlo devuelta'),
@@ -291,17 +291,17 @@ module.exports.mockAdvertising = () => {
 module.exports.mockHiddenLanguage = () => {
   const language = [
     makeHiddenWord('a732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tonto'),
-    makeHiddenWord('a222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'idiota'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hijo de perra'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'estupido'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarado'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarada'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'gil'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'imbesil'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'vigilante'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'hincha del rojo'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'enfermo'),
-    makeHiddenWord('a332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', 'bobo')
+    makeHiddenWord('a222bca10-c18b-11e7-a4fa-e3e6bf7f2e07', 'idiota'),
+    makeHiddenWord('a332bca20-c18b-11e7-a4fa-e3e6bf7f2e07', 'hijo de perra'),
+    makeHiddenWord('a332bca30-c18b-11e7-a4fa-e3e6bf7f2e07', 'estupido'),
+    makeHiddenWord('a332bca40-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarado'),
+    makeHiddenWord('a332bca50-c18b-11e7-a4fa-e3e6bf7f2e07', 'tarada'),
+    makeHiddenWord('a332bca60-c18b-11e7-a4fa-e3e6bf7f2e07', 'gil'),
+    makeHiddenWord('a332bca70-c18b-11e7-a4fa-e3e6bf7f2e07', 'imbesil'),
+    makeHiddenWord('a332bca80-c18b-11e7-a4fa-e3e6bf7f2e07', 'vigilante'),
+    makeHiddenWord('a332bca90-c18b-11e7-a4fa-e3e6bf7f2e07', 'hincha del rojo'),
+    makeHiddenWord('a332bca00-c18b-11e7-a4fa-e3e6bf7f2e07', 'enfermo'),
+    makeHiddenWord('a332bca110-c18b-11e7-a4fa-e3e6bf7f2e07', 'bobo')
   ]
 
   return language;

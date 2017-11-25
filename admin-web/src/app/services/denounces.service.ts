@@ -14,7 +14,7 @@ export class DenouncesService {
   getDenounces() {
     let url = this.denouncesUrl
     let token = localStorage.getItem('sessionToken')
-    let headers = new HttpHeaders({'Content-type': 'aplication/json','Authorization': token})
+    let headers = new HttpHeaders({'Content-type': 'application/json','Authorization': token})
     return this.http.get(url,{headers}).toPromise()
   }
 

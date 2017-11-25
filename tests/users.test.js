@@ -258,7 +258,7 @@ describe('Integration user tests', () => {
         .then((res) => { assert.deepEqual(res, []); })
       );
 
-      it('user links should not exist', () => linksResponse
+      it.skip('user links should not exist', () => linksResponse
         .then((res) => { assert.deepEqual(res, []); })
       );
 

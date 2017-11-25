@@ -1,145 +1,338 @@
-<div class="container" style="margin-top: 100px" *ngIf="profile != null" style="padding-top:3em">    
-    <div class="row">
-        
-        <div class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
-            <img alt="User Pic"  [src]="getProfilePhoto" id="profile-image1" class="img-circle img-fluid rounded-circle" style="min-width: 100%"> 
-        </div>
+<div class="container" style="height:100% ;background-color: #f8f9f8; width:100%">
+      <div class="container" style="height:100% ;background-color: #f8f9f8; width:70%">
+            <div class="container" style="margin-top: 100px" *ngIf="profile != null" style="padding-top:2em">
+                  <div class="row" style="color:gray">
 
-        <div class="col-md-8 col-xs-12 col-sm-6 col-lg-8" >
-            <div class="container" >
-                <h2>{{profile.name}}</h2>
-                <h4>{{profile.age}} Años</h4>
-                
-            </div>
-            <hr>
-
-            <ul class="container details" >
-                
-                <li><p>trabaja en   <b> {{profile.work}}</b></p></li>
-                <li><p>estudio en   <b> {{profile.education}}</b></p></li>
-            </ul>
-
-            <hr>
-            <div class="col-sm-5 col-xs-6 tital " >ID del usuario:  {{profile.id}}</div>
-        
-        </div>
-    </div>
-
-    <hr>
-
-    <mat-tab-group>
-            <mat-tab label="Fotos">
-                <div class="row" style="padding-top:3em">
-                        <div *ngFor="let photo of profile.photos; let index = index" class="col-md-4 col-xs-12 col-sm-6 col-lg-4">
-                                <img [src]="getPhoto(index)" class="img-fluid" style="padding:1em; min-width: 100%"/>
+                        <div class="col-md-3 col-xs-11 col-sm-5 col-lg-3">
+                              <img alt="User Pic" [src]="getProfilePhoto" id="profile-image1" class="img-circle img-fluid rounded-circle" style="min-width: 100%">
                         </div>
-                </div>
-                
-            </mat-tab>
-            <mat-tab label="Descripción">
-                <div class="container" style="padding-top:3em">
-                        <div class="row">
 
-                                <div class="col-xs-12 col-sm-3 well" style="height: 25em" >
-                                        <mat-list>
-                                            <mat-list-item> <h3>Intereses</h3> </mat-list-item>
-                                            <!-- <mat-list-item *ngFor="let interest of profile.interests">{{interest}}</mat-list-item> -->
-                                                
-                                        </mat-list>
-                                </div>
-                                <div class="col-xs-9" style="height: 20em">
-                                        <h3 style="padding-left:2em">Descripción</h3>
-                                        <hr>
-                                        <h4 style="padding-left:3em">{{profile.description}}</h4>
-                                </div>
-                                
-                            </div>
-                </div>
-                
+                        <div class="col-md-7 col-xs-13 col-sm-7 col-lg-9">
+                              <div class="container">
+                                    <h3>{{profile.name}}</h3>
+                                    <h5>{{profile.age}} Años</h5>
+                              </div>
+                              <hr>
+                              <ul class="container details">
+                                    <font size="2">
+                                          <li>
+                                                trabaja en
+                                                <b> {{profile.work}}</b>
 
-            </mat-tab>
+                                          </li>
+                                          <li>
+                                                <p>estudio en
+                                                      <b> {{profile.education}}</b>
+                                                </p>
+                                          </li>
+                                    </font>
 
-            <mat-tab label="Denuncias recibidas">
-                
-                <mat-table #table [dataSource]="dataSource" matSort>
-                        <!--- Note that these columns can be defined in any order.
-                              The actual rendered columns are set as a property on the row definition" -->
-                    
-                        <!-- ID Column -->
-                        <ng-container matColumnDef="sendUName">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
-                          <mat-cell *matCellDef="let denounce"> 
-                                  
-                                  <button (click)="showProfile(denounce.sendUID)" mat-button color="primary">
-                                        {{denounce.sendUName}}
-                                  </button>
-                                               
-                                  
-                            </mat-cell>
-                        </ng-container>
-                    
-                        <!-- Progress Column -->
-                        <ng-container matColumnDef="recUName">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciado </mat-header-cell>
-                          <mat-cell *matCellDef="let denounce"> 
-                                  <button (click)="showProfile(denounce.recUID)" mat-button color="primary">
-                                        {{denounce.recUName}} 
-                                  </button>
-                            </mat-cell>
-                        </ng-container>
-                    
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="status">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
-                          <mat-cell *matCellDef="let row"> {{row.status}} </mat-cell>
-                        </ng-container>
-                    
-                      <!-- Color Column -->
-                      <ng-container matColumnDef="type">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo</mat-header-cell>
-                            <mat-cell *matCellDef="let row" > tipo </mat-cell>
-                      </ng-container>
-          
-                        <!-- Color Column -->
-                        <ng-container matColumnDef="message">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </mat-header-cell>
-                          <mat-cell *matCellDef="let row" > {{row.message}} </mat-cell>
-                        </ng-container>
-          
-                      
-                        <ng-container matColumnDef="accept">
-                                  <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
-                                  <mat-cell *matCellDef="let denounce" > 
-                                        <div *ngIf="denounce.status == 'pendiente'">
-                                                    <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-sm btn-success"> <i class="fa fa-check" aria-hidden="true"></i> Bloquear </button>
-                                        </div>
-                                  </mat-cell>
-                                </ng-container>
-          
-                                
-                        <ng-container matColumnDef="reject">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Rechazar </mat-header-cell>
-                            <mat-cell *matCellDef="let denounce" > 
-                                        <div *ngIf="denounce.status == 'pendiente'">
-                                              
-                                              <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-sm btn-danger"> <i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
-                                        </div>
-                                  </mat-cell>
-                        </ng-container>
-                    
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                      </mat-table>
+                              </ul>
 
-            </mat-tab>
+                        </div>
+                  </div>
+                  <hr>
+                  <mat-tab-group>
+                        <mat-tab label="Fotos">
+                              <div class="row" style="padding-top:1em; height: 24em">
+                                    <div *ngFor="let photo of profile.photos; let index = index" class="col-md-3 col-sm- col-lg-3">
+                                          <img [src]="getPhoto(index)" class="img-fluid" style=" min-width: 100%" />
+                                    </div>
+                              </div>
 
-            <mat-tab label="Denuncias realizadas">
+                        </mat-tab>
+                        <mat-tab label="Descripción">
+                              <div class="container" style="padding-top:1em ; padding-bottom: 1em ; height: 24em">
+                                    <div class="row">
 
-            </mat-tab>
-          </mat-tab-group>
+                                          <div class="col-xs-12 col-sm-3 well">
+                                                <mat-card style="height: 20em ; width: 100%">
+                                                      <h3>Intereses</h3>
+                                                      <hr>
+                                                      <mat-list>
+                                                            <!-- <mat-list-item>
+                                                      <h3>Intereses</h3>
+                                                </mat-list-item> -->
+                                                            <mat-list-item *ngFor="let interest of profile.interests">{{interest}}</mat-list-item>
+                                                      </mat-list>
+                                                </mat-card>
+                                          </div>
+                                          <div class="col-sm-9">
+                                                <mat-card style="height: 20em ; width: 100% !important">
+                                                      <h3>Descripción</h3>
+                                                      <hr>
+                                                      <h4>{{profile.description}}</h4>
 
+                                                </mat-card>
+                                          </div>
+
+                                    </div>
+                              </div>
+
+
+                        </mat-tab>
+
+                        <mat-tab label="Denuncias recibidas ({{databaseReceived.data.length}})">
+                              <div class="container-fluid" style=" padding-top: 1em;  height: 24em">
+                                   <div class="example-container mat-elevation-z8">
+                                    <!-- HEADER  RECIBIDAS -->
+                                    <mat-table #table [dataSource]="dataSourceReceived" matSort class="text-center">
+
+                                          <!-- Denunciante -->
+                                          <ng-container matColumnDef="sendUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Denunciado -->
+                                          <ng-container matColumnDef="recUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciado </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Estado -->
+                                          <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+                                                <mat-cell *matCellDef="let row">  </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Tipo -->
+                                          <ng-container matColumnDef="type">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo</mat-header-cell>
+                                                <mat-cell *matCellDef="let row">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton de aceptar -->
+                                          <ng-container matColumnDef="accept">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton Rechazar -->
+                                          <ng-container matColumnDef="reject">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Rechazar </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+
+                                          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                          <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
+                                    </mat-table>
+
+                                    <mat-table #table [dataSource]="dataSourceReceived" matSort class="text-center">
+
+                                          <!-- Denunciante -->
+                                          <ng-container matColumnDef="sendUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      <button (click)="showProfile(denounce.sendUID)" mat-button color="primary">
+                                                            {{denounce.sendUName}}
+                                                      </button>
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Denunciado -->
+                                          <ng-container matColumnDef="recUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciado </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      <button (click)="showProfile(denounce.recUID)" mat-button color="primary">
+                                                            {{denounce.recUName}}
+                                                      </button>
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Estado -->
+                                          <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+                                                <mat-cell *matCellDef="let row"> {{row.status}} </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Tipo -->
+                                          <ng-container matColumnDef="type">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo</mat-header-cell>
+                                                <mat-cell *matCellDef="let row">
+                                                      <span *ngIf="row.type == 'otro'" matTooltip="{{row.message}}">{{row.type}} </span>
+                                                      <div *ngIf="row.type != 'otro'">{{row.type}} </div>
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton de aceptar -->
+                                          <ng-container matColumnDef="accept">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      <div *ngIf="denounce.status == 'pendiente'">
+                                                            <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-sm btn-success">
+                                                                  <i class="fa fa-check" aria-hidden="true"></i> Bloquear </button>
+                                                      </div>
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton Rechazar -->
+                                          <ng-container matColumnDef="reject">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Rechazar </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      <div *ngIf="denounce.status == 'pendiente'">
+                                                            <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-sm btn-danger">
+                                                                  <i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
+                                                      </div>
+                                                </mat-cell>
+                                          </ng-container>
+
+
+                                          <mat-header-row *matHeaderRowDef="displayedColumns" style="position: fixed;
+                                          /* float: top; */
+                                          visibility: hidden;
+                                          z-index: 2;"></mat-header-row>
+                                          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    </mat-table>
+                                   </div>
+                              </div>
+                        </mat-tab>
+
+
+                        <mat-tab label="Denuncias realizadas ({{databaseSent.data.length}})">
+
+                              <div class="container-fluid" style=" padding-top: 1em; height: 24em">
+                              <div class="example-container mat-elevation-z8">
+
+                                    <!-- HEADER -->
+                                    <mat-table #table [dataSource]="dataSourceSent" matSort class="text-center">
+                                          <!-- Denunciante -->
+                                          <ng-container matColumnDef="sendUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Denunciado -->
+                                          <ng-container matColumnDef="recUName">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciado </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Estado -->
+                                          <ng-container matColumnDef="status">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+                                                <mat-cell *matCellDef="let row"> </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Tipo -->
+                                          <ng-container matColumnDef="type">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo</mat-header-cell>
+                                                <mat-cell *matCellDef="let row">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton de aceptar -->
+                                          <ng-container matColumnDef="accept">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                     
+                                                </mat-cell>
+                                          </ng-container>
+
+                                          <!-- Boton Rechazar -->
+                                          <ng-container matColumnDef="reject">
+                                                <mat-header-cell *matHeaderCellDef mat-sort-header> Rechazar </mat-header-cell>
+                                                <mat-cell *matCellDef="let denounce">
+                                                      
+                                                </mat-cell>
+                                          </ng-container>
+
+
+                                          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                          <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
+                                    </mat-table>
+
+                                    <mat-table #table [dataSource]="dataSourceSent" matSort class="text-center">
+                                                <!-- Denunciante -->
+                                                <ng-container matColumnDef="sendUName">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciante </mat-header-cell>
+                                                      <mat-cell *matCellDef="let denounce">
+                                                            <button (click)="showProfile(denounce.sendUID)" mat-button color="primary">
+                                                                  {{denounce.sendUName}}
+                                                            </button>
+                                                      </mat-cell>
+                                                </ng-container>
+      
+                                                <!-- Denunciado -->
+                                                <ng-container matColumnDef="recUName">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Denunciado </mat-header-cell>
+                                                      <mat-cell *matCellDef="let denounce">
+                                                            <button (click)="showProfile(denounce.recUID)" mat-button color="primary">
+                                                                  {{denounce.recUName}}
+                                                            </button>
+                                                      </mat-cell>
+                                                </ng-container>
+      
+                                                <!-- Estado -->
+                                                <ng-container matColumnDef="status">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
+                                                      <mat-cell *matCellDef="let row"> {{row.status}} </mat-cell>
+                                                </ng-container>
+      
+                                                <!-- Tipo -->
+                                                <ng-container matColumnDef="type">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo</mat-header-cell>
+                                                      <mat-cell *matCellDef="let row">
+                                                            <span *ngIf="row.type == 'otro'" matTooltip="{{row.message}}">{{row.type}} </span>
+                                                            <div *ngIf="row.type != 'otro'">{{row.type}} </div>
+                                                      </mat-cell>
+                                                </ng-container>
+      
+                                                <!-- Boton de aceptar -->
+                                                <ng-container matColumnDef="accept">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Bloquear </mat-header-cell>
+                                                      <mat-cell *matCellDef="let denounce">
+                                                            <div *ngIf="denounce.status == 'pendiente'">
+                                                                  <button (click)='acceptDenounce(denounce)' type="button" class="btn btn-sm btn-success">
+                                                                        <i class="fa fa-check" aria-hidden="true"></i> Bloquear </button>
+                                                            </div>
+                                                      </mat-cell>
+                                                </ng-container>
+      
+                                                <!-- Boton Rechazar -->
+                                                <ng-container matColumnDef="reject">
+                                                      <mat-header-cell *matHeaderCellDef mat-sort-header> Rechazar </mat-header-cell>
+                                                      <mat-cell *matCellDef="let denounce">
+                                                            <div *ngIf="denounce.status == 'pendiente'">
+                                                                  <button (click)='rejectDenounce(denounce)' type="button" class="btn btn-sm btn-danger">
+                                                                        <i class="fa fa-times" aria-hidden="true"></i> Rechazar</button>
+                                                            </div>
+                                                      </mat-cell>
+                                                </ng-container>
+      
+                                                <mat-header-row *matHeaderRowDef="displayedColumns" style="position: fixed;
+                                                /* float: top; */
+                                                visibility: hidden;
+                                                z-index: 2;"></mat-header-row>
+                                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                          </mat-table>
+                                          </div>
+                              </div>
+
+
+                        </mat-tab>
+                  </mat-tab-group>
+
+            </div>
+
+
+
+
+      </div>
 </div>
-
-
-
-    

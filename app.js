@@ -34,7 +34,10 @@ database.connect()
 app.use(cors());
 
 //  Body parser middleware
-app.use(bodyParser.json());
+// app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
 
 //  Routes
 router.get('/ping', (req, res) => statusController.ping(req, res));

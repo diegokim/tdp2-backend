@@ -1,0 +1,148 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
+    <ul class="nav flex-column">
+      <li class="nav-item ">
+        <a class="nav-link non-active" routerLink="/analytics">General</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/analytics/denounces" routerLinkActive="active">Reporte de denuncias</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/analytics/activeusers" routerLinkActive="active">Reporte de usuarios activos</a>
+      </li>
+
+    </ul>
+  </mat-sidenav>
+  <div class="container" style=" padding: 5em 3em 2em 3em !important ;">
+
+
+    <h2>
+      <font color="grey"> Reporte de Usuarios Activos</font>
+    </h2>
+
+    <hr>
+    <div class="container-fluid" style="width: 100%">
+      <div class="row">
+        <div [ngClass]="{'col-sm-6': !expanded, 'col-sm-12': expanded}" style=" margin-bottom: 2em">
+          <mat-card style="padding-bottom:7px; height: 519px">
+
+
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-7">
+                  <h4>
+                    <font color="grey">Usuarios Activos </font>
+                  </h4>
+                </div>
+                <div class="col-sm-5" align="right">
+                  <button mat-button mat-small color="primary" *ngIf="!expanded" (click)="expand()">Expandir >> </button>
+                  <button mat-button color="primary" *ngIf="expanded" (click)="contract()">
+                    << Contraer </button>
+
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div style="display: block;">
+              <canvas baseChart height="225" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [legend]="lineChartLegend"
+                [chartType]="lineChartType" *ngIf="lineChartLabels.length > 0 && !expanded"></canvas>
+              <canvas baseChart height="100" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [legend]="lineChartLegend"
+                [chartType]="lineChartType" *ngIf="lineChartLabels.length > 0 && expanded"></canvas>
+            </div>
+
+            <hr>
+
+            <form>
+              <mat-form-field style="width: 25%">
+                <input matInput [matDatepicker]="picker" [min]="minDate" [max]="endDate" placeholder="Desde" [value]="startDate" (dateInput)="setStartDate('input', $event)"
+                  (dateChange)="setStartDate('change', $event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field style="width: 25%">
+                <input matInput [matDatepicker]="otherPicker" placeholder="Hasta" (dateInput)="setEndDate('input', $event)" [value]="endDate"
+                  (dateChange)="setEndDate('change', $event)" [min]="startDate" [max]="today">
+                <mat-datepicker-toggle matSuffix [for]="otherPicker"></mat-datepicker-toggle>
+                <mat-datepicker #otherPicker></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-button style="width: 20%" (click)="updateData()" color="primary">Actualizar</button>
+              <button mat-button style="width: 20%" (click)="resetData()" color="primary">Limpiar</button>
+            </form>
+
+          </mat-card>
+
+        </div>
+        <div [ngClass]="{'col-sm-6': !expanded, 'col-sm-12': expanded}" style=" margin-bottom: 2em">
+
+          <mat-card style="width: 100% ;padding: 0; height: 519px" [style.height.px]="519 ">
+
+            <div class="example-container">
+              <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="60 ">
+
+                <!-- Estado -->
+                <ng-container matColumnDef="month-year">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Año/Mes </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.label}}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Tipo -->
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Totales </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.total}}
+                  </mat-cell>
+                </ng-container>
+                <!-- Estado -->
+                <ng-container matColumnDef="accountType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Premium </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.premium}}
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
+              </mat-table>
+
+
+
+              <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="459">
+                <!-- Estado -->
+                <ng-container matColumnDef="month-year">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Mes </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.label}}
+                  </mat-cell>
+                </ng-container>
+                <!-- Tipo -->
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Totales </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.total}}
+                  </mat-cell>
+                </ng-container>
+                <!-- Estado -->
+                <ng-container matColumnDef="accountType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Premium </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{row.premium}}
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns" style="position: fixed;
+                /* float: top; */
+                visibility: hidden;
+                z-index: 2;"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-sidenav-container>

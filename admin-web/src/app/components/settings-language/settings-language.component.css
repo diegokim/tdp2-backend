@@ -1,3 +1,23 @@
+a.active {
+    color: gray;
+    background-color: #ECEFF1;
+    border-left: 4px solid #B0BEC5;
+    margin-left: -2px;
+  }
+
+a.non-active {
+    color: gray
+}
+a.non-active:hover {
+    background-color: #B0BEC5;
+}
+
+/* .mat-card-header-text {
+    width: 50%
+} */
+
+
+
 /* Structure */
 .example-container {
     display: flex;
@@ -20,7 +40,6 @@
   
   .mat-header-cell .mat-sort-header-sorted {
     color: black;
-    
   }
 /* Structure */
 .example-container {
@@ -29,12 +48,15 @@
   min-width: 300px;
 }
 
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
 .mat-form-field {
   font-size: 14px;
   
 }
-
-
 
 .mat-table {
   overflow: auto;
@@ -42,9 +64,21 @@
 }
 
 
-::ng-deep .mat-sort-header-container {
-  position: sticky; top: 0;
-  display:flex;
-  justify-content:center;
+.scroll-container {
+  overflow-y: scroll;
+  max-height: 450px;
 }
 
+.btn-link {
+  color: gray
+}
+.btn-link:hover {
+  color: black
+}
+
+.flex-center-vertically {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 400px;
+}

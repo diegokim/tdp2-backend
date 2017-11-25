@@ -8,3 +8,7 @@ a.active {
 a.non-active {
     color: gray
 }
+
+a.non-active:hover {
+    background-color: #B0BEC5;
+}

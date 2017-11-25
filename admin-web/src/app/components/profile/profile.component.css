@@ -3,3 +3,31 @@
     color: #000;
 }
 
+
+
+::ng-deep .mat-sort-header-container {
+    display:flex;
+    justify-content:center;
+  }
+
+
+  .mat-card {
+    overflow: auto;
+    max-height: 20em;
+  }
+
+  .mat-tab-group {
+    /* overflow: auto; */
+    height: 28em;
+  }
+
+  .example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+
+  .mat-table {
+    overflow: auto;
+    max-height: 300px;
+  }

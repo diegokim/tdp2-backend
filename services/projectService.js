@@ -29,13 +29,18 @@ module.exports.getAdvertising = () => {
 
 module.exports.createAdvertising = (body) => {
   const id = uuid.v1();
+  const startDate = new Date(body.startDate);
+  const endDate = new Date(body.endDate);
+  const start = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getUTCDate()}`;
+  const end = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getUTCDate()}`;
+
   const newAdvert = new ProjectAdvertisingDB({
     id,
     image: body.image || '',
     link: body.link || '',
     name: body.name,
-    startDate: body.startDate,
-    endDate: body.endDate
+    startDate: start,
+    endDate: end
   });
 
   return ProjectAdvertisingDB.create(newAdvert);

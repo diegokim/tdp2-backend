@@ -10,17 +10,22 @@ import { HttpHeaders } from '@angular/common/http';
 import { SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   providers: [DenouncesService]
 })
+
 export class ProfileComponent implements OnInit {
-  profile: Profile
-  displayedColumns = ['sendUName', 'recUName', 'type', 'message', 'status', 'accept', 'reject'];
-  database = new DenouncesDatabase([]);
-  dataSource: DenouncesDataSource | null;
+  profile: Profile;
+  displayedColumns = ['sendUName', 'recUName', 'type', 'status', 'accept', 'reject'];
+  denounces: Denounce[];
+  databaseSent = new DenouncesDatabase([]);
+  dataSourceSent: DenouncesDataSource | null;
+  databaseReceived = new DenouncesDatabase([]);
+  dataSourceReceived: DenouncesDataSource | null;
   
   @ViewChild(MatSort) sort: MatSort;
   
@@ -29,19 +34,21 @@ export class ProfileComponent implements OnInit {
               private _sanitizer: DomSanitizer,
               private denouncesService: DenouncesService,
               private router: Router) {
-
-    
   }
   
-
-
   updateDenounces() {
     this.denouncesService.getDenounces()
     .then( (denounces:Denounce[]) => {
-      denounces.filter( (denounce:Denounce) => {
-        return denounce.recUID == this.profile.id || denounce.sendUID == this.profile.id
+      let thisUserDenouncesSent = denounces.filter( (denounce:Denounce) => {
+        return denounce.sendUID == this.profile.id
       })
-      this.database.updateDenounces(denounces);
+      let thisUserDenouncesReceived = denounces.filter( (denounce:Denounce) => {
+        return denounce.recUID == this.profile.id
+      })
+      this.databaseSent.updateDenounces(thisUserDenouncesSent);
+      this.dataSourceSent = new DenouncesDataSource(this.databaseSent, this.sort);
+      this.databaseReceived.updateDenounces(thisUserDenouncesReceived);
+      this.dataSourceReceived = new DenouncesDataSource(this.databaseReceived, this.sort);
     })
     .catch(console.log)
   }
@@ -81,12 +88,10 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource = new DenouncesDataSource(this.database, this.sort);
-
     let id = this.route.snapshot.params['id']
     let url = 'http://localhost:5000/users/' + id + '/profile';
     let token = localStorage.getItem('sessionToken')
-    let headers = new HttpHeaders({'Content-type': 'aplication/json','Authorization': token})
+    let headers = new HttpHeaders({'Content-type': 'application/json','Authorization': token})
     this.http.get(url,{headers}).toPromise()
     .then((profile: Profile) => {
       this.profile = profile

@@ -1,3 +1,19 @@
+a.active {
+    color: gray;
+    background-color: #ECEFF1;
+    border-left: 4px solid #B0BEC5;
+    margin-left: -2px;
+  }
+
+a.non-active {
+    color: gray
+}
+
+a.non-active:hover {
+    background-color: #B0BEC5;
+}
+
+
 /* Structure */
 .example-container {
     display: flex;
@@ -47,4 +63,3 @@
   display:flex;
   justify-content:center;
 }
-

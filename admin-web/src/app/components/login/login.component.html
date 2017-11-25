@@ -1,18 +1,16 @@
 <div class="container-fluid" style="height:50em; background-image:url(assets/images/login_background_medium.png); ">
-    
-    <div class="login-page">
-            <div class="form">
-              <form class="login-form">
-                <h1>Link Up</h1>
-                <h3>Administración Web </h3>
-                <hr>
-                <flash-messages></flash-messages>
-                <input type="text" [(ngModel)]="user" name="user" placeholder="username"/>
-                <input type="password" [(ngModel)]="password" name="password" placeholder="password"/>
-                <button (click)="loginAction()"  class="btn btn-block btn-lg btn-primary">login</button>
-              </form>
-            </div>
-          </div>
+
+  <div class="login-page">
+    <div class="form">
+      <form class="login-form">
+        <h1>Link Up</h1>
+        <h3>Administración Web </h3>
+        <hr>
+        <flash-messages></flash-messages>
+        <input type="text" [(ngModel)]="user" name="user" placeholder="Usuario" />
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" />
+        <button (click)="loginAction()" class="btn btn-block btn-lg btn-primary">Ingresar</button>
+      </form>
+    </div>
+  </div>
 </div>
-
-

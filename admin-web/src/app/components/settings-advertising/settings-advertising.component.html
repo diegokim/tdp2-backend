@@ -1,0 +1,128 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
+    <ul class="nav flex-column">
+      <li class="nav-item ">
+        <a class="nav-link non-active" routerLink="/settings">General</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" routerLink="/settings/advertising" routerLinkActive="active">Publicidad</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/settings/language" routerLinkActive="active">Lenguaje Abusivo</a>
+      </li>
+
+    </ul>
+  </mat-sidenav>
+  <div class="container" style=" padding: 5em 3em 2em 3em !important ;">
+
+
+    <div class="row">
+      <div class="col-sm-9">
+        <h3>
+          <font color="grey"> Publicidad</font>
+        </h3>
+      </div>
+      <div class="col-sm-3" align="right">
+
+        <button mat-raised-button routerLink="/settings/advertising/new" color="primary">Nueva Publicidad</button>
+      </div>
+
+
+    </div>
+    <hr>
+    <div class="example-container mat-elevation-z8">
+
+      <mat-table #table [dataSource]="dataSource" matSort class="text-center">
+        <!-- Estado -->
+        <ng-container matColumnDef="image">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Imagen </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            <img [src]="getImage(advertising.image)" width="150" height="53">
+          </mat-cell>
+        </ng-container>
+        <!-- Denunciante -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="display: fixed;"> Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+          </mat-cell>
+        </ng-container>
+
+        <!-- Denunciado -->
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+          </mat-cell>
+        </ng-container>
+
+        <!-- Estado -->
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de fin </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">  </mat-cell>
+        </ng-container>
+
+        <!-- Estado -->
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Eliminar </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
+      </mat-table>
+
+
+
+      <mat-table #table [dataSource]="dataSource" matSort class="text-center">
+        <!-- Estado -->
+        <ng-container matColumnDef="image">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Imagen </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            <img [src]="getImage(advertising.image)" width="150" height="53">
+          </mat-cell>
+        </ng-container>
+        <!-- Denunciante -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header style="display: fixed;"> Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            {{advertising.name}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Denunciado -->
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            {{advertising.startDate}}
+          </mat-cell>
+        </ng-container>
+
+        <!-- Estado -->
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de fin </mat-header-cell>
+          <mat-cell *matCellDef="let advertising"> {{advertising.endDate}} </mat-cell>
+        </ng-container>
+
+
+
+        <!-- Estado -->
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Eliminar </mat-header-cell>
+          <mat-cell *matCellDef="let advertising">
+            <button mat-button color="warn" (click)="deleteAdvertising(advertising.id)">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns" style="position: fixed;
+        /* float: top; */
+        visibility: hidden;
+        z-index: 2;"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+
+  </div>
+</mat-sidenav-container>

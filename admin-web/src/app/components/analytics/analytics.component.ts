@@ -8,46 +8,93 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnalyticsComponent implements OnInit {
 
-  activeUsers: Array<ActiveUsersRegistry>;
-  denounces: {
-    comp: DenouncesRegistry;
-    otro: DenouncesRegistry;
-    spam: DenouncesRegistry;
-  }
+  data: ServerResponse;
+
+  // lineChart
+  public lineChartData:Array<any> = [
+    {data: [], label: ''},
+    {data: [], label: ''}
+  ];
+
+  public defaultPeriod: string;
+
+  // Pie  
+  public pieChartLabels:string[] = [];
+  public pieChartData:number[] = [];
+  public pieChartType:string = 'pie';
+  public pieChartOptions = {  }
+  
+  public lineChartLabels:Array<any> = [];
+  public lineChartOptions:any = {
+    responsive: true
+  };  
+  public lineChartLegend:boolean = true;
+  public lineChartType:string = 'line';
+
+  
 
   analyticsUrl: string = 'http://localhost:5000/project/reports'
 
   constructor(private http: HttpClient) { }
 
+
   getData() {
     let url = this.analyticsUrl
+    let today = new Date(Date.now())
+    let oneMonthAgo = new Date(Date.now())
+    oneMonthAgo.setMonth(today.getMonth() - 1 )
+    
     let body = {
-      startDate: '15/9/16',
-      endDate: '15/9/17'
+      startDate: oneMonthAgo.toDateString(),
+      endDate:  today.toDateString()
     }
     let token = localStorage.getItem('sessionToken')
-    let headers = new HttpHeaders({'Content-type': 'aplication/json','Authorization': token})
+    let headers = new HttpHeaders({'Content-type': 'application/json','Authorization': token})
     return this.http.post(url, body, {headers}).toPromise()
   }
 
   ngOnInit() {
+
+    let today: Date = new Date(Date.now())
+    let oneMonthAgo = new Date(Date.now())
+    oneMonthAgo.setMonth(today.getMonth() - 1 )
+    console.log(today.getMonth())
+    this.defaultPeriod =  (oneMonthAgo.getMonth() + 1) + '/' + oneMonthAgo.getFullYear() + ' - ' + (today.getMonth() + 1) + '/' + today.getFullYear()
+    console.log(this.defaultPeriod)
+
     this.getData()
     .then( (res:ServerResponse) => {
-      this.activeUsers = res.activeUsers.sampling
-      this.denounces = res.denounces  
-      console.log(res)
-      //this.pieChartData = [this.denounces.comp.count, this.denounces.otro.count, this.denounces.spam.count]
+      this.data = res;      
+      this.pieChartData = this.data.denounces.data;
+      this.pieChartLabels = this.data.denounces.labels;
+      this.lineChartLabels = this.data.activeUsers.labels;
+      this.lineChartData = this.data.activeUsers.data;
+
+      
+
+      this.pieChartOptions = {
+        tooltips: {
+            enabled: true,
+            mode: 'single',
+            callbacks: {
+                footer: function(tooltipItems: TooltipItem, data: TooltipData) { 
+                  let index = tooltipItems[0].index
+                  let dataset = data.datasets[0].data
+                  var blockeds = res.denounces.blockeds
+                  var rejecteds = res.denounces.rejecteds
+                  if (blockeds != null) {
+                    let pendings = dataset[index] - blockeds[index] - rejecteds[index];
+                    return 'Bloqueados: ' + blockeds[index] + " Rechazadas: " + rejecteds[index] + " Pendientes: " + pendings;
+                  }
+                  return '';
+              }
+            }
+        }   
     }
-
+    }
     )
-
   }
 
-  // Pie
-  public pieChartLabels:string[] = ['Comportamiento Abusivo', 'Otro', 'Spam'];
-  public pieChartData:number[] = [300, 500, 100];
-  public pieChartType:string = 'pie';
- 
   // events
   public chartClicked(e:any):void {
     let index = e.active[0]._index
@@ -55,22 +102,9 @@ export class AnalyticsComponent implements OnInit {
   }
  
   public chartHovered(e:any):void {
+    let index = e.active[0]._index
     console.log(e);
   }
-
-
-// lineChart
-public lineChartData:Array<any> = [
-  {data: [65, 59, 80, 81, 56, 55, 40], label: 'Usuarios Totales'},
-  {data: [28, 48, 40, 19, 40, 27, 20], label: 'Usuarios Premium'}
-];
-public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-public lineChartOptions:any = {
-  responsive: true
-};  
-public lineChartLegend:boolean = true;
-public lineChartType:string = 'line';
-
 
 // events
 public lineChartClicked(e:any):void {
@@ -82,34 +116,46 @@ public lineChartHovered(e:any):void {
 }
 
 
-
-
-
-
-
-
-
-
 }
 
-class ServerResponse {
+export class ServerResponse {
   activeUsers: {
-    sampling: Array<ActiveUsersRegistry>
+    labels: Array<string>;
+    data: Array<Line>;
+    
+    table: Array<{
+      premium: string;
+      label: string;
+      total: number;
+      
+    }>
   };
   denounces: {
-    comp: DenouncesRegistry;
-    otro: DenouncesRegistry;
-    spam: DenouncesRegistry;
+    labels: string[];
+    data: number[];
+    blockeds: Array<number>;
+    rejecteds: Array<number>;
+    table: Array<{
+      label: string
+      spam: number
+      otro: number
+      'mensaje inapropiado': number;
+      'comportamiento abusivo': number
+    }>
   }
 }
 
-class ActiveUsersRegistry {
-  x: number;
-  y: number;
+class Line {
+  data: Array<number>;
+  label: string;
 }
 
-class DenouncesRegistry {
-  count: number;
-  percentaje: number;
-  blocked: number;
+export class TooltipItem {
+  index: number;
+}
+
+export class TooltipData {
+  datasets: Array<{
+    data: Array<any>
+  }>
 }

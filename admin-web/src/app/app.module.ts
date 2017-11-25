@@ -12,9 +12,10 @@ import { DenouncesComponent } from './components/denounces/denounces.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ProfileComponent } from './components/profile/profile.component';
 
-
+import { ImageUploadModule } from "angular2-image-upload";
+import { FancyImageUploaderModule } from 'ng2-fancy-image-uploader';
 import { FlashMessagesModule} from 'angular2-flash-messages'
-import { MatListModule, MatCardModule } from '@angular/material';
+import { MatListModule, MatCardModule, MatSelectModule, MatGridListModule, MatSnackBarModule, MatDatepickerModule, MatNativeDateModule, MatTooltipModule } from '@angular/material';
 import {MatTabsModule, MatSidenavModule, MatToolbarModule, MatTableModule, MatSortModule, MatButtonModule, MatInputModule} from '@angular/material';
 import { MainComponent } from './components/main/main.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -24,6 +25,12 @@ import { DenouncestableComponent } from './components/denouncestable/denouncesta
 import { SettingsComponent } from './components/settings/settings.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { ChartsModule } from 'ng2-charts';
+import { SettingsAdvertisingComponent } from './components/settings-advertising/settings-advertising.component';
+import { SettingsLanguageComponent } from './components/settings-language/settings-language.component';
+import { SettingsAddAdvertisingComponent } from './components/settings-add-advertising/settings-add-advertising.component';
+import { AnalyticsDenouncesComponent } from './components/analytics-denounces/analytics-denounces.component';
+import { AnalyticsActiveUsersComponent } from './components/analytics-active-users/analytics-active-users.component';
+import { Ng2FileSizeModule } from 'ng2-file-size';
 
 const appRoutes: Routes = [
   {
@@ -49,6 +56,26 @@ const appRoutes: Routes = [
   {
     path: 'analytics',
     component: AnalyticsComponent
+  },
+  {
+    path: 'settings/advertising',    
+    component: SettingsAdvertisingComponent
+  },
+  {
+    path: 'settings/language',
+    component: SettingsLanguageComponent
+  },
+  {
+    path: 'settings/advertising/new',
+    component: SettingsAddAdvertisingComponent
+  },
+  {
+    path: 'analytics/denounces',
+    component: AnalyticsDenouncesComponent
+  },
+  {
+    path: 'analytics/activeusers',
+    component: AnalyticsActiveUsersComponent
   }
 ]
 
@@ -65,7 +92,12 @@ const appRoutes: Routes = [
     SidebarComponent,
     DenouncestableComponent,
     SettingsComponent,
-    AnalyticsComponent
+    AnalyticsComponent,
+    SettingsAdvertisingComponent,
+    SettingsLanguageComponent,
+    SettingsAddAdvertisingComponent,
+    AnalyticsDenouncesComponent,
+    AnalyticsActiveUsersComponent
 
     
   ],
@@ -86,7 +118,17 @@ const appRoutes: Routes = [
     MatSortModule,
     MatButtonModule,
     MatInputModule,
-    ChartsModule
+    ChartsModule,
+    MatSelectModule,
+    MatGridListModule,
+    MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FancyImageUploaderModule,
+    ImageUploadModule.forRoot(),
+    MatTooltipModule,
+    Ng2FileSizeModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

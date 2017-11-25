@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   loginAction() {
     let user = this.user
     let password = this.password
-    let headers = new HttpHeaders({'Content-type': 'aplication/json'})
+    let headers = new HttpHeaders({'Content-type': 'application/json'})
 
     if (user && password) {
       this.http.post(this.loginUrl,{user, password})

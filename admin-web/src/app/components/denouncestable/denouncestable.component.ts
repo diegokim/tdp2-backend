@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Denounce } from './../denounces/denounces.component';
 import { DenouncesService } from './../../services/denounces.service';
 import { Router } from '@angular/router';
@@ -21,9 +22,45 @@ import 'rxjs/add/operator/map';
 
 
 export class DenouncestableComponent {
-  displayedColumns = ['sendUName', 'recUName', 'type', 'message', 'status', 'accept', 'reject'];
+  displayedColumns = ['sendUName', 'recUName', 'type', 'status', 'accept', 'reject'];
+  denounces: Denounce[];
   database = new DenouncesDatabase([]);
   dataSource: DenouncesDataSource | null;
+
+  selected = 'receiver';
+
+  filterValue: string;
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    var denouncesFiltered = this.denounces.filter( element => {
+      
+      if ( filterValue.length != 0 ) {
+        switch(this.selected) {
+          case 'receiver':
+              if (element.recUName.toLowerCase().includes(filterValue) ) {
+                return true;
+              }
+              return false;
+            case 'sender':
+              if (element.sendUName.toLowerCase().includes(filterValue) ) {
+                return true;
+              }
+              return false;
+            case 'type':
+            if (element.type.toLowerCase().includes(filterValue) ) {
+              return true;
+            }
+            return false;
+          default:
+              return true;
+        }
+      }
+      return true
+    });
+    this.database.updateDenounces(denouncesFiltered);
+  }
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -35,6 +72,7 @@ export class DenouncestableComponent {
   updateDenounces() {
     this.denouncesService.getDenounces()
     .then( (denounces:Denounce[]) => {
+      this.denounces = denounces;
       this.database.updateDenounces(denounces);
     })
     .catch(console.log)
@@ -88,18 +126,15 @@ export class DenouncesDatabase {
   }
 
   updateDenounces(newDenounces) {
+    
     this.dataChange.next(newDenounces);
   }
 
 }
-/**
- * Data source to provide what data should be rendered in the table. Note that the data source
- * can retrieve its data in any way. In this case, the data source is provided a reference
- * to a common data base, ExampleDatabase. It is not the data source's responsibility to manage
- * the underlying data. Instead, it only needs to take the data and send the table exactly what
- * should be rendered.
- */
+
+
 export class DenouncesDataSource extends DataSource<any> {
+
   constructor(private _exampleDatabase: DenouncesDatabase, private _sort: MatSort) {
     super();
   }
@@ -128,9 +163,10 @@ export class DenouncesDataSource extends DataSource<any> {
       let propertyB: number|string = '';
 
       switch (this._sort.active) {
+        case 'userName' : [propertyA, propertyB] = [a.userName, b.userName]; break;
         case 'sendUName': [propertyA, propertyB] = [a.sendUID, b.sendUID]; break;
         case 'recUName': [propertyA, propertyB] = [a.recUName, b.recUName]; break;
-        case 'message': [propertyA, propertyB] = [a.message, b.message]; break;
+        case 'type': [propertyA, propertyB] = [a.type, b.type]; break;
         case 'status': [propertyA, propertyB] = [a.status, b.status]; break;
       }
 

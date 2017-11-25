@@ -1,0 +1,204 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav mode="side" opened="true" style="padding: 5em 0em 0em 0em ;width:20%; background: #CFD8DC">
+    <ul class="nav flex-column">
+      <li class="nav-item ">
+        <a class="nav-link non-active" routerLink="/analytics">General</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/analytics/denounces" routerLinkActive="active">Reporte de denuncias</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link non-active" routerLink="/analytics/activeusers" routerLinkActive="active">Reporte de usuarios activos</a>
+      </li>
+
+    </ul>
+  </mat-sidenav>
+  <div class="container" style=" padding: 5em 3em 2em 3em !important ;">
+
+    <h2>
+      <font color="grey"> Reporte de Denuncias</font>
+    </h2>
+
+
+    <hr>
+
+    <div class="container-fluid" style="width: 100%">
+      <div class="row">
+        <div class="col-md-6" style=" margin-bottom: 2em">
+          <mat-card style="padding-bottom:7px">
+
+
+            <h4>
+              <font color="grey">Denuncias </font>
+            </h4>
+
+            <hr>
+            <div style="display: block">
+
+              <!-- PRIMARY CHART -->
+              <canvas baseChart height="230" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)" [options]="pieChartOptions" *ngIf="pieChartData.length > 0"></canvas>
+
+            </div>
+            <hr>
+            <form>
+              <mat-form-field style="width: 25%">
+                <input matInput [matDatepicker]="picker" [min]="minDate" [max]="endDate" placeholder="Desde" [value]="startDate" (dateInput)="setStartDate('input', $event)"
+                  (dateChange)="setStartDate('change', $event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field style="width: 25%">
+                <input matInput [matDatepicker]="otherPicker" placeholder="Hasta" (dateInput)="setEndDate('input', $event)" [value]="endDate"
+                  (dateChange)="setEndDate('change', $event)" [min]="startDate" [max]="today">
+                <mat-datepicker-toggle matSuffix [for]="otherPicker"></mat-datepicker-toggle>
+                <mat-datepicker #otherPicker></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-button style="width: 20%" (click)="updateData()" color="primary">Actualizar</button>
+              <button mat-button style="width: 20%" (click)="resetData()" color="primary">Limpiar</button>
+            </form>
+          </mat-card>
+
+        </div>
+        <div class="col-md-6">
+          <div class="container" style=" width: 100%">
+            <div class="row" style="margin-bottom: 1em; height:235px; width: 100%" *ngIf="mustShowDenounceTypeDetails">
+              <mat-card style="width: 100%">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-11">
+
+                      <font size="2" center>{{perTypePieChartTitle}}</font>
+                    </div>
+                    <div class="col-sm-1">
+                      <div align="right">
+
+
+                        <i class="fa fa-times" (click)="hidePerTypeChart()" aria-hidden="true"></i>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <hr>
+
+
+                <div style="display: block">
+
+                  <!-- PER TYPE CHART! -->
+                  <canvas baseChart height="35px" width="100%" [data]="perTypePieChartData" [labels]="perTypePieChartLabels" [chartType]="pieChartType"
+                    (chartHover)="chartHovered($event)" [options]="perTypePieChartOptions" *ngIf="perTypePieChartData.length > 0"></canvas>
+                </div>
+
+              </mat-card>
+            </div>
+            <div class="row" style="margin-bottom: 1em; width: 100%" [style.height.px]="mustShowDenounceTypeDetails ? 268 : 519 ">
+              <mat-card style="width: 100% ;padding: 0; height: 100%">
+
+                <div class="example-container">
+
+                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 60 : 60 ">
+
+                    <!-- Denunciante -->
+                    <ng-container matColumnDef="month">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="display: fixed;"> Año/Mes </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Tipo -->
+                    <ng-container matColumnDef="abusive">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Comportamiento abusivo </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Estado -->
+                    <ng-container matColumnDef="spam">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Spam </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="inapropiate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Mensaje Inapropiado </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="other">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Otro </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
+                  </mat-table>
+
+                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 208 : 459 ">
+
+                    <!-- Denunciante -->
+                    <ng-container matColumnDef="month">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="display: fixed;"> Año/Mes </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        {{row.label}}
+
+
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Tipo -->
+                    <ng-container matColumnDef="abusive">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Comportamiento abusivo </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        {{row['comportamiento abusivo']}}
+                      </mat-cell>
+                    </ng-container>
+
+                    <!-- Estado -->
+                    <ng-container matColumnDef="spam">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Spam </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        {{row.spam}}
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="inapropiate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Mensaje Inapropiado </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        {{ row['mensaje inapropiado'] }}
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="other">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Otro </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        {{row.otro}}
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns" style="position: fixed;
+                    /* float: top; */
+                    visibility: hidden;
+                    z-index: 2;"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                </div>
+              </mat-card>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</mat-sidenav-container>

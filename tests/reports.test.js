@@ -217,6 +217,71 @@ describe('Integration Reports tests', () => {
           }));
       });
     })
+
+    describe('when filter denounces by date and user', () => {
+      describe('should remove repited by month and user', () => {
+        beforeEach(() => {
+          const denounces = [
+            makeDenounce('', '', 'id1', 'jorge', 'malo', 'rechazada', 'otro', '2000-01-01'),
+            makeDenounce('', '', 'id1', 'jorge', 'malo1', 'rechazada', 'otro', '2000-02-02'),
+            makeDenounce('', '', 'id1', 'jorge', 'malo2', 'rechazada', 'otro', '2000-02-02'), // repited
+
+            makeDenounce('', '', 'id1', 'jorge', 'malo', 'rechazada', 'comportamiento abusivo', '2000-01-01'),
+            makeDenounce('', '', 'id1', 'jorge', 'malo', 'pendiente', 'comportamiento abusivo', '2000-02-02'),
+            makeDenounce('', '', 'id1', 'jorge', 'malo', 'aceptada', 'comportamiento abusivo', '2000-03-03')
+          ];
+
+          return DB.initialize({ denounces: { denounces } })
+        })
+        beforeEach(() => (response = request.getReports(ADMIN_TOKEN, { startDate: '1999-11-11', endDate: '2000-04-04' })));
+
+        it('should remove repited by month and user, but not repited by others things', () => response
+          .then((res) => {
+            const expectedReports = {
+              activeUsers: {
+                labels: [],
+                data: [
+                  { data: [], label: 'Usuarios Totales'},
+                  { data: [], label: 'Usuarios Premium'}
+                ],
+                table: []
+              },
+              denounces: {
+                labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
+                data: [3, 0, 2, 0],
+                blockeds: [1, 0, 0, 0],
+                rejecteds: [1, 0, 2, 0],
+                table: [
+                  {
+                    'comportamiento abusivo': 1,
+                    'label': '1999/12',
+                    'mensaje inapropiado': 0,
+                    'otro': 1,
+                    'spam': 0
+                  },
+                  {
+                    'comportamiento abusivo': 1,
+                    'label': '2000/2',
+                    'mensaje inapropiado': 0,
+                    'otro': 1,
+                    'spam': 0
+                  },
+                  {
+                    'comportamiento abusivo': 1,
+                    'label': '2000/3',
+                    'mensaje inapropiado': 0,
+                    'otro': 0,
+                    'spam': 0
+                  }
+                ]
+              }
+            }
+
+            assert.equal(res.status, 200);
+            assert.deepEqual(res.body, expectedReports);
+          }));
+      });
+    })
   });
 
   describe('Get Active Users reports', () => {
@@ -317,6 +382,7 @@ describe('Integration Reports tests', () => {
         it('should return the rigth report', () => response
           .then((res) => {
             delete res.body.activeUsers.table;
+            delete res.body.denounces.table;
             const expectedReports = {
               activeUsers: {
                 labels: ['2016/11', '2016/12', '2017/1', '2017/2'],
@@ -329,8 +395,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
-                rejecteds: [0, 0, 0, 0],
-                table: []
+                rejecteds: [0, 0, 0, 0]
               }
             }
 
@@ -345,6 +410,7 @@ describe('Integration Reports tests', () => {
         it('should return the rigth report', () => response
           .then((res) => {
             delete res.body.activeUsers.table;
+            delete res.body.denounces.table;
             const expectedReports = {
               activeUsers: {
                 labels: ['2017/1', '2017/2'],
@@ -357,8 +423,7 @@ describe('Integration Reports tests', () => {
                 labels: ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'],
                 data: [0, 0, 0, 0],
                 blockeds: [0, 0, 0, 0],
-                rejecteds: [0, 0, 0, 0],
-                table: []
+                rejecteds: [0, 0, 0, 0]
               }
             }
 

@@ -35,23 +35,26 @@ const filterDenounces = (filters) => {
       const spamDenouncesByFilters = reduceByFilters(spamDenouncesByType, filters);
       const messDenouncesByFilters = reduceByFilters(messDenouncesByType, filters);
 
+      // reduce by user and month: se consideran por usuario y por cada fecha
+      const otherDenounces = reduceByUserAndMonth(otherDenouncesByFilters);
+      const compDenounces = reduceByUserAndMonth(compDenouncesByFilters);
+      const spamDenounces = reduceByUserAndMonth(spamDenouncesByFilters);
+      const messDenounces = reduceByUserAndMonth(messDenouncesByFilters);
+
       // calculate blocked users
-      const otherDenouncesBlockeds = calculateBlockeds(otherDenouncesByFilters);
-      const compDenouncesBlockeds = calculateBlockeds(compDenouncesByFilters);
-      const spamDenouncesBlockeds = calculateBlockeds(spamDenouncesByFilters);
-      const messDenouncesBlockeds = calculateBlockeds(messDenouncesByFilters);
+      const otherDenouncesAccepted = calculateBlockeds(otherDenounces);
+      const compDenouncesAccepted = calculateBlockeds(compDenounces);
+      const spamDenouncesAccepted = calculateBlockeds(spamDenounces);
+      const messDenouncesAccepted = calculateBlockeds(messDenounces);
 
       // calculate rejected denounces
-      const otherDenouncesRejected = calculateRejecteds(otherDenouncesByFilters);
-      const compDenouncesRejected = calculateRejecteds(compDenouncesByFilters);
-      const spamDenouncesRejected = calculateRejecteds(spamDenouncesByFilters);
-      const messDenouncesRejected = calculateRejecteds(messDenouncesByFilters);
+      const otherDenouncesRejected = calculateRejecteds(otherDenounces);
+      const compDenouncesRejected = calculateRejecteds(compDenounces);
+      const spamDenouncesRejected = calculateRejecteds(spamDenounces);
+      const messDenouncesRejected = calculateRejecteds(messDenounces);
 
-      // reduce by user
-      const otherDenounces = reduceByUser(otherDenouncesByFilters);
-      const compDenounces = reduceByUser(compDenouncesByFilters);
-      const spamDenounces = reduceByUser(spamDenouncesByFilters);
-      const messDenounces = reduceByUser(messDenouncesByFilters);
+      // calculate denounces table
+      const sortedDenouncesByMonth = generateSortedDenouncesByMonth([].concat(otherDenounces).concat(compDenounces).concat(spamDenounces).concat(messDenounces), filters);
 
       // calculate
       const otherLength = otherDenounces.length || 0;
@@ -60,10 +63,10 @@ const filterDenounces = (filters) => {
       const messLength = messDenounces.length || 0;
 
       const labels = ['Comportamiento abusivo', 'Mensaje inapropiado', 'Otro', 'Spam'];
-      const blockeds = [compDenouncesBlockeds, messDenouncesBlockeds, otherDenouncesBlockeds, spamDenouncesBlockeds];
+      const blockeds = [compDenouncesAccepted, messDenouncesAccepted, otherDenouncesAccepted, spamDenouncesAccepted];
       const rejecteds = [compDenouncesRejected, messDenouncesRejected, otherDenouncesRejected, spamDenouncesRejected];
       const data = [compLength, messLength, otherLength, spamLength];
-      const table = [].concat(otherDenouncesByFilters).concat(compDenouncesByFilters).concat(spamDenouncesByFilters).concat(messDenouncesByFilters);
+      const table = sortedDenouncesByMonth;
 
       return {
         labels,
@@ -75,16 +78,59 @@ const filterDenounces = (filters) => {
     })
 }
 
-const reduceByUser = (denounces) => {
-  const userMap = {};
+const reduceByUserAndMonth = (denounces) => {
+  let reducedDenounces = [];
+  const userMapByMonth = {};
 
   for (const denounce of denounces) {
-    userMap[denounce.userId] = denounce
+    const label = `${denounce.year}/${denounce.month}`;
+
+    if (userMapByMonth[label]) {
+      userMapByMonth[label].push(denounce);
+    } else {
+      userMapByMonth[label] = [denounce];
+    }
   }
 
-  return Object.keys(userMap).map((key) => {
-    return userMap[key];
+  // por cada mes, reducir por usuario y sumamos las denuncias a 'reducedDenounces'
+  Object.keys(userMapByMonth).map((label) => {
+    const userMap = {};
+
+    //  - si ya existe una denuncia y es aceptada, dejarla
+    //  - si ya existe una denuncia y es rechazada, pero la actual no es aceptada, dejarla
+    //  - caso contrario, ingresar esa denuncia
+    for (const denounce of userMapByMonth[label]) {
+      if ((userMap[denounce.userId] && userMap[denounce.userId].type === 'aceptada')) {
+        console.log();
+      } else if (userMap[denounce.userId] && userMap[denounce.userId].type === 'rechazada') {
+        if (denounce.type === 'aceptada') {
+          userMap[denounce.userId] = denounce
+        }
+      } else {
+        userMap[denounce.userId] = denounce
+      }
+    }
+
+    // map to array
+    const denouncesByMonth = Object.keys(userMap).map((userId) => {
+      return userMap[userId];
+    });
+
+    // sumamos las denuncias por usuario
+    reducedDenounces = reducedDenounces.concat(denouncesByMonth);
+    return null;
   });
+
+  return reducedDenounces;
+  // const userMap = {};
+
+  // for (const denounce of denounces) {
+  //   userMap[denounce.userId] = denounce
+  // }
+
+  // return Object.keys(userMap).map((key) => {
+  //   return userMap[key];
+  // });
 }
 
 const reduceByFilters = (denounces, filters) => {
@@ -106,7 +152,9 @@ const reduceByFilters = (denounces, filters) => {
     userId: denounce.recUID,
     userName: denounce.recUName,
     status: denounce.status,
-    type: denounce.type
+    type: denounce.type,
+    month: (new Date(denounce.date).getMonth() + 1),
+    year: new Date(denounce.date).getFullYear()
   }));
 }
 
@@ -116,9 +164,7 @@ const filterActiveUsers = (filters) => {
       // filter by filters
       const filterUsers = filterUsersByFilters(users, filters);
 
-      // filter by last year
-      // const filterUsersByLastYear = filterByLastYear(filterUsers);
-
+      // generate users by month array
       const usersMonthYearArray = generateSortedUserByMonthArray(filterUsers, filters);
 
       const labels = [];
@@ -137,7 +183,7 @@ const filterActiveUsers = (filters) => {
           { data: total, label: 'Usuarios Totales' },
           { data: premium, label: 'Usuarios Premium' }
         ],
-        table: sortUsersByDate(filterUsers)
+        table: usersMonthYearArray
       }
     })
 }
@@ -178,6 +224,114 @@ const filterByLastYear = (users) => { // eslint-disable-line
   lastYear.setFullYear(lastYearYear - 1);
 
   return filterUsersByFilters(users, { startDate: lastYear.toLocaleString(), endYear: new Date().toLocaleString()});
+}
+
+const generateSortedDenouncesByMonth = (denounces, filters) => {
+  const denouncesMap = {};
+
+  // generamos un mapa para agrupar por fecha
+  denounces.forEach((denounce) => {
+    const type = denounce.type;
+    const label = `${denounce.year}/${denounce.month}`;
+    if (denouncesMap[label]) {
+      if (denouncesMap[label][type]) {
+        denouncesMap[label][type] += 1;
+      } else {
+        denouncesMap[label][type] = 1;
+      }
+    } else {
+      denouncesMap[label] = {};
+      denouncesMap[label][type] = 1;
+    }
+  });
+
+  // las fechas que no tienen denuncias, las completamos con cero
+  let startDate = filters.startDate && new Date(filters.startDate);
+  const endDate = (filters.endDate && new Date(filters.endDate));
+
+  if (endDate) { // TODO: REFACTOR
+    if (!startDate) {
+      startDate = new Date();
+      startDate.setFullYear(startDate.getFullYear() - 1);
+    } else if ((startDate.getFullYear() < new Date().getFullYear() - 1) || ((startDate.getFullYear() === new Date().getFullYear() - 1) && startDate.getMonth() + 1 < new Date().getMonth())) {
+      startDate = new Date();
+      startDate.setFullYear(startDate.getFullYear() - 1);
+    }
+    const startMonth = startDate.getMonth() + 1;
+    const endMonth = endDate.getMonth() + 1;
+    const startYear = startDate.getFullYear();
+    const endYear = endDate.getFullYear();
+
+    if (startYear === endYear) {
+      for (let month = startMonth; month <= endMonth; month += 1) {
+        const label = `${startYear}/${month}`;
+
+        if (denouncesMap[label]) {
+          denouncesMap[label].spam = denouncesMap[label].spam || 0;
+          denouncesMap[label].otro = denouncesMap[label].otro || 0;
+          denouncesMap[label]['mensaje inapropiado'] = denouncesMap[label]['mensaje inapropiado'] || 0;
+          denouncesMap[label]['comportamiento abusivo'] = denouncesMap[label]['comportamiento abusivo'] || 0;
+        } else {
+          denouncesMap[label] = { 'mensaje inapropiado': 0, 'spam': 0, 'comportamiento abusivo': 0, 'otro': 0 }
+        }
+      }
+    } else if (startYear < endYear) {
+      for (let month = startMonth; month <= 12; month += 1) {
+        const label = `${startYear}/${month}`;
+
+        if (denouncesMap[label]) {
+          denouncesMap[label].spam = denouncesMap[label].spam || 0;
+          denouncesMap[label].otro = denouncesMap[label].otro || 0;
+          denouncesMap[label]['mensaje inapropiado'] = denouncesMap[label]['mensaje inapropiado'] || 0;
+          denouncesMap[label]['comportamiento abusivo'] = denouncesMap[label]['comportamiento abusivo'] || 0;
+        } else {
+          denouncesMap[label] = { 'mensaje inapropiado': 0, 'spam': 0, 'comportamiento abusivo': 0, 'otro': 0 }
+        }
+      }
+      for (let month = 1; month < endMonth; month += 1) {
+        const label = `${endYear}/${month}`;
+
+        if (denouncesMap[label]) {
+          denouncesMap[label].spam = denouncesMap[label].spam || 0;
+          denouncesMap[label].otro = denouncesMap[label].otro || 0;
+          denouncesMap[label]['mensaje inapropiado'] = denouncesMap[label]['mensaje inapropiado'] || 0;
+          denouncesMap[label]['comportamiento abusivo'] = denouncesMap[label]['comportamiento abusivo'] || 0;
+        } else {
+          denouncesMap[label] = { 'mensaje inapropiado': 0, 'spam': 0, 'comportamiento abusivo': 0, 'otro': 0 }
+        }
+      }
+    }
+  }
+
+  // generamos un array de denuncias para armar la tabla, por cada posicion tenemos cuantas denuncias hubo por esa fecha
+  const denouncesByMonthArray = [];
+
+  Object.keys(denouncesMap).forEach((label) => {
+    denouncesByMonthArray.push({
+      label,
+      spam: denouncesMap[label].spam || 0,
+      otro: denouncesMap[label].otro || 0,
+      'mensaje inapropiado': denouncesMap[label]['mensaje inapropiado'] || 0,
+      'comportamiento abusivo': denouncesMap[label]['comportamiento abusivo'] || 0
+    });
+  });
+
+  // ordenamos el array
+  const sortedDenouncesByMonthArray = denouncesByMonthArray.sort((a, b) => {
+    const aMonth = parseInt(a.label.split('/')[1], 10);
+    const bMonth = parseInt(b.label.split('/')[1], 10);
+    const aYear = parseInt(a.label.split('/')[0], 10);
+    const bYear = parseInt(b.label.split('/')[0], 10);
+
+    if (aYear < bYear) {
+      return -1;
+    } else if ((aYear === bYear) && (aMonth < bMonth)) {
+      return -1;
+    }
+    return 1;
+  });
+
+  return sortedDenouncesByMonthArray;
 }
 
 const generateSortedUserByMonthArray = (users, filters) => {
@@ -267,17 +421,6 @@ const generateSortedUserByMonthArray = (users, filters) => {
   });
 
   return sortedUserByMonthArray;
-}
-
-const sortUsersByDate = (users) => {
-  return users.sort((a, b) => {
-    if (a.month < b.month) {
-      return -1;
-    } else if ((a.year === b.year) && (a.month < b.month)) {
-      return -1;
-    }
-    return 1;
-  });
 }
 
 const calculateBlockeds = (denounces) => {
