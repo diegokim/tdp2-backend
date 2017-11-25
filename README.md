@@ -46,6 +46,18 @@ Para correr el servidor:
 
 > $ npm test
 
+
+## Cómo levantar la administración Web
+
+Una vez realizados los pasos anteriores, pararse sobre la carpeta admin-web y realizar:
+
+> $ npm install
+
+> $ npm start
+
+Luego la administración Web se abrirá automáticamente en un Browser
+
+
 # API publica
 
 ## Status
