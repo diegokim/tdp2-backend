@@ -97,9 +97,14 @@
             <div class="row" style="margin-bottom: 1em; width: 100%" [style.height.px]="mustShowDenounceTypeDetails ? 268 : 519 ">
               <mat-card style="width: 100% ;padding: 0; height: 100%">
 
-                <div class="example-container">
-
-                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 60 : 60 ">
+                <div class="example-container" style="margin-top:10px">
+                  <div class="text-center">
+                      <font color="grey">
+                    Desde: {{startDate.toLocaleString().split(',')[0]}} - Hasta: {{endDate.toLocaleString().split(',')[0]}} 
+                  </font>
+                  <hr>
+                  </div>
+                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 50 : 60 ">
 
                     <!-- Denunciante -->
                     <ng-container matColumnDef="month">
@@ -142,7 +147,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;" style="position: fixed; visibility: hidden"></mat-row>
                   </mat-table>
 
-                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 208 : 459 ">
+                  <mat-table #table [dataSource]="dataSource" matSort class="text-center" [style.max-height.px]="mustShowDenounceTypeDetails ? 148 : 399 ">
 
                     <!-- Denunciante -->
                     <ng-container matColumnDef="month">

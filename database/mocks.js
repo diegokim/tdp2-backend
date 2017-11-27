@@ -280,9 +280,9 @@ module.exports.mockDenounces = () => {
 
 module.exports.mockAdvertising = () => {
   const advertising = [
-    makeAdvertising('b732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[0], 'https://www.racingclub.com.ar/img/noticias/portada-socios-30-12-15.jpg', 'Racing', '2017-01-01', '2017-11-30'),
-    makeAdvertising('b222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[1], 'http://www.awesomeinventions.com/wp-content/uploads/2014/10/Hidden-messages.jpg', 'Coca Cola', '2017-10-01', '2017-10-30'),
-    makeAdvertising('b332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[2], 'http://s1.thingpic.com/images/3J/M7tstKmnw6qaSPFj3RPPTRX3.jpeg', 'Mc Donalds', '2017-09-03', '2017-12-30')
+    makeAdvertising('b732bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[0], 'https://www.racingclub.com.ar/img/noticias/portada-socios-30-12-15.jpg', 'Coca Cola', '2017-01-01', '2017-11-30'),
+    makeAdvertising('b222bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[1], 'http://www.awesomeinventions.com/wp-content/uploads/2014/10/Hidden-messages.jpg', 'Mc Donalds', '2017-10-01', '2017-10-30'),
+    makeAdvertising('b332bca0-c18b-11e7-a4fa-e3e6bf7f2e07', advertisingImages[2], 'http://s1.thingpic.com/images/3J/M7tstKmnw6qaSPFj3RPPTRX3.jpeg', 'Racing', '2017-09-03', '2017-12-30')
   ]
 
   return advertising;

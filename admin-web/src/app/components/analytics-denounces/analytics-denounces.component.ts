@@ -210,7 +210,7 @@ export class AnalyticsDenouncesComponent implements OnInit {
     this.perTypePieChartData = [blockeds, rejecteds]
     this.perTypePieChartLabels = ["Bloqueados", "Rechazados"]
     this.mustShowDenounceTypeDetails = true;
-    this.perTypePieChartTitle = 'Detalle de las denuncias de tipo: ' + this.pieChartLabels[index];
+    this.perTypePieChartTitle = this.pieChartLabels[index];
 
     
   }
