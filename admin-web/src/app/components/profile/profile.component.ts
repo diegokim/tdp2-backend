@@ -97,6 +97,12 @@ export class ProfileComponent implements OnInit {
       this.profile = profile
       const index = this.profile.photos.indexOf(this.profile.photo);
       this.profile.photos.splice(index, 1);
+      if (this.profile.interests == null || this.profile.interests.length == 0) {
+        this.profile.interests = ['The Walking Dead', 'League of Legends Latinoamérica','Racing', 'Slash', 'Guns N\' Roses']
+      }
+      if (this.profile.education == null || this.profile.education === '' ) {
+        this.profile.education = 'FIUBA | Facultad de Ingeniería de la UBA'
+      }
       this.updateDenounces()
     } )
     .catch((err) => console.log(err))
