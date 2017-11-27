@@ -95,6 +95,8 @@ export class ProfileComponent implements OnInit {
     this.http.get(url,{headers}).toPromise()
     .then((profile: Profile) => {
       this.profile = profile
+      const index = this.profile.photos.indexOf(this.profile.photo);
+      this.profile.photos.splice(index, 1);
       this.updateDenounces()
     } )
     .catch((err) => console.log(err))

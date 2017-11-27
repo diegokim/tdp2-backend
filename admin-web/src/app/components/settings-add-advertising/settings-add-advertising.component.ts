@@ -65,7 +65,7 @@ export class SettingsAddAdvertisingComponent implements OnInit {
         this.snackBar.open('Debes llenar el campo nombre!', '', {
           duration: 2000,
         })
-      } else if ( this.startDate <  this.endDate) {
+      } else if ( this.startDate <=  this.endDate) {
         let body = {
           name: this.name,
           startDate: this.startDate.toDateString(),
