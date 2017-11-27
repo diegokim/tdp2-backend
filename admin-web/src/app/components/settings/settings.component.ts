@@ -46,9 +46,7 @@ export class SettingsComponent implements OnInit {
     console.log(body)
     let token = localStorage.getItem('sessionToken')
     let headers = new HttpHeaders({'Authorization': token})
-    this.http.put(url, body, {headers}).toPromise()
-    .then(console.log)
-    .catch(console.log)
+    return this.http.put(url, body, {headers}).toPromise()
   }
 
   updateSettings () {
@@ -66,16 +64,21 @@ export class SettingsComponent implements OnInit {
 
     if (this.linksForFreeAccount != this.settings.linksForFreeAccount.value) {
       this.updateSetting(this.settings.linksForFreeAccount.name, this.linksForFreeAccount)
+      this.settings.linksForFreeAccount.value = this.linksForFreeAccount 
     }
     if (this.linksForPremiumAccount != this.settings.linksForPremiumAccount.value) {
       this.updateSetting(this.settings.linksForPremiumAccount.name, this.linksForPremiumAccount)
+      this.settings.linksForPremiumAccount.value = this.linksForPremiumAccount
     }
     if (this.maxCandidatesToShow != this.settings.maxCandidatesToShow.value) {
       this.updateSetting(this.settings.maxCandidatesToShow.name, this.maxCandidatesToShow)
+      this.settings.maxCandidatesToShow.value = this.maxCandidatesToShow
     }
     if (this.maxPhotosToLogin != this.settings.maxPhotosToLogin.value) {
       this.updateSetting(this.settings.maxPhotosToLogin.name, this.maxPhotosToLogin)
+      this.settings.maxPhotosToLogin.value = this.maxPhotosToLogin
     }
+
     this.snackBar.open('Configuracion guardada con exito!', '', {
       duration: 2000,
     });
@@ -87,7 +90,6 @@ export class SettingsComponent implements OnInit {
     this.maxCandidatesToShow = this.settings.maxCandidatesToShow.value
     this.maxPhotosToLogin = this.settings.maxPhotosToLogin.value
   }
-
 }
 
 

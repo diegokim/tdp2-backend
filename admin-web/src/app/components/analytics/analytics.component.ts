@@ -83,8 +83,8 @@ export class AnalyticsComponent implements OnInit {
                   var blockeds = res.denounces.blockeds
                   var rejecteds = res.denounces.rejecteds
                   if (blockeds != null) {
-                    let pendings = dataset[index] - blockeds[index] - rejecteds[index];
-                    return 'Bloqueados: ' + blockeds[index] + " Rechazadas: " + rejecteds[index] + " Pendientes: " + pendings;
+                    
+                    return 'Bloqueados: ' + blockeds[index] + " Rechazadas: " + rejecteds[index];
                   }
                   return '';
               }

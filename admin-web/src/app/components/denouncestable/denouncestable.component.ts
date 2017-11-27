@@ -164,7 +164,7 @@ export class DenouncesDataSource extends DataSource<any> {
 
       switch (this._sort.active) {
         case 'userName' : [propertyA, propertyB] = [a.userName, b.userName]; break;
-        case 'sendUName': [propertyA, propertyB] = [a.sendUID, b.sendUID]; break;
+        case 'sendUName': [propertyA, propertyB] = [a.sendUName, b.sendUName]; break;
         case 'recUName': [propertyA, propertyB] = [a.recUName, b.recUName]; break;
         case 'type': [propertyA, propertyB] = [a.type, b.type]; break;
         case 'status': [propertyA, propertyB] = [a.status, b.status]; break;
